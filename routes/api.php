@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware' => ['json.response']], function () {
+Route::group(['middleware' => ['guest']], function () {
 
     Route::post('/register', [CustomerController::class, 'register'])->name('register.api');
 
