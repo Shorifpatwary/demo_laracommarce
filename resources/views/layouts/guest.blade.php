@@ -26,5 +26,9 @@
                 {{ $slot }}
             </div>
         </div>
+
+{{-- toastr message --}}
+@include('layouts.partials.toastr')
+
     </body>
 </html>

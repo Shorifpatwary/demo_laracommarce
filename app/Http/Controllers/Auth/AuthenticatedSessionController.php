@@ -28,8 +28,9 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        $notification = ['message' => 'Logout successful!', 'alert-type' => 'success'];
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect()->intended(RouteServiceProvider::HOME)->with('notification', $notification);
     }
 
     /**
@@ -42,7 +43,8 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
+        $notification = ['message' => 'Logout successful!', 'alert-type' => 'success'];
 
-        return redirect('/');
+        return redirect('/')->with('notification', $notification);
     }
 }
