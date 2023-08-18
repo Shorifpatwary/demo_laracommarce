@@ -27,8 +27,7 @@ Route::group(['middleware' => ['guest']], function () {
 });
 
 // Protected routes api 
-Route::group(['middleware' => ['json.response', 'auth:api']], function () {
+Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('/logout', [CustomerController::class, 'logout'])->name('logout.api');
-
 });
