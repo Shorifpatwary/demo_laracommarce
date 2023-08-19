@@ -125,7 +125,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-    <script src="//cdn.ckeditor.com/4.16.0/full/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/4.16.0/full/ckeditor.js"></script>
     <script src="{{ asset('') }}plugins/summernote/summernote-bs4.min.js"></script>
     <script>
       $(function () {
@@ -156,29 +156,8 @@
     </script>
 
     {{-- caching --}}
-    <script>
-      // In your service worker file (sw.js)
-
-      self.addEventListener('install', event => {
-      event.waitUntil(
-      caches.open('my-cache').then(cache => {
-        return cache.addAll([
-          'https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js',
-          // Add other resources you want to cache
-        ]);
-      })
-      );
-      });
-
-      self.addEventListener('fetch', event => {
-      event.respondWith(
-      caches.match(event.request).then(response => {
-        return response || fetch(event.request);
-      })
-      );
-      });
-
-    </script>
+    {{-- don't cache this file --}}
+    <script src="{{ asset('') }}dist/js/sw.js" defer> </script>
 
 </body>
 
