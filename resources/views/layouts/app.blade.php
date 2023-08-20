@@ -29,7 +29,7 @@
   <!-- Toastr -->
   <link rel="stylesheet" href="{{asset('')}}plugins/toastr/toastr.min.css">
 
-  @stack('css-link');
+  @stack('css-link')
 
 </head>
 
@@ -55,7 +55,7 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
 
-      @yield('dashboard-content');
+      @yield('dashboard-content')
 
     </div>
     <!-- /.content-wrapper -->
@@ -101,7 +101,7 @@
     <script src="{{asset('')}}plugins/toastr/toastr.min.js"></script>
 
 
-    @stack('js-link');
+    @stack('js-link')
 
     {{-- Swal message --}}
     @include('layouts.partials.swal')
@@ -135,7 +135,6 @@
     </script>
     {{-- <script src="{{ asset('') }}plugins/print_this/printThis.js"></script> --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js" defer></script>
-
 
     <script>
       $(function () {

@@ -24,14 +24,14 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth.session')->group(function () {
+Route::middleware('auth.basic')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 // admin 
-Route::middleware('web', 'auth.session')->group(function () {
+Route::middleware(['web', 'auth'])->group(function () {
     // category 
     Route::resource('category', CategoryController::class);
     Route::resource('sub-category', SubcategoryController::class);
