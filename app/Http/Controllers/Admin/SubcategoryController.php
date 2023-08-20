@@ -15,8 +15,10 @@ class SubcategoryController extends Controller
      */
     public function index()
     {
-        $data = Subcategory::all();
-        return view('category.sub-category.index', compact('data'));
+        $mainCategories = Category::where('parent_id', null)->get();
+        $data = Category::whereIn('parent_id', $mainCategories->pluck('id'))->get();
+
+        return view('category.sub-category.index', compact('data',));
     }
 
     /**
@@ -24,7 +26,7 @@ class SubcategoryController extends Controller
      */
     public function create()
     {
-        $data = Category::all();
+        $data = Category::where('parent_id', null)->get();
         return view('category.sub-category.create', compact('data'));
     }
 
@@ -36,15 +38,15 @@ class SubcategoryController extends Controller
         // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|unique:subcategories|max:55',
-            'category_id' => 'required|exists:categories,id',
+            'parent_id' => 'required|exists:categories,id',
             // 'icon' => 'required',
         ]);
         $slug = Str::slug($request->name, '-');
 
-        Subcategory::insert([
+        Category::insert([
             'name' => $request->name,
             'slug' => $slug,
-            'category_id' => $request->category_id,
+            'parent_id' => $request->parent_id,
             // 'home_page' => $request->home_page,
             // 'icon' => 'public/files/category/' . $photoname,
         ]);
@@ -82,7 +84,7 @@ class SubcategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        Subcategory::where('id', $id)->delete();
+        Category::where('id', $id)->delete();
 
         $notification = ['notification' => 'Category Deleted!', 'alert-type' => 'success'];
         return redirect()->route('sub-category.index')->with($notification);

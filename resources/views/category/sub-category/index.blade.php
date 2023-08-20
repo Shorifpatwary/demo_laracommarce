@@ -52,7 +52,7 @@
                   <td>{{ $key+1 }}</td>
                   <td>{{ $row->name }}</td>
                   <td>{{ $row->slug }}</td>
-                  <td>{{ $row->category->name }}</td>
+                  <td> {{ $row->parentCategory->name }}</td>
                   {{-- <td><img src="{{ asset($row->icon) }}" height="32" width="32"></td> --}}
                   {{-- <td>
                     @if($row->home_page==1)

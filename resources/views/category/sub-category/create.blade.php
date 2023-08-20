@@ -39,9 +39,9 @@
               </div>
               {{-- parent category --}}
               <div class="form-group">
-                <label for="category_id">Category Name</label>
-                <select class="form-control @error('category_id')  is-invalid @enderror" name="category_id"
-                  value="{{old('category_id')}}" required>
+                <label for="parent_id">Category Name</label>
+                <select class="form-control @error('parent_id')  is-invalid @enderror" name="parent_id"
+                  value="{{old('parent_id')}}" required>
                   <option value="">Select</option>
                   @foreach($data as $row)
                   <option value="{{ $row->id }}">{{ $row->name }}</option>

@@ -14,9 +14,19 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+
+    public function index(Request $request)
     {
-        $data = Category::all();
+        // to avoid using subCategoryController .... 
+        if ($request->is('specific/form/route')) {
+            // The request is coming from a specific form route
+            // Your logic here
+        } else {
+            // The request is not coming from the specific form route
+            // Your alternative logic here
+        }
+        $data = $mainCategory = Category::where('parent_id', null)->get();
         return view('category.category.index', compact('data'));
     }
 

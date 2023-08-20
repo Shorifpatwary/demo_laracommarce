@@ -14,8 +14,8 @@ class Category extends Model
         'slug',
         'description'
     ];
-    public function subCategory()
+    public function parentCategory()
     {
-        return $this->hasMany(Subcategory::class);
+        return $this->belongsTo(Category::class, 'parent_id');
     }
 }
