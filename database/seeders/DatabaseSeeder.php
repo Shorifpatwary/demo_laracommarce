@@ -4,8 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\Customer;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +18,9 @@ class DatabaseSeeder extends Seeder
             // CustomerSeeder::class,
             // CategorySeeder::class,
             // SubcategorySeeder::class,
+            // BrandSeeder::class,
+            // CategoryBrandSeeder::class,
+            SeoSeeder::class,
         ]);
     }
 }

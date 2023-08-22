@@ -90,9 +90,7 @@
     <!-- ChartJS -->
     <script src="{{asset('')}}plugins/chart.js/Chart.min.js" defer></script>
 
-    <!-- AdminLTE for demo purposes -->
-    <script src="{{asset('')}}dist/js/demo.js" defer></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+
     <script src="{{asset('')}}dist/js/pages/dashboard2.js"></script>
 
     <!-- SweetAlert2 -->

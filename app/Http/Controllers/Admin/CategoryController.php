@@ -26,7 +26,7 @@ class CategoryController extends Controller
             // The request is not coming from the specific form route
             // Your alternative logic here
         }
-        $data = $mainCategory = Category::where('parent_id', null)->get();
+        $data = Category::where('parent_id', null)->get();
         return view('category.category.index', compact('data'));
     }
 
