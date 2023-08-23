@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\ProfileController;
@@ -39,6 +40,9 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::resource('sub-category', SubcategoryController::class);
     // brands route
     Route::resource('brand', BrandController::class);
+
+    // pages route
+    Route::resource('page', PageController::class);
 });
 
 // settings 
@@ -49,6 +53,11 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::group(['prefix' => 'seo'], function () {
             Route::get('/', [SettingController::class, 'seo'])->name('seo.setting');
             Route::post('/update/{id}', [SettingController::class, 'seoUpdate'])->name('seo.setting.update');
+        });
+        //smtp setting
+        Route::group(['prefix' => 'smtp'], function () {
+            Route::get('/',  [SettingController::class, 'smtp'])->name('smtp.setting');
+            Route::post('/update', [SettingController::class, 'smtpUpdate'])->name('smtp.setting.update');
         });
     });
 });

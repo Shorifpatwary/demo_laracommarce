@@ -40,8 +40,7 @@
                   <th>sub category name</th>
                   <th>sub category slug</th>
                   <th>parent category name</th>
-                  {{-- <th>Icon</th>
-                  <th>Home Page</th> --}}
+
                   <th>Action</th>
                 </tr>
               </thead>
@@ -53,12 +52,6 @@
                   <td>{{ $row->name }}</td>
                   <td>{{ $row->slug }}</td>
                   <td> {{ $row->parentCategory->name }}</td>
-                  {{-- <td><img src="{{ asset($row->icon) }}" height="32" width="32"></td> --}}
-                  {{-- <td>
-                    @if($row->home_page==1)
-                    <span class="badge badge-success">Home Page</span>
-                    @endif
-                  </td> --}}
                   <td class=" d-inline-flex">
                     <a href="#" class="btn btn-info btn-sm edit" data-id="{{ $row->id }}" data-toggle="modal"
                       data-target="#editModal"><i class="fas fa-edit"></i></a>
@@ -102,14 +95,6 @@
   </div>
 </div>
 
-@push('css-link')
-
-<!-- DataTables -->
-<link rel="stylesheet" href="{{ asset('') }}plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="{{ asset('') }}plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-<link rel="stylesheet" href="{{ asset('') }}plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-
-@endpush
 
 @push('js-link')
 

@@ -29,6 +29,14 @@
   <!-- Toastr -->
   <link rel="stylesheet" href="{{asset('')}}plugins/toastr/toastr.min.css">
 
+  {{-- data table css --}}
+  <link rel="stylesheet" href="{{ asset('') }}plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="{{ asset('') }}plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="{{ asset('') }}plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+  {{-- summernote --}}
+  <link rel="stylesheet" href="{{ asset('') }}plugins/summernote/summernote-bs4.min.css">
+
   @stack('css-link')
 
 </head>
@@ -124,6 +132,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
     <script src="https://cdn.ckeditor.com/4.16.0/full/ckeditor.js"></script>
+
+    {{-- summernote --}}
     <script src="{{ asset('') }}plugins/summernote/summernote-bs4.min.js"></script>
     <script>
       $(function () {

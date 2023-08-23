@@ -20,7 +20,9 @@ class DatabaseSeeder extends Seeder
             // SubcategorySeeder::class,
             // BrandSeeder::class,
             // CategoryBrandSeeder::class,
-            SeoSeeder::class,
+            // SeoSeeder::class,
+            // SmtpSeeder::class,
+            PageSeeder::class,
         ]);
     }
 }

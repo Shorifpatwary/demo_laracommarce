@@ -109,13 +109,13 @@
               </a>
             </li>
             <li class="nav-item">
-              {{-- <a href="{{ route('page.index') }}" class="nav-link"> --}}
+              <a href="{{ route('page.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Page Create</p>
+                <p>Page</p>
               </a>
             </li>
             <li class="nav-item">
-              {{-- <a href="{{ route('smtp.setting') }}" class="nav-link"> --}}
+              <a href="{{ route('smtp.setting') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>SMTP Setting</p>
               </a>

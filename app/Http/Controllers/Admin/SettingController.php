@@ -44,31 +44,40 @@ class SettingController extends Controller
     }
 
     // //smtp setting page
-    // public function smtp()
-    // {
-    //     // $smtp=DB::table('smtp')->first();
-    //     return view('admin.setting.smtp');
-    // }
+    public function smtp()
+    {
+        // $smtp=DB::table('smtp')->first();
+        return view('setting.smtp');
+    }
 
-    // //smtp update
-    // public function smtpUpdate(Request $request)
-    // {
-    //     // $data=array();
-    //     // $data['mailer']=$request->mailer;
-    //     // $data['host']=$request->host;
-    //     // $data['port']=$request->port;
-    //     // $data['user_name']=$request->user_name;
-    //     // $data['password']=$request->password;
-    //     // DB::table('smtp')->where('id',$id)->update($data);
-    //     // $notification=array('messege' => 'SMTP Setting Updated!', 'alert-type' => 'success');
-    //     // return redirect()->back()->with($notification);
+    //smtp update
+    public function smtpUpdate(Request $request)
+    {
+        $validatedData = $request->validate([
+            'mailer' => 'nullable|string|between:5,255',
+            'host' => 'nullable|string|between:5,255',
+            'port' => 'nullable|string|between:5,255',
+            'user_name' => 'nullable|string|between:5,255',
+            'password' => 'nullable|string|between:5,255',
+        ]);
 
-    //     foreach ($request->types as $key => $type) {
-    //         $this->updateEnvFile($type, $request[$type]);
-    //     }
-    //     $notification = array('messege' => 'SMTP Setting Updated!', 'alert-type' => 'success');
-    //     return redirect()->back()->with($notification);
-    // }
+        // $data=array();
+        // $data['mailer']=$request->mailer;
+        // $data['host']=$request->host;
+        // $data['port']=$request->port;
+        // $data['user_name']=$request->user_name;
+        // $data['password']=$request->password;
+
+        DB::table('smtps')->where('id', $request->id)->update($validatedData);
+        $notification = array('messege' => 'SMTP Setting Updated!', 'alert-type' => 'success');
+        return redirect()->back()->with($notification);
+
+        // foreach ($request->types as $key => $type) {
+        //     $this->updateEnvFile($type, $request[$type]);
+        // }
+        // $notification = array('messege' => 'SMTP Setting Updated!', 'alert-type' => 'success');
+        // return redirect()->back()->with($notification);
+    }
 
     // public function updateEnvFile($type, $val)
     // {
