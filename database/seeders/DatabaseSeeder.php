@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
             // CategoryBrandSeeder::class,
             // SeoSeeder::class,
             // SmtpSeeder::class,
-            PageSeeder::class,
+            // PageSeeder::class,
+            SettingSeeder::class,
         ]);
     }
 }

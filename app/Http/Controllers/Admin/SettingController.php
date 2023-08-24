@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Image;
 
 class SettingController extends Controller
 {
@@ -61,15 +62,9 @@ class SettingController extends Controller
             'password' => 'nullable|string|between:5,255',
         ]);
 
-        // $data=array();
-        // $data['mailer']=$request->mailer;
-        // $data['host']=$request->host;
-        // $data['port']=$request->port;
-        // $data['user_name']=$request->user_name;
-        // $data['password']=$request->password;
-
         DB::table('smtps')->where('id', $request->id)->update($validatedData);
-        $notification = array('messege' => 'SMTP Setting Updated!', 'alert-type' => 'success');
+
+        $notification = array('notification' => 'SMTP Setting Updated!', 'alert-type' => 'success');
         return redirect()->back()->with($notification);
 
         // foreach ($request->types as $key => $type) {
@@ -100,52 +95,53 @@ class SettingController extends Controller
     // }
 
 
-
-
     // //website setting
-    // public function website()
-    // {
-    //     $setting = DB::table('settings')->first();
-    //     return view('admin.setting.website_setting', compact('setting'));
-    // }
+    public function website()
+    {
+        $setting = DB::table('settings')->first();
+        return view('setting.website-setting', compact('setting'));
+    }
 
     // //website setting update
-    // public function WebsiteUpdate(Request $request, $id)
-    // {
-    //     $data = array();
-    //     $data['currency'] = $request->currency;
-    //     $data['phone_one'] = $request->phone_one;
-    //     $data['phone_two'] = $request->phone_two;
-    //     $data['main_email'] = $request->main_email;
-    //     $data['support_email'] = $request->support_email;
-    //     $data['address'] = $request->address;
-    //     $data['facebook'] = $request->facebook;
-    //     $data['twitter'] = $request->twitter;
-    //     $data['instagram'] = $request->instagram;
-    //     $data['linkedin'] = $request->linkedin;
-    //     $data['youtube'] = $request->youtube;
-    //     if ($request->logo) {  //jodi new logo die thake
-    //         $logo = $request->logo;
-    //         $logo_name = uniqid() . '.' . $logo->getClientOriginalExtension();
-    //         Image::make($logo)->resize(320, 120)->save('public/files/setting/' . $logo_name);
-    //         $data['logo'] = 'public/files/setting/' . $logo_name;
-    //     } else {   //jodi new logo na dey
-    //         $data['logo'] = $request->old_logo;
-    //     }
+    public function WebsiteUpdate(Request $request)
+    {
+        $data = $request->validate([
+            'currency' => 'nullable|string|max:25',
+            'phone_one' => 'nullable|string|max:55',
+            'phone_two' => 'nullable|string|max:55',
+            'main_email' => 'nullable|email|max:100',
+            'support_email' => 'nullable|email|max:100',
+            'address' => 'nullable|string|max:1000',
+            'facebook' => 'nullable|url|max:255',
+            'twitter' => 'nullable|url|max:255',
+            'instagram' => 'nullable|url|max:255',
+            'linkedin' => 'nullable|url|max:255',
+            'youtube' => 'nullable|url|max:255',
+            'logo' => 'image|mimes:jpg,jpeg,png,gif,webp|max:2048',
+        ]);
 
-    //     if ($request->favicon) {  //jodi new logo die thake
-    //         $favicon = $request->favicon;
-    //         $favicon_name = uniqid() . '.' . $favicon->getClientOriginalExtension();
-    //         Image::make($favicon)->resize(32, 32)->save('public/files/setting/' . $favicon_name);
-    //         $data['favicon'] = 'public/files/setting/' . $favicon_name;
-    //     } else {   //jodi new logo na dey
-    //         $data['favicon'] = $request->old_favicon;
-    //     }
+        if ($request->logo) {  //if user submit a new image
+            $logo = $request->logo;
+            $logo_name = uniqid() . '.' . $logo->getClientOriginalExtension();
+            Image::make($logo)->resize(320, 120)->save('files/setting/' . $logo_name);
+            $data['logo'] = 'files/setting/' . $logo_name;
+        } else {   //jodi new logo na dey
+            $data['logo'] = $request->old_logo;
+        }
 
-    //     DB::table('settings')->where('id', $id)->update($data);
-    //     $notification = array('messege' => 'Setting Updated!', 'alert-type' => 'success');
-    //     return redirect()->back()->with($notification);
-    // }
+        if ($request->favicon) {  //if user submit a new image
+            $favicon = $request->favicon;
+            $favicon_name = uniqid() . '.' . $favicon->getClientOriginalExtension();
+            Image::make($favicon)->resize(32, 32)->save('files/setting/' . $favicon_name);
+            $data['favicon'] = 'files/setting/' . $favicon_name;
+        } else {   //jodi new logo na dey
+            $data['favicon'] = $request->old_favicon;
+        }
+
+        DB::table('settings')->where('id', $request->id)->update($data);
+        $notification = array('notification' => 'Setting Updated!', 'alert-type' => 'success');
+        return redirect()->back()->with($notification);
+    }
 
     // //__payment gateway
     // public function PaymentGateway()

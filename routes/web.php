@@ -59,6 +59,10 @@ Route::middleware(['web', 'auth'])->group(function () {
             Route::get('/',  [SettingController::class, 'smtp'])->name('smtp.setting');
             Route::post('/update', [SettingController::class, 'smtpUpdate'])->name('smtp.setting.update');
         });
+        // website setting 
+        Route::get('/', [SettingController::class, 'website'])->name('website.setting');
+
+        Route::post('/update/{id}', [SettingController::class, 'WebsiteUpdate'])->name('website.setting.update');
     });
 });
 
