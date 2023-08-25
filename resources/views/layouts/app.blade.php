@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark" data-bs-theme="dark">
 
 <head>
   <meta charset="utf-8">
@@ -58,7 +58,6 @@
     @include('layouts.partials.sidebar')
     <!-- Main Sidebar Container -->
     @endguest
-
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -160,8 +159,8 @@
       "responsive": true,
     });
   });  
+  
     </script>
-
     {{-- caching --}}
     {{-- don't cache this file --}}
     <script src="{{ asset('') }}dist/js/sw.js" defer> </script>
