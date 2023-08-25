@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Create Coupon'])
+@extends('layouts.app', ['title' => 'Update Coupon'])
 
 @section('dashboard-content')
 <!-- Content Header (Page header) -->
@@ -28,19 +28,19 @@
       <div class="col-8">
         <div class="card card-primary p-2">
           <div class="card-header">
-            <h3 class="card-title">Create a Coupon</h3>
+            <h3 class="card-title">Update Coupon</h3>
           </div>
           <!-- /.card-header -->
           {{-- form start --}}
-          <form action="{{ route('update.coupon', $coupon->id) }}" method="POST" id="edit_form">
+          <form action="{{ route('coupon.update', $coupon->id) }}" method="POST" id="edit_form">
             @csrf
             @method('PUT')
             <div class="modal-body">
               <div class="form-group">
-                <label for="coupon_code">Coupon Code</label>
-                <input type="text" class="form-control @error('coupon_code') is-invalid @enderror" name="coupon_code"
-                  required="" value="{{ old('coupon_code', $coupon->coupon_code) }}">
-                @error('coupon_code')
+                <label for="code">Coupon Code</label>
+                <input type="text" class="form-control @error('code') is-invalid @enderror" name="code" required=""
+                  value="{{ old('code', $coupon->code) }}">
+                @error('code')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
               </div>
@@ -58,10 +58,10 @@
               </div>
 
               <div class="form-group">
-                <label for="coupon_amount">Amount</label>
-                <input type="text" class="form-control @error('coupon_amount') is-invalid @enderror"
-                  name="coupon_amount" required="" value="{{ old('coupon_amount', $coupon->coupon_amount) }}">
-                @error('coupon_amount')
+                <label for="amount">Amount</label>
+                <input type="text" class="form-control @error('amount') is-invalid @enderror" name="amount" required=""
+                  value="{{ old('amount', $coupon->amount) }}">
+                @error('amount')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
               </div>
@@ -83,7 +83,7 @@
                   </option>
                   <option value="inactive" {{ old('status', $coupon->status) == 'inactive' ? 'selected' : '' }}>Inactive
                   </option>
-                  <option value="expired" {{ old('status', $coupon->status) == 'expired' ? 'selected' : '' }}>Inactive
+                  <option value="expired" {{ old('status', $coupon->status) == 'expired' ? 'selected' : '' }}>Expired
                   </option>
                 </select>
                 @error('status')

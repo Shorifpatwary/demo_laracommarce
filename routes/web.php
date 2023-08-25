@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\WarehouseController;
+use App\Http\Controllers\Admin\PickupPointController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,6 +51,9 @@ Route::middleware(['web', 'auth'])->group(function () {
 
 	// coupons route
 	Route::resource('coupon', CouponController::class);
+
+	// pickup points route
+	Route::resource('pickup-point', PickupPointController::class);
 });
 
 // settings 

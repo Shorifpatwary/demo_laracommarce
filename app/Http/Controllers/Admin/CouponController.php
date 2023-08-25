@@ -80,7 +80,7 @@ class CouponController extends Controller
      */
     public function edit(Coupon $coupon)
     {
-        return view('shop.coupon.edit');
+        return view('shop.coupon.edit', compact('coupon'));
     }
 
     /**
