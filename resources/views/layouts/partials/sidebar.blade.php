@@ -75,6 +75,20 @@
                 <p>child category</p>
               </a>
             </li>
+          </ul>
+        </li>
+        {{-- shop --}}
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-copy"></i>
+            <p>
+              shop
+              <i class="fas fa-angle-left right"></i>
+              <span class="badge badge-info right">4</span>
+            </p>
+          </a>
+          {{-- category --}}
+          <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{route('brand.index')}}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
@@ -87,9 +101,14 @@
                 <p>Warehouse</p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="{{ route('coupon.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Coupon</p>
+              </a>
+            </li>
           </ul>
         </li>
-
         {{-- Website setting --}}
 
         {{-- @if(Auth::user()->setting==1) --}}

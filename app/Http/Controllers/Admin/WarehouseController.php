@@ -23,8 +23,16 @@ class WarehouseController extends Controller
 				// })
 				->addIndexColumn()
 				->addColumn('action', function ($row) {
-					$actionbtn = '<a href="' . route('warehouse.edit', [$row->id]) . '" class="btn btn-info btn-sm edit" data-id="' . $row->id . '" ><i class="fas fa-edit"></i></a>
-							<a href="' . route('warehouse.destroy', [$row->id]) . '" class="btn btn-danger btn-sm" id="delete"><i class="fas fa-trash"></i></a>';
+					$actionbtn = '<div class="d-inline-flex gap-1">
+							<a href="' . route('warehouse.edit', [$row->id]) . '" class="btn btn-info btn-sm edit"><i class="fas fa-edit"></i></a>
+							<form action="' .  route('warehouse.destroy', [$row->id]) . '" method="post">'
+						. csrf_field()  .
+						method_field('DELETE') .
+						'<button type="submit" href="' . route('warehouse.destroy', [$row->id]) . '" class="btn btn-danger btn-sm" id="delete">
+											<i class="fas fa-trash"></i>
+									</button>
+							</form>
+							</div>';
 					return $actionbtn;
 				})
 				->rawColumns(['action'])

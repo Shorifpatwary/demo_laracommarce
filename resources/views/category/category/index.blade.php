@@ -62,7 +62,8 @@
                       data-target="#editModal"><i class="fas fa-edit"></i></a>
                     <form action="{{route('category.destroy' , $row->id)}}" method="post">
                       @csrf
-                      <input type="hidden" name="_method" value="DELETE">
+                      @method('DELETE')
+                      {{-- <input type="hidden" name="_method" value="DELETE"> --}}
                       <button type="submit" href="{{ route('category.destroy',$row->id) }}"
                         class="btn btn-danger btn-sm" id="delete">
                         <i class="fas fa-trash"></i>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SubcategoryController;
@@ -36,7 +37,7 @@ Route::middleware('auth.basic')->group(function () {
 
 // admin 
 Route::middleware(['web', 'auth'])->group(function () {
-	// category 
+	// categories 
 	Route::resource('category', CategoryController::class);
 	Route::resource('sub-category', SubcategoryController::class);
 	// brands route
@@ -46,6 +47,9 @@ Route::middleware(['web', 'auth'])->group(function () {
 
 	// pages route
 	Route::resource('page', PageController::class);
+
+	// coupons route
+	Route::resource('coupon', CouponController::class);
 });
 
 // settings 
