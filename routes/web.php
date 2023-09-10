@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\WarehouseController;
 use App\Http\Controllers\Admin\PickupPointController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,22 +39,26 @@ Route::middleware('auth.basic')->group(function () {
 
 // admin 
 Route::middleware(['web', 'auth'])->group(function () {
-	// categories 
+	// category routes 
 	Route::resource('category', CategoryController::class);
+
 	Route::resource('sub-category', SubcategoryController::class);
-	// brands route
+	// brand routes
 	Route::resource('brand', BrandController::class);
-	// pages route
+	// page routes
 	Route::resource('warehouse', WarehouseController::class);
 
-	// pages route
+	// page routes
 	Route::resource('page', PageController::class);
 
-	// coupons route
+	// coupons routess
 	Route::resource('coupon', CouponController::class);
 
-	// pickup points route
+	// pickup point routes
 	Route::resource('pickup-point', PickupPointController::class);
+
+	// product routes
+	Route::resource('product', ProductController::class);
 });
 
 // settings 
@@ -77,4 +82,8 @@ Route::middleware(['web', 'auth'])->group(function () {
 	});
 });
 
+
+// other routes
+//global route
+Route::get('/get-child-category/{id}', [CategoryController::class, 'getChildCategory'])->middleware('api');
 require __DIR__ . '/auth.php';

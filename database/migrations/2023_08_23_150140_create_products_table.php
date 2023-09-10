@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('name');
+            $table->string('slug');
             $table->string('code');
             $table->string('unit')->nullable();
             $table->string('tags')->nullable();
@@ -23,18 +24,19 @@ return new class extends Migration
             $table->string('selling_price')->nullable();
             $table->string('discount_price')->nullable();
             $table->string('stock_quantity')->nullable();
-            $table->integer('warehouse')->nullable();
-            $table->string('description');
+            $table->text('description');
             $table->string('thumbnail')->nullable();
             $table->string('images')->nullable();
-            $table->boolean('featured')->nullable();
-            $table->boolean('today_deal')->nullable();
-            $table->integer('status')->nullable();
-            $table->integer('flash_deal_id')->nullable();
-            $table->boolean('cash_on_delivery')->nullable();
+            $table->boolean('featured')->default(0);
+            $table->boolean('today_deal')->default(0);
+            $table->boolean('product_slider')->default(0);
+            $table->integer('trendy')->default(0);
+            $table->integer('status')->default(0);
 
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->foreignId('brand_id')->nullable()->constrained('brands')->cascadeOnDelete();
+            $table->foreignId('warehouse_id')->nullable()->constrained('warehouses')->cascadeOnDelete();
+            $table->foreignId('pickup_point_id')->nullable()->constrained('pickup_points')->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
 
             $table->timestamps();

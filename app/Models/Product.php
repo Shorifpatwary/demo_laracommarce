@@ -11,6 +11,7 @@ class Product extends Model
 
     protected $fillable = [
         'name',
+        'slug',
         'code',
         'unit',
         'tags',
@@ -19,17 +20,18 @@ class Product extends Model
         'selling_price',
         'discount_price',
         'stock_quantity',
-        'warehouse',
         'description',
         'thumbnail',
         'images',
         'featured',
         'today_deal',
+        'trendy',
+        'product_slider',
         'status',
-        'flash_deal_id',
-        'cash_on_delivery',
         'category_id',
         'brand_id',
+        'warehouse_id',
+        'pickup_point_id',
         'user_id',
     ];
 }
