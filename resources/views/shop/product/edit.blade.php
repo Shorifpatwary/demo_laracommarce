@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Create Coupon'])
+@extends('layouts.app', ['title' => 'Edit Product'])
 
 @push('css-link')
 
@@ -208,6 +208,41 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
 });
 </script>
 
+{{-- delete old image --}}
+<script>
+  // Get all elements with the class 'delete-image'
+var deleteButtons = document.querySelectorAll('.delete-image');
+
+// Attach a click event listener to each delete button
+deleteButtons.forEach(function(button) {
+  button.addEventListener('click', function() {
+        // Get the parent container of the clicked delete button
+        var imageContainer = button.closest('.image-container');
+
+        if (imageContainer) {
+            // Find the associated input element within the container
+            var hiddenInput = imageContainer.querySelector('input[name="existing_images[]"]');
+
+            if (hiddenInput) {
+                // Get the associated image's filename
+                var imageName = hiddenInput.value;
+
+                // Create an input element to store the deleted image's filename
+                var hiddenDeleteInput = document.createElement('input');
+                hiddenDeleteInput.type = 'hidden';
+                hiddenDeleteInput.name = 'delete_images[]';
+                hiddenDeleteInput.value = imageName;
+
+                // Append the delete input element to the form
+                document.querySelector('#editProductFormId').appendChild(hiddenDeleteInput);
+
+                // Remove the entire container from the view
+                imageContainer.remove();
+            }
+        }
+    });
+});
+</script>
 
 @endPushOnce
 
@@ -248,15 +283,17 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
 
       <!-- /.card-header -->
       {{-- form start --}}
-      <form action="{{ route('product.store') }}" id="createProductFormId" method="post" enctype="multipart/form-data">
+      <form action="{{ route('product.update', $product->id) }}" id="editProductFormId" method="post"
+        enctype="multipart/form-data">
         @csrf
+        @method('PUT')
         <div class="row">
           <!-- left column -->
           <div class="col-md-8">
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Add New Product</h3>
+                <h3 class="card-title">Edit Product</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -265,7 +302,7 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
                   <div class="form-group col-lg-6">
                     <label for="name">Product Name <span class="text-danger">*</span> </label>
                     <input type="text" id="name" class="form-control @error('name') is-invalid @enderror " name="name"
-                      value="{{ old('name') }}" required="" maxlength="255">
+                      value="{{ old('name', $product->name) }}" required="" maxlength="255">
                     @error('name')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -274,7 +311,7 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
                   <div class="form-group col-lg-6">
                     <label for="code">Product Code <span class="text-danger">*</span> </label>
                     <input type="text" id="code" class="form-control @error('code') is-invalid @enderror"
-                      value="{{ old('code') }}" name="code" required="" minlength="2" maxlength="50">
+                      value="{{ old('code', $product->code) }}" name="code" required="" minlength="2" maxlength="50">
                     @error('code')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -284,16 +321,23 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
                 {{-- product category --}}
                 <div class="row">
                   <div class="form-group col-lg-6">
-                    <label for="exampleInputEmail1">Category/Subcategory <span class="text-danger">*</span> </label>
+                    <label for="subcategory_id">Category/Subcategory <span class="text-danger">*</span> </label>
+
                     <select class="form-control" name="subcategory_id" id="subcategory_id">
                       <option disabled="" selected="">==choose category==</option>
+                      {{-- parent category --}}
+                      {{-- @php
+                      $parentCategory=DB::table('categories')->where('id',$product->category->parent_id)->get();
+                      @endphp --}}
+
                       @foreach($category as $row)
                       @php
                       $subcategories=DB::table('categories')->where('parent_id',$row->id)->get();
                       @endphp
                       <option class="text-danger" disabled="">{{ $row->name }}</option>
                       @foreach($subcategories as $subcategory)
-                      <option value="{{ $subcategory->id }}" {{ old('subcategory_id')==$row->id ? 'selected' : '' }}> --
+                      <option value="{{ $subcategory->id }}" {{ old('subcategory_id', $product->category->parent_id) ==
+                        $subcategory->id ? 'selected' : '' }}> --
                         {{ $subcategory->name }}</option>
                       @endforeach
                       @endforeach
@@ -302,6 +346,16 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
                   <div class="form-group col-lg-6">
                     <label for="childcategory_id">Child category<span class="text-danger">*</span> </label>
                     <select class="form-control" name="childcategory_id" id="childcategory_id">
+                      <option disabled="" selected="">==choose child category==</option>
+                      @php
+                      $childcategories=DB::table('categories')->where('parent_id',$product->category->parent_id)->get();
+                      @endphp
+                      @foreach($childcategories as $childcategory)
+                      <option value="{{ $childcategory->id }}" {{ old('category_id', $childcategory->id) ==
+                        $childcategory->id ? 'selected' : '' }}> --
+                        {{ $childcategory->name }}</option>
+                      @endforeach
+                      {{-- You can populate child categories based on the selected subcategory --}}
                     </select>
                   </div>
                 </div>
@@ -314,7 +368,8 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
                       required="">
                       <option value="" disabled selected>Select a Brand</option>
                       @foreach($brand as $row)
-                      <option value="{{ $row->id }}" {{ old('brand_id')==$row->id ? 'selected' : '' }}>
+                      <option value="{{ $row->id }}" {{ old('brand_id', $product->brand_id) == $row->id ? 'selected' :
+                        '' }}>
                         {{ $row->name }}
                       </option>
                       @endforeach
@@ -323,14 +378,15 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                   </div>
-                  {{-- comment pickup point for now --}}
+                  {{-- pickup point --}}
                   <div class="form-group col-lg-6">
                     <label for="pickup_point_id">Pickup Point</label>
                     <select class="form-control @error('pickup_point_id') is-invalid @enderror" name="pickup_point_id"
                       id="pickup_point_id">
                       <option value="" disabled selected>Select a Pickup Point</option>
                       @foreach($pickup_point as $row)
-                      <option value="{{ $row->id }}" {{ old('pickup_point_id')==$row->id ? 'selected' : '' }}>
+                      <option value="{{ $row->id }}" {{ old('pickup_point_id', $product->pickup_point_id) == $row->id ?
+                        'selected' : '' }}>
                         {{ $row->name }}
                       </option>
                       @endforeach
@@ -345,7 +401,7 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
                   <div class="form-group col-lg-6">
                     <label for="unit">Unit<span class="text-danger">*</span></label>
                     <input type="text" class="form-control @error('unit') is-invalid @enderror" name="unit"
-                      value="{{ old('unit') }}" id="unit" required="" minlength="5" maxlength="100">
+                      value="{{ old('unit', $product->unit) }}" id="unit" required="" minlength="5" maxlength="100">
                     @error('unit')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -354,19 +410,20 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
                   <div class="form-group col-lg-6">
                     <label for="tags">Tags</label><br>
                     <input type="text" class="form-control @error('tags') is-invalid @enderror" name="tags"
-                      value="{{ old('tags') }}" id="tags" data-role="tagsinput" minlength="5" maxlength="255">
+                      value="{{ old('tags', $product->tags) }}" id="tags" data-role="tagsinput" minlength="5"
+                      maxlength="255">
                     @error('tags')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                   </div>
-
                 </div>
                 <div class="row">
                   {{-- purchase price --}}
                   <div class="form-group col-lg-4">
                     <label for="purchase_price">Purchase Price</label>
                     <input type="number" class="form-control @error('purchase_price') is-invalid @enderror"
-                      name="purchase_price" value="{{ old('purchase_price') }}" id="purchase_price">
+                      name="purchase_price" value="{{ old('purchase_price', $product->purchase_price) }}"
+                      id="purchase_price">
                     @error('purchase_price')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -375,22 +432,23 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
                   <div class="form-group col-lg-4">
                     <label for="selling_price">Selling Price <span class="text-danger">*</span></label>
                     <input type="number" class="form-control @error('selling_price') is-invalid @enderror"
-                      name="selling_price" value="{{ old('selling_price') }}" id="selling_price" required="">
+                      name="selling_price" value="{{ old('selling_price', $product->selling_price) }}"
+                      id="selling_price" required="">
                     @error('selling_price')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                   </div>
-                  {{-- descount price --}}
+                  {{-- discount price --}}
                   <div class="form-group col-lg-4">
                     <label for="discount_price">Discount Price</label>
-                    <input type="number" class="form-control @error('selling_price') is-invalid @enderror"
-                      name="discount_price" value="{{ old('discount_price') }}" id="discount_price">
+                    <input type="number" class="form-control @error('discount_price') is-invalid @enderror"
+                      name="discount_price" value="{{ old('discount_price', $product->discount_price) }}"
+                      id="discount_price">
                     @error('discount_price')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                   </div>
                 </div>
-
                 <div class="row">
                   {{-- warehouse --}}
                   <div class="form-group col-lg-6">
@@ -399,7 +457,8 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
                       id="warehouse_id" required="">
                       <option value="" disabled selected>Select a Warehouse</option>
                       @foreach($warehouse as $row)
-                      <option value="{{ $row->id }}" {{ old('warehouse_id')==$row->id ? 'selected' : '' }}>
+                      <option value="{{ $row->id }}" {{ old('warehouse_id', $product->warehouse_id) == $row->id ?
+                        'selected' : '' }}>
                         {{ $row->name }}
                       </option>
                       @endforeach
@@ -412,20 +471,20 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
                   <div class="form-group col-lg-6">
                     <label for="stock_quantity">Stock</label>
                     <input type="number" class="form-control @error('stock_quantity') is-invalid @enderror"
-                      name="stock_quantity" value="{{ old('stock_quantity') }}" id="stock_quantity">
+                      name="stock_quantity" value="{{ old('stock_quantity', $product->stock_quantity) }}"
+                      id="stock_quantity">
                     @error('stock_quantity')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                   </div>
                 </div>
-
                 <div class="row">
                   {{-- color --}}
                   <div class="form-group col-lg-6">
                     <label for="color">Color</label><br>
                     <input type="text" class="form-control @error('color') is-invalid @enderror"
-                      value="{{ old('color') }}" data-role="tagsinput" name="color" id="color" minlength="2"
-                      maxlength="100" />
+                      value="{{ old('color', $product->color) }}" data-role="tagsinput" name="color" id="color"
+                      minlength="2" maxlength="100" />
                     @error('color')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -434,39 +493,37 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
                   <div class="form-group col-lg-6">
                     <label for="size">Size</label><br>
                     <input type="text" class="form-control @error('size') is-invalid @enderror"
-                      value="{{ old('size') }}" data-role="tagsinput" name="size" id="size" minlength="2"
-                      maxlength="100" />
+                      value="{{ old('size', $product->size) }}" data-role="tagsinput" name="size" id="size"
+                      minlength="2" maxlength="100" />
                     @error('size')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                   </div>
                 </div>
-
                 <div class="row">
-                  {{-- product details / descripton --}}
+                  {{-- product details / description --}}
                   <div class="form-group col-lg-12">
                     <label for="description">Product Details</label>
                     <textarea class="form-control textarea @error('description') is-invalid @enderror"
-                      name="description" id="description" minlength="50">{{ old('description') }}</textarea>
+                      name="description" id="description"
+                      minlength="50">{{ old('description', $product->description) }}</textarea>
                     @error('description')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                   </div>
                 </div>
-
                 <div class="row">
                   {{-- video url --}}
                   <div class="form-group col-lg-12">
                     <label for="video">Video url</label>
                     <input type="url" class="form-control @error('video') is-invalid @enderror" name="video"
-                      value="{{ old('video') }}" placeholder="Place your video url" id="video" minlength="5"
-                      maxlength="100">
+                      value="{{ old('video', $product->video) }}" placeholder="Place your video url" id="video"
+                      minlength="5" maxlength="100">
                     @error('video')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                     <small class="text-danger text-capitalize">Video url</small>
                   </div>
-
                 </div>
               </div>
               <!-- /.card-body -->
@@ -482,74 +539,95 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
                 {{-- thumbnail --}}
                 <div class="form-group">
                   <label for="thumbnail">Main Thumbnail <span class="text-danger">*</span></label><br>
-
-                  <input type="file" name="thumbnail" required="" accept="image/*"
+                  {{-- <input type="file" name="thumbnail" accept="image/*"
                     class="dropify input_images @error('thumbnail') is-invalid @enderror"
-                    data-allowed-file-extensions="jpg jpeg png gif" data-max-file-size="300k">
-
-                  <div class="input_images" style="padding-top: .5rem;"></div>
+                    data-allowed-file-extensions="jpg jpeg png gif" data-max-file-size="300k"> --}}
+                  <input type="file" name="thumbnail" accept="image/*" class="dropify input_images"
+                    data-allowed-file-extensions="jpg jpeg png gif webp" data-max-file-size="300k"
+                    data-default-file="{{ asset('files/product/' . $product->thumbnail) }}">
+                  <input type="hidden" name="original_thumbnail" value="{{ $product->thumbnail }}">
                   @error('thumbnail')
                   <div class="invalid-feedback">{{ $message }}</div>
                   @enderror
                 </div>
-
+                {{-- @dd($product); --}}
+                <div>
+                  <img class="testingImage" src="{{$product->thumbnail}}" alt="">
+                </div>
                 {{-- product images --}}
-                <div class="form-group max-h-8">
+                {{-- <div class="form-group max-h-8">
                   <label for="images" class="text-capitalize">Product images <span
                       class="text-danger">*</span></label><br>
-
                   <input type="file" multiple name="images[]" class="images" id="images">
                   @error('images')
                   <div class="invalid-feedback">{{ $message }}</div>
                   @enderror
+                </div> --}}
+                <!-- Product Images -->
+                <div class="form-group">
+                  <label for="images" class="text-capitalize">Product Images</label><br>
+
+                  <!-- Display existing images -->
+                  {{-- @dd(json_decode($product->images)) --}}
+                  @if ($product->images)
+                  @foreach(json_decode($product->images) as $index => $image)
+                  <div class="image-container">
+                    <img src="{{ asset('files/product/' . $image) }}" alt="{{ $image }}" width="100">
+                    <input type="hidden" name="existing_images[]" value="{{ $image }}">
+                    <button type="button" id="image_delete_button" class="btn btn-danger btn-sm delete-image"
+                      data-index="{{ $index }}">Delete</button><br><br>
+                  </div>
+                  @endforeach
+                  @endif
+                  <!-- Upload new images -->
+                  <input type="file" multiple name="new_images[]" class="images" id="images">
                 </div>
-                {{-- testing 2 --}}
                 <!-- Main Thumbnail -->
                 <br>
-                {{-- is fearuce checkbox --}}
+                {{-- is feature checkbox --}}
                 <div class="">
                   <label class="text-capitalize col-8 mt-0 gap-2
-                  ">featured</label>
+                            ">featured</label>
                   <label class="toggle">
-                    <input class="toggleCheckbox" type="checkbox" name="featured" value="{{old('featured' , 1 )}}" />
+                    <input class="toggleCheckbox" type="checkbox" name="featured" value="{{ old('featured',
+                    $product->featured) }}" />
                     <span class="labels" data-on="ON" data-off="OFF"></span>
                   </label>
                 </div>
                 {{-- is today checkbox --}}
                 <div class="">
                   <label class="text-capitalize col-8
-                  ">tody deal</label>
+                            ">today deal</label>
                   <label class="toggle">
-                    <input class="toggleCheckbox" type="checkbox" name="today_deal"
-                      value="{{old('today_deal' , 0 )}}" />
+                    <input class="toggleCheckbox" type="checkbox" name="today_deal" value="{{ old('today_deal',
+                    $product->today_deal) }}" />
                     <span class="labels" data-on="ON" data-off="OFF"></span>
                   </label>
                 </div>
-
                 <div class="">
                   <label class="text-capitalize col-8
-                  ">add to slider</label>
+                            ">add to slider</label>
                   <label class="toggle">
-                    <input class="toggleCheckbox" type="checkbox" name="product_slider"
-                      value="{{old('product_slider' , 0 )}}" />
+                    <input class="toggleCheckbox" type="checkbox" name="product_slider" value=" {{
+                      old('product_slider', $product->product_slider)  }} " />
                     <span class="labels" data-on="ON" data-off="OFF"></span>
                   </label>
                 </div>
-
                 <div class="d-flex-inline gap-2">
                   <label class="text-capitalize col-8
-                  ">add to trandy</label>
+                            ">add to trendy</label>
                   <label class="toggle">
-                    <input class="toggleCheckbox" type="checkbox" value="{{old('trendy' , 0 )}}" name="trendy" />
+                    <input class="toggleCheckbox" type="checkbox" name="trendy" value="{{ old('trendy',
+                    $product->trendy)  }}" />
                     <span class="labels" data-on="ON" data-off="OFF"></span>
                   </label>
                 </div>
-
                 <div class="d-flex-inline gap-2">
                   <label class="text-capitalize col-8
-                  ">status</label>
+                            ">status</label>
                   <label class="toggle">
-                    <input class="toggleCheckbox" type="checkbox" value="{{old('status' , 1 )}}" name="status" />
+                    <input class="toggleCheckbox" type="checkbox" name="status" value="{{ old('status',
+                    $product->status) }}" />
                     <span class="labels" data-on="ON" data-off="OFF"></span>
                   </label>
                 </div>
@@ -558,10 +636,10 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
             </div>
             <!-- /.card -->
           </div>
-          <button class="btn btn-info ml-2 btn-block" id="submitFormButton" type="submit">Submit</button>
+          <button class="btn btn-info ml-2 btn-block" id="submitFormButton" type="submit">Update</button>
         </div>
-
       </form>
+
       {{-- form end --}}
 
       {{-- your content end--}}
@@ -570,3 +648,35 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
 </section>
 <!-- /.content -->
 @endsection
+
+{{-- existing image --}}
+{{-- <div class="form-group">
+  <label for="images" class="text-capitalize">Product Images</label><br>
+
+  <!-- Display existing images -->
+  @php
+  $existingImages = [];
+  @endphp
+
+  @foreach(json_decode($product->images) as $index => $image)
+  @php
+  // Append each image to the $existingImages array
+  $existingImages[] = $image;
+  @endphp
+
+  <div class="image-container">
+    <img src="{{ asset('files/product/' . $image) }}" alt="{{ $image }}" width="100">
+    <!-- Use [] to indicate an array of values for the same input name -->
+    <input type="hidden" name="existing_images[]" value="{{ $image }}">
+    <button type="button" id="image_delete_button" class="btn btn-danger btn-sm delete-image"
+      data-index="{{ $index }}">Delete</button><br><br>
+  </div>
+  @endforeach
+
+  <!-- Store the array of existing images as a JSON string -->
+  <input type="hidden" name="all_existing_images" value="{{ json_encode($existingImages) }}">
+
+
+  <!-- Upload new images -->
+  <input type="file" multiple name="new_images[]" class="images" id="images">
+</div> --}}
