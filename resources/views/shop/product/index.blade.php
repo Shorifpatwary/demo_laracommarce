@@ -24,6 +24,7 @@
     {{-- your content start--}}
     <div class="row">
       <div class="col-12">
+        @livewire('product-table')
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Products List</h3>
@@ -46,6 +47,7 @@
 
               </tbody>
             </table>
+
           </div>
         </div>
       </div>
@@ -64,6 +66,7 @@
 <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
 <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 @endpush
 
 
