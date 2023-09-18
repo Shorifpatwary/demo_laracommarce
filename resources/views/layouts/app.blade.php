@@ -29,11 +29,6 @@
   <!-- Toastr -->
   <link rel="stylesheet" href="{{asset('')}}plugins/toastr/toastr.min.css">
 
-  {{-- data table css --}}
-  <link rel="stylesheet" href="{{ asset('') }}plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-  <link rel="stylesheet" href="{{ asset('') }}plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="{{ asset('') }}plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-
   {{-- summernote --}}
   <link rel="stylesheet" href="{{ asset('') }}plugins/summernote/summernote-bs4.min.css">
 
@@ -115,18 +110,6 @@
     @include('layouts.partials.toastr')
 
 
-    <script src="{{ asset('') }}plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="{{ asset('') }}plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="{{ asset('') }}plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="{{ asset('') }}plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="{{ asset('') }}plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="{{ asset('') }}plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="{{ asset('') }}plugins/jszip/jszip.min.js"></script>
-    <script src="{{ asset('') }}plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="{{ asset('') }}plugins/pdfmake/vfs_fonts.js"></script>
-    <script src="{{ asset('') }}plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="{{ asset('') }}plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="{{ asset('') }}plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
@@ -140,27 +123,9 @@
       $('.textarea').summernote()
       })
     </script>
-    {{-- <script src="{{ asset('') }}plugins/print_this/printThis.js"></script> --}}
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js" defer></script>
 
-    <script>
-      $(function () {
-    $("#dataTable_example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#dataTable_example1_wrapper .col-md-6:eq(0)');
-    $('#dataTable_example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
-  });  
-  
-    </script>
     {{-- caching --}}
     {{-- don't cache this file --}}
     <script src="{{ asset('') }}dist/js/sw.js" defer> </script>
