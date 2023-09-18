@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CouponController;
@@ -45,6 +46,8 @@ Route::middleware(['web', 'auth'])->group(function () {
 	Route::resource('sub-category', SubcategoryController::class);
 	// brand routes
 	Route::resource('brand', BrandController::class);
+	// brand routes
+	Route::resource('attribute', AttributeController::class);
 	// page routes
 	Route::resource('warehouse', WarehouseController::class);
 

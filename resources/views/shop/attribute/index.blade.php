@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Brand Home Page'])
+@extends('layouts.app', ['title' => 'Attribute Home Page'])
 
 @section('dashboard-content')
 <!-- Content Header (Page header) -->
@@ -13,7 +13,7 @@
       </div><!-- /.col -->
       <div class="col-sm-4 text-capitalize">
         <ol class="breadcrumb float-sm-right ">
-          <a href="{{route('brand.create')}}" class="btn btn-primary"> + Add New </a>
+          <a href="{{route('attribute.create')}}" class="btn btn-primary"> + Add New </a>
         </ol>
       </div><!-- /.col -->
     </div><!-- /.row -->
@@ -37,10 +37,9 @@
               <thead class=" text-capitalize">
                 <tr>
                   <th>SL</th>
-                  <th>brand Name</th>
-                  <th>brand Slug</th>
-                  <th>image</th>
-                  <th>Home Page</th>
+                  <th>attribute type</th>
+                  <th>attribute Name</th>
+                  <th>attribute Slug</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -49,31 +48,20 @@
                 @foreach($data as $key=>$row)
                 <tr>
                   <td>{{ $key+1 }}</td>
+                  <td>{{ $row->type }}</td>
                   <td>{{ $row->name }}</td>
                   <td>{{ $row->slug }}</td>
-                  {{-- image --}}
-                  <td>
-                    @if (str_starts_with($row->logo, 'http://') || str_starts_with($row->logo, 'https://'))
-                    <img src="{{ $row->logo }}" height="32" width="32" loading="lazy">
-                    @else
-                    <img src="{{ asset($row->logo) }}" height="32" width="32" loading="lazy">
-                    @endif
-                  </td>
-                  <td>
-                    @if( $row->front_page == 1 )
-                    <span class="badge badge-success">Home Page</span>
-                    @endif
-                  </td>
+
                   <td class=" d-inline-flex">
-                    <a href="{{route('brand.edit' , $row->id)}}" class="btn btn-info btn-sm edit mr-2"
+                    <a href="{{route('attribute.edit' , $row->id)}}" class="btn btn-info btn-sm edit mr-2"
                       data-id="{{ $row->id }}">
                       <i class="fas fa-edit"></i>
                     </a>
-                    <form action="{{route('brand.destroy' , $row->id)}}" method="post">
+                    <form action="{{route('attribute.destroy' , $row->id)}}" method="post">
                       @csrf
                       <input type="hidden" name="_method" value="DELETE">
-                      <button type="submit" href="{{ route('brand.destroy',$row->id) }}" class="btn btn-danger btn-sm"
-                        id="delete">
+                      <button type="submit" href="{{ route('attribute.destroy',$row->id) }}"
+                        class="btn btn-danger btn-sm" id="delete">
                         <i class="fas fa-trash"></i>
                       </button>
                     </form>
@@ -111,7 +99,5 @@
     });
   });
 </script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.js"></script>
 
 @endsection

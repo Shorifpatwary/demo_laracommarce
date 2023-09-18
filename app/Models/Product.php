@@ -45,4 +45,22 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function sizes()
+    {
+        return $this->hasMany(Attribute::class)
+            ->where('Type', 'size');
+    }
+
+    public function colors()
+    {
+        return $this->hasMany(Attribute::class)
+            ->where('Type', 'color');
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(Attribute::class)
+            ->where('Type', 'tag');
+    }
 }
