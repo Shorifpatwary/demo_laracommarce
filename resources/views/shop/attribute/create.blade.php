@@ -34,38 +34,35 @@
           {{-- form start --}}
           <form action="{{ route('attribute.store') }}" method="POST" id="add-form">
             @csrf
+            <div class="form-group">
+              <label for="type">Attribute Type</label>
+              <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required="">
+                <option disabled {{ old('type')==='' ? 'selected' : '' }}>Select an option</option>
+                @foreach($enumOptions as $option)
+                <option value="{{ $option }}" {{ old('type')===$option ? 'selected' : '' }}>{{ ucfirst($option) }}
+                </option>
+                @endforeach
+              </select>
+              @error('type')
+              <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
 
             <div class="form-group">
-              <label for="name">attribute Name</label>
+              <label for="name">attribute name</label>
               <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" required=""
-                placeholder="attribute Name" value="{{ old('name') }}">
+                placeholder="attribute name" value="{{ old('name') }}">
               @error('name')
-              <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-
-            <div class="form-group">
-              <label for="address">attribute Address</label>
-              <input type="text" class="form-control @error('address') is-invalid @enderror" name="address" required=""
-                placeholder="attribute Address" value="{{ old('address') }}">
-              @error('address')
-              <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-
-            <div class="form-group">
-              <label for="phone">attribute Phone</label>
-              <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" required=""
-                placeholder="attribute Phone" value="{{ old('phone') }}">
-              @error('phone')
-              <div class="invalid-feedback">{{ $message }}</div>
+              <div class="invalid-feedback">{{ $message }}</div>s
               @enderror
             </div>
 
             <button type="submit" class="btn btn-primary">
               <span class="submit_btn">Submit</span>
             </button>
-
+            {{--
+            <x-select label="Select Status" placeholder="Select one status"
+              :options="['Active', 'Pending', 'Stuck', 'Done']" wire:model.defer="model" /> --}}
           </form>
 
           {{-- form end --}}
@@ -76,8 +73,12 @@
     <!--/. container-fluid -->
 </section>
 <!-- /.content -->
-@push('script')
+@pushOnce('css-link')
+{{-- <script src="https://cdn.tailwindcss.com"></script> --}}
+@endPushOnce
+@push('js-link')
+{{--
 <wireui:scripts />
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> --}}
 @endpush
 @endsection

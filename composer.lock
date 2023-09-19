@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5020d58f981e0267801acf9466b3260",
+    "content-hash": "f205277c66f162769589d69d59eb9a36",
     "packages": [
         {
             "name": "brick/math",
@@ -3040,6 +3040,51 @@
                 }
             ],
             "time": "2023-09-14T22:57:11+00:00"
+        },
+        {
+            "name": "mohsentm/laravel-db-enum",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mohsentm/laravel-db-enum.git",
+                "reference": "bb86fc5bc8243939279591034d034188639991ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mohsentm/laravel-db-enum/zipball/bb86fc5bc8243939279591034d034188639991ad",
+                "reference": "bb86fc5bc8243939279591034d034188639991ad",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mohsentm\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Mohsen Hosseini",
+                    "email": "Hosseini.m1370@gmail.com"
+                }
+            ],
+            "description": "laravel-db-enum is a trait for laravel models. use this trait on modules for getting the table fileds enum values",
+            "keywords": [
+                "database",
+                "db",
+                "enum",
+                "laravel",
+                "lumen",
+                "table"
+            ],
+            "support": {
+                "issues": "https://github.com/mohsentm/laravel-db-enum/issues",
+                "source": "https://github.com/mohsentm/laravel-db-enum/tree/master"
+            },
+            "time": "2018-12-01T11:44:02+00:00"
         },
         {
             "name": "monolog/monolog",

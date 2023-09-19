@@ -4,17 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Traits\EnumeratesValues;
+use Mohsentm\EnumValue;
 
 class Attribute extends Model
 {
     use HasFactory;
-
-    // protected $table = 'attributes';
-
     protected $fillable = [
-        'Type',
-        'Name',
-        'product_id',
+        'type',
+        'name',
+        'slug',
     ];
 
     // Define the relationship with the "Product" model

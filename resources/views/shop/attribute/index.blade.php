@@ -2,7 +2,7 @@
 
 @section('dashboard-content')
 <!-- Content Header (Page header) -->
-{{-- <div class="content-header">
+<div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2 justify-content-between">
       <div class="col-sm-4">
@@ -18,7 +18,7 @@
       </div><!-- /.col -->
     </div><!-- /.row -->
   </div><!-- /.container-fluid -->
-</div> --}}
+</div>
 <!-- /.content-header -->
 
 <!-- Main content -->
@@ -59,7 +59,7 @@
                     </a>
                     <form action="{{route('attribute.destroy' , $row->id)}}" method="post">
                       @csrf
-                      <input type="hidden" name="_method" value="DELETE">
+                      @method('DELETE')
                       <button type="submit" href="{{ route('attribute.destroy',$row->id) }}"
                         class="btn btn-danger btn-sm" id="delete">
                         <i class="fas fa-trash"></i>

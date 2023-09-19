@@ -1,11 +1,11 @@
 {{-- toastr dynamic alert with laravel --}}
-{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" >
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" ></script> --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
 @if (session('notification'))
-    <script>
-        toastr.options = {
+<script>
+    toastr.options = {
     "closeButton": true,       // Display a close button to close the alert
     "debug": false,            // Enable debug mode
     "newestOnTop": true,       // Display newest toast at the top
@@ -40,5 +40,5 @@
                 toastr.info(message);
                 break;
         }
-    </script>
+</script>
 @endif
