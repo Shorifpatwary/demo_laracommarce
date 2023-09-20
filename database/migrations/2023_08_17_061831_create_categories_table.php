@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug');
             $table->string('description')->nullable();
-            $table->unsignedBigInteger('parent_id')->nullable(); // Add the parent_id column
+            $table->string('image')->nullable();
+            $table->string('icon')->nullable();
+
             $table->foreign('parent_id')->references('id')->on('categories')->cascadeOnDelete();
             $table->timestamps();
         });

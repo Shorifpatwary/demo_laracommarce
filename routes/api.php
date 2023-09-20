@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\CustomerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,8 @@ Route::group(['middleware' => ['guest']], function () {
     Route::post('/register', [CustomerController::class, 'register'])->name('register.api');
 
     Route::post('/login', [CustomerController::class, 'Login'])->name('login.api');
+    // category
+    Route::apiResource('category', CategoryController::class);
 });
 
 // Protected routes api 

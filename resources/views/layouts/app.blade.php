@@ -8,8 +8,6 @@
 
   <title class="text-capitalize">{{ $title ?? config('app.name') }}</title>
 
-
-
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -19,6 +17,8 @@
   {{-- latest v --}}
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
 
+  <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}">
+  <link href="{{ asset('css/style.css') }}" rel="stylesheet">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="{{asset('')}}plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Theme style -->
@@ -116,13 +116,13 @@
     <script src="https://cdn.ckeditor.com/4.16.0/full/ckeditor.js"></script>
 
     {{-- summernote --}}
-    <script src="{{ asset('') }}plugins/summernote/summernote-bs4.min.js"></script>
+    {{-- <script src="{{ asset('') }}plugins/summernote/summernote-bs4.min.js"></script>
     <script>
       $(function () {
       // Summernote
       $('.textarea').summernote()
       })
-    </script>
+    </script> --}}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js" defer></script>
 

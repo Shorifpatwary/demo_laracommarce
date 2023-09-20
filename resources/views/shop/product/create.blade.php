@@ -1,215 +1,5 @@
 @extends('layouts.app', ['title' => 'Create Coupon'])
 
-@push('css-link')
-
-
-
-{{-- bootstrap tags input css --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.6.0/bootstrap-tagsinput.css"
-  integrity="sha512-3uVpgbpX33N/XhyD3eWlOgFVAraGn3AfpxywfOTEQeBDByJ/J7HkLvl4mJE1fvArGh4ye1EiPfSBnJo2fgfZmg=="
-  crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-{{-- dropify --}}
-<link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
-
-{{-- switch css --}}
-<link rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/4.0.0-alpha.1/css/bootstrap-switch.min.css">
-
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
-
-<style type="text/css">
-  .bootstrap-tagsinput .tag {
-    background: #428bca;
-    border: 1px solid white;
-    padding: 1 6px;
-    padding-left: 2px;
-    margin-right: 2px;
-    color: white;
-    border-radius: 4px;
-  }
-
-  /* toogle checkbox */
-  .toggle {
-    --width: 80px;
-    --height: calc(var(--width) / 3);
-
-    position: relative;
-    display: inline-block;
-    width: var(--width);
-    height: var(--height);
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-  }
-
-  .toggle input {
-    display: none;
-  }
-
-  .toggle .labels {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    font-size: 12px;
-    font-family: sans-serif;
-    transition: all 0.4s ease-in-out;
-  }
-
-  .toggle .labels::after {
-    content: attr(data-off);
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    color: #4d4d4d;
-    background-color: #f19999;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
-    transition: all 0.4s ease-in-out;
-  }
-
-  .toggle .labels::before {
-    content: attr(data-on);
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    color: #ffffff;
-    background-color: #4fe132;
-    text-align: center;
-    opacity: 0;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.4);
-    transition: all 0.4s ease-in-out;
-  }
-
-  .toggle input:checked~.labels::after {
-    /* flip 180deg */
-    transform: rotateY(180deg);
-    opacity: 0;
-  }
-
-  .toggle input:checked~.labels::before {
-    transform: rotateY(180deg) scale(-1, 1);
-    opacity: 1;
-  }
-</style>
-
-@endpush
-
-@pushOnce('js-link')
-
-{{-- jquery --}}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-{{-- <script type="text/javascript"
-  src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js" defer></script> --}}
-
-{{-- dropify --}}
-<script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
-
-{{-- <script src="{{ asset('') }}plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script> --}}
-
-{{-- <script src="https://cdn.jsdelivr.net/npm/dropzone@5.9.2/dist/min/dropzone.min.js" defer></script> --}}
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/4.0.0-alpha.1/js/bootstrap-switch.min.js">
-</script>
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-
-
-
-<script>
-  $(document).ready(function(){      
-    $('.dropify').dropify();  //dropify image
-  }); 
-</script>
-
-{{-- toggle checkbox --}}
-<script type="text/javascript">
-  // Get all elements with class "toggleCheckbox"
-  const toggleCheckboxes = document.querySelectorAll(".toggleCheckbox");
-
-  // Loop through each checkbox element
-  toggleCheckboxes.forEach((checkbox) => {
-    // Check the initial value and set the checkbox accordingly
-    checkbox.checked = checkbox.value === "1";
-
-    // Add an event listener to toggle the checkbox when clicked
-    checkbox.addEventListener("click", function () {
-      // Toggle the value between "1" and "0"
-      this.value = this.value === "1" ? "0" : "1";
-    });
-  });
-</script>
-
-{{-- child category request --}}
-<script type="text/javascript">
-  // Define a function to handle the change event on the "subcategory_id" select element
-document.getElementById("subcategory_id").addEventListener("change", function () {
-  // Get the selected value from the "subcategory_id" select element
-  var id = this.value;
-
-  // Construct the URL for the AJAX request
-  var url = "/get-child-category/" + id;
-
-  // Send a GET request using the fetch method
-  fetch(url)
-    .then(function (response) {
-      // Check if the response status is OK (200)
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("Failed to fetch data");
-      }
-    })
-    .then(function (data) {
-      // Get a reference to the "childcategory_id" select element
-      var childcategorySelect = document.querySelector('#childcategory_id');
-
-      // Clear the options in the "childcategory_id" select element
-      // Add the optional "Select Child Category" option as the first option
-      
-      childcategorySelect.innerHTML = '';
-
-      // Add the optional "Select Child Category" option as the first option
-      var defaultOption = document.createElement("option");
-      defaultOption.value = ""; // No value for the default option
-      defaultOption.textContent = "Select Child Category";
-      childcategorySelect.appendChild(defaultOption);
-
-      // Iterate through the received data and add options to the 
-      // "childcategory_id" select element
-
-      data.forEach(function (item) {
-        var option = document.createElement("option");
-        option.value = item.id;
-        option.textContent = item.name;
-        childcategorySelect.appendChild(option);
-      });
-    })
-    .catch(function (error) {
-      console.error(error);
-    });
-});
-</script>
-
-
-@endPushOnce
 
 @section('dashboard-content')
 <!-- Content Header (Page header) -->
@@ -569,4 +359,222 @@ document.getElementById("subcategory_id").addEventListener("change", function ()
     <!--/. container-fluid -->
 </section>
 <!-- /.content -->
+
+
+@push('css-link')
+
+{{-- bootstrap tags input css --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.6.0/bootstrap-tagsinput.css"
+  integrity="sha512-3uVpgbpX33N/XhyD3eWlOgFVAraGn3AfpxywfOTEQeBDByJ/J7HkLvl4mJE1fvArGh4ye1EiPfSBnJo2fgfZmg=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+{{-- dropify --}}
+<link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+
+{{-- switch css --}}
+<link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/4.0.0-alpha.1/css/bootstrap-switch.min.css">
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+<style type="text/css">
+  .bootstrap-tagsinput .tag {
+    background: #428bca;
+    border: 1px solid white;
+    padding: 1 6px;
+    padding-left: 2px;
+    margin-right: 2px;
+    color: white;
+    border-radius: 4px;
+  }
+
+  /* toogle checkbox */
+  .toggle {
+    --width: 80px;
+    --height: calc(var(--width) / 3);
+
+    position: relative;
+    display: inline-block;
+    width: var(--width);
+    height: var(--height);
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+  }
+
+  .toggle input {
+    display: none;
+  }
+
+  .toggle .labels {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    font-family: sans-serif;
+    transition: all 0.4s ease-in-out;
+  }
+
+  .toggle .labels::after {
+    content: attr(data-off);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    color: #4d4d4d;
+    background-color: #f19999;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+    transition: all 0.4s ease-in-out;
+  }
+
+  .toggle .labels::before {
+    content: attr(data-on);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    color: #ffffff;
+    background-color: #4fe132;
+    text-align: center;
+    opacity: 0;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.4);
+    transition: all 0.4s ease-in-out;
+  }
+
+  .toggle input:checked~.labels::after {
+    /* flip 180deg */
+    transform: rotateY(180deg);
+    opacity: 0;
+  }
+
+  .toggle input:checked~.labels::before {
+    transform: rotateY(180deg) scale(-1, 1);
+    opacity: 1;
+  }
+</style>
+
+@endpush
+
+@pushOnce('js-link')
+
+{{-- jquery --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+{{-- <script type="text/javascript"
+  src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js" defer></script> --}}
+
+{{-- dropify --}}
+<script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+
+{{-- <script src="{{ asset('') }}plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script> --}}
+
+{{-- <script src="https://cdn.jsdelivr.net/npm/dropzone@5.9.2/dist/min/dropzone.min.js" defer></script> --}}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/4.0.0-alpha.1/js/bootstrap-switch.min.js">
+</script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+{{-- summernote --}}
+<script src="{{ asset('') }}plugins/summernote/summernote-bs4.min.js"></script>
+
+<script>
+  $(function () {
+     // Summernote
+     $('.textarea').summernote()
+     })
+</script>
+
+<script>
+  $(document).ready(function(){      
+    $('.dropify').dropify();  //dropify image
+  }); 
+</script>
+
+{{-- toggle checkbox --}}
+<script type="text/javascript">
+  // Get all elements with class "toggleCheckbox"
+  const toggleCheckboxes = document.querySelectorAll(".toggleCheckbox");
+
+  // Loop through each checkbox element
+  toggleCheckboxes.forEach((checkbox) => {
+    // Check the initial value and set the checkbox accordingly
+    checkbox.checked = checkbox.value === "1";
+
+    // Add an event listener to toggle the checkbox when clicked
+    checkbox.addEventListener("click", function () {
+      // Toggle the value between "1" and "0"
+      this.value = this.value === "1" ? "0" : "1";
+    });
+  });
+</script>
+
+{{-- child category request --}}
+<script type="text/javascript">
+  // Define a function to handle the change event on the "subcategory_id" select element
+document.getElementById("subcategory_id").addEventListener("change", function () {
+  // Get the selected value from the "subcategory_id" select element
+  var id = this.value;
+
+  // Construct the URL for the AJAX request
+  var url = "/get-child-category/" + id;
+
+  // Send a GET request using the fetch method
+  fetch(url)
+    .then(function (response) {
+      // Check if the response status is OK (200)
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error("Failed to fetch data");
+      }
+    })
+    .then(function (data) {
+      // Get a reference to the "childcategory_id" select element
+      var childcategorySelect = document.querySelector('#childcategory_id');
+
+      // Clear the options in the "childcategory_id" select element
+      // Add the optional "Select Child Category" option as the first option
+      
+      childcategorySelect.innerHTML = '';
+
+      // Add the optional "Select Child Category" option as the first option
+      var defaultOption = document.createElement("option");
+      defaultOption.value = ""; // No value for the default option
+      defaultOption.textContent = "Select Child Category";
+      childcategorySelect.appendChild(defaultOption);
+
+      // Iterate through the received data and add options to the 
+      // "childcategory_id" select element
+
+      data.forEach(function (item) {
+        var option = document.createElement("option");
+        option.value = item.id;
+        option.textContent = item.name;
+        childcategorySelect.appendChild(option);
+      });
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+});
+</script>
+
+
+@endPushOnce
 @endsection

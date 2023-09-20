@@ -34,6 +34,8 @@ class Product extends Model
         'warehouse_id',
         'pickup_point_id',
         'user_id',
+        'color',
+        'size'
     ];
 
     public function user(): BelongsTo
@@ -49,18 +51,18 @@ class Product extends Model
     public function sizes()
     {
         return $this->hasMany(Attribute::class)
-            ->where('Type', 'size');
+            ->where('type', 'size');
     }
 
     public function colors()
     {
         return $this->hasMany(Attribute::class)
-            ->where('Type', 'color');
+            ->where('type', 'color');
     }
 
     public function tags()
     {
         return $this->hasMany(Attribute::class)
-            ->where('Type', 'tag');
+            ->where('type', 'tag');
     }
 }

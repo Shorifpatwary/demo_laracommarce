@@ -26,7 +26,7 @@ class CategoryController extends Controller
             // The request is not coming from the specific form route
             // Your alternative logic here
         }
-        $data = Category::where('parent_id', null)->get();
+        $data = Category::all();
         return view('category.category.index', compact('data'));
     }
 
@@ -35,30 +35,34 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('category.category.create');
+        $parent_category = category::where('parent_id', null)->get();
+        return view('category.category.create', compact('parent_category'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
+
     {
-        $validated = $request->validate([
+
+        $validatedData = $request->validate([
             'name' => 'required|unique:categories|max:55',
-            // 'icon' => 'required',
+            'description' => 'min:55',
+            'parent_id' => 'exists:categories,id|max:55',
+            'icon' => 'required|max:100',
+            'image' => 'required|image|max:300',
         ]);
 
-        $slug = Str::slug($request->name, '-');
-        // $photo = $request->icon;
-        // $photoname = $slug . '.' . $photo->getClientOriginalExtension();
-        // Image::make($photo)->resize(32, 32)->save('public/files/category/' . $photoname); //image intervention
+        $validatedData['slug'] = Str::slug($validatedData['name'], '-');
+        if ($request->image) {
+            $image = $request->image;
+            $photoname = $validatedData['slug'] . hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+            Image::make($image)->resize(300, 200)->save('files/category-image/' . $photoname);
+            $validatedData['image'] = $photoname;   // files/category-image/plus-point.jpg
+        }
         //Eloquent ORM
-        Category::insert([
-            'name' => $request->name,
-            'slug' => $slug,
-            // 'home_page' => $request->home_page,
-            // 'icon' => 'public/files/category/' . $photoname,
-        ]);
+        Category::create($validatedData);
 
         $notification = array('notification' => 'Category Inserted!', 'alert-type' => 'success');
         return redirect()->route('category.index')->with($notification);
@@ -75,49 +79,56 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Category $category)
     {
-        $data = Category::findorfail($id);
-        // return view('category.category.edit', compact('data'));
+        $parent_category = Category::where('parent_id', null)->get();
+        return view('category.category.edit', compact('category', 'parent_category'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Category $category)
     {
-        // $slug = Str::slug($request->name, '-');
-        // $data = array();
-        // $data['name'] = $request->name;
-        // $data['slug'] = $slug;
-        // $data['home_page'] = $request->home_page;
-        // if ($request->icon) {
-        //     if (File::exists($request->old_icon)) {
-        //         unlink($request->old_icon);
-        //     }
-        //     $photo = $request->icon;
-        //     $photoname = $slug . '.' . $photo->getClientOriginalExtension();
-        //     Image::make($photo)->resize(32, 32)->save('public/files/category/' . $photoname);
-        //     $data['icon'] = 'public/files/category/' . $photoname;
-        //     DB::table('categories')->where('id', $request->id)->update($data);
-        //     $notification = array('messege' => 'Category Update!', 'alert-type' => 'success');
-        //     return redirect()->back()->with($notification);
-        // } else {
-        //     $data['icon'] = $request->old_icon;
-        //     DB::table('categories')->where('id', $request->id)->update($data);
-        //     $notification = ['messege' => 'Category Update!', 'alert-type' => 'success'];
-        //     return redirect()->back()->with($notification);
-        // }
+        // dd($request->all());
+        $validatedData = $request->validate([
+            'name' => 'max:55',
+            'description' => 'min:55',
+            'parent_id' => 'exists:categories,id|max:55|different:' . $category->id,
+            'icon' => 'max:100',
+            'image' => 'image|max:300',
+        ]);
+        $validatedData['slug'] = Str::slug($validatedData['name'], '-');
+        if ($request->hasFile('image')) {
+            // Delete the old image
+
+            if (File::exists('files/category-image/' . $category->image)) {
+                File::delete('files/category-image/' . $category->image);
+            }
+            // Upload and save the new image
+            $image = $request->file('image');
+            $photoname = $validatedData['slug'] . hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+            Image::make($image)->resize(300, 200)->save('files/category-image/' . $photoname);
+            $validatedData['image'] = $photoname;
+        } else {
+            $validatedData['image'] = $category->image;
+        }
+        // update category
+        // dd($validatedData);
+        $category->update($validatedData);
+
+        $notification = ['notification' => 'Category Updated!', 'alert-type' => 'success'];
+        return redirect()->route('category.index')->with($notification);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Category $category)
     {
         // return view('category.category.create');
 
-        category::where('id', $id)->delete();
+        $category->delete();
 
         $notification = ['notification' => 'Category Deleted!', 'alert-type' => 'success'];
         return redirect()->route('category.index')->with($notification);

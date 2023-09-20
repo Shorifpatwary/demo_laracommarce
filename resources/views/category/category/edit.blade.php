@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Create Shop Category'])
+@extends('layouts.app', ['title' => 'Edit Shop Category'])
 
 @section('dashboard-content')
 <!-- Content Header (Page header) -->
@@ -15,13 +15,14 @@
         <!-- Adjust the column size as needed -->
         <div class="card">
           <div class="card-body">
-            <form action="{{ route('category.store') }}" method="Post" enctype="multipart/form-data">
+            <form action="{{ route('category.update' , $category->id) }}" method="Post" enctype="multipart/form-data">
               @csrf
+              @method('PUT')
               {{-- category name --}}
               <div class="form-group">
                 <label for="name">Category Name</label>
                 <input type="text" class="form-control @error('name')  is-invalid @enderror" id="name" name="name"
-                  value="{{old('name')}}" required>
+                  value="{{old('name' , $category->name)}}" required>
                 @error('name')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -30,20 +31,31 @@
 
               {{-- parent category --}}
               <div class="form-group">
-                <small for="parent_id">Category/Subcategory <span class="text-info"> optional</span></small>
+                <small for="parent_id">Category/Subcategory <span class="text-info">optional</span></small>
                 <select class="form-control @error('parent_id') is-invalid @enderror" name="parent_id" id="parent_id">
-                  <option disabled="" selected="">== Choose category ==</option>
+                  <option disabled="">== Choose category ==</option>
+                  {{-- AVOIDING::THIS WILL GET ERROR MESSAGE FORM SERVER. Ensure the current category is not its own
+                  parent --}}
                   @foreach($parent_category as $row)
                   @php
                   $subcategories = DB::table('categories')->where('parent_id', $row->id)->get();
                   @endphp
-                  <option class="text-danger" value="{{ $row->id }}" {{ old('parent_id')==$row->id ? 'selected' : '' }}>
+                  {{-- @if ($category->id != $row->id) --}}
+                  <!-- Ensure the current category is not its own parent -->
+                  <option class="text-danger" value="{{ $row->id }}" {{ old('parent_id', $category->parent_id) ==
+                    $row->id ?
+                    'selected' : '' }}>
                     {{ $row->name }}
                   </option>
+                  {{-- @endif --}}
                   @foreach($subcategories as $subcategory)
-                  <option value="{{ $subcategory->id }}" {{ old('parent_id')==$subcategory->id ? 'selected' : '' }}>
+                  {{-- @if ($category->id != $subcategory->id) --}}
+                  <!-- Ensure the current category is not its own parent -->
+                  <option value="{{ $subcategory->id }}" {{ old('parent_id', $category->parent_id) == $subcategory->id ?
+                    'selected' : '' }}>
                     -- {{ $subcategory->name }}
                   </option>
+                  {{-- @endif --}}
                   @endforeach
                   @endforeach
                 </select>
@@ -52,15 +64,16 @@
                 @enderror
               </div>
 
+
               {{-- image --}}
               <div class="form-group">
                 <label for="image">Main image <span class="text-danger">*</span></label><br>
 
-                <input type="file" name="image" required="" accept="image/*" value="{{old('image')}}"
+                <input type="file" name="image" accept="image/*" value="{{old('image' , $category->image)}}"
                   class="dropify input_images @error('image') is-invalid @enderror"
-                  data-allowed-file-extensions="jpg jpeg png gif webp" data-max-file-size="300k">
+                  data-allowed-file-extensions="jpg jpeg png gif webp" data-max-file-size="300k"
+                  data-default-file="{{ asset('files/category-image/' . $category->image) }}">
 
-                <div class="input_images" style="padding-top: .5rem;"></div>
                 @error('image')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -69,7 +82,7 @@
               <div class="form-group">
                 <label for="description">category description</label>
                 <textarea class="form-control textarea @error('description') is-invalid @enderror" name="description"
-                  id="description" minlength="50">{{ old('description') }}</textarea>
+                  id="description" minlength="50">{{ old('description' , $category->description) }}</textarea>
                 @error('description')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -78,7 +91,7 @@
               <div class="form-group">
                 <label for="icon">Category icon <span class="text-danger">*</span> </label>
                 <input type="text" class="form-control @error('icon')  is-invalid @enderror" id="icon" name="icon"
-                  value="{{old('icon')}}" required>
+                  value="{{old('icon' , $category->icon)}}" required>
                 @error('icon')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

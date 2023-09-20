@@ -60,7 +60,7 @@ class ProductController extends Controller
     public function create()
     {
         // category 
-        $category = category::where('parent_id', null)->get();;
+        $category = category::where('parent_id', null)->get();
         // brand 
         $brand = Brand::all();
         // pickup point
@@ -134,7 +134,7 @@ class ProductController extends Controller
         // insert data 
         Product::create($validatedData);
         $notification = ['notification' => 'Product Created!', 'alert-type' => 'success'];
-        return redirect()->back()->with($notification);
+        return redirect()->route('product.index')->with($notification);
     }
 
     /**
