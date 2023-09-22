@@ -1,0 +1,20 @@
+{
+  "login": {
+    "url": "http://localhost:8000/api/login",
+    "method": "POST",
+    "success_status_code": 200,
+    "error_status_code": 422
+  },
+  "register": {
+    "url": "http://localhost:8000/api/register",
+    "method": "POST",
+    "success_status_code": 200,
+    "error_status_code": 422
+  },
+  "customer_profile": {
+    "url": "http://localhost:8000/api/customer/profile",
+    "method": "GET",
+    "success_status_code": 200,
+    "error_status_code": 401
+  }
+}

@@ -4,6 +4,7 @@ import NProgress from "nprogress";
 import React, { Fragment } from "react";
 import { ThemeProvider } from "styled-components";
 import { AppProvider } from "../contexts/app/AppContext";
+import AuthProvider from "@context/AuthProvider";
 import { GlobalStyles } from "../utils/globalStyles";
 import { theme } from "../utils/theme";
 
@@ -56,9 +57,11 @@ const App = ({ Component, pageProps }: any) => {
       </Head>
       <GlobalStyles />
       <AppProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <AuthProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </AuthProvider>
       </AppProvider>
     </ThemeProvider>
   );
@@ -72,8 +75,8 @@ const App = ({ Component, pageProps }: any) => {
 // App.getInitialProps = async (appContext) => {
 //   // calls page's `getInitialProps` and fills `appProps.pageProps`
 //   const appProps = await App.getInitialProps(appContext);
-//
-//   return { ...appProps }
-// }
+
+//   return { ...appProps };
+// };
 
 export default App;

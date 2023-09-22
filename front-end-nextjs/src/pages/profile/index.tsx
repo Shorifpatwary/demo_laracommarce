@@ -8,11 +8,28 @@ import DashboardLayout from "@component/layout/CustomerDashboardLayout";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import TableRow from "@component/TableRow";
 import Typography, { H3, H5, Small } from "@component/Typography";
+import { AuthContext } from "@context/AuthProvider";
 import { format } from "date-fns";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { customer_profile } from "@data/apis.json";
 
 const Profile = () => {
+  const { makeAuthenticatedRequest } = useContext(AuthContext);
+  const [profileData, setProfileData] = useState(null);
+  console.log(profileData, "profile data ");
+
+  useEffect(() => {
+    // Example: Make an authenticated API request
+    makeAuthenticatedRequest(customer_profile.url, customer_profile.method)
+      .then((data) => {
+        setProfileData(data.customer);
+      })
+      .catch((error) => {
+        console.error("Error fetching profile data:", error);
+      });
+  }, []);
+
   return (
     <div>
       <DashboardPageHeader
@@ -39,15 +56,15 @@ const Profile = () => {
                   alignItems="center"
                 >
                   <div>
-                    <H5 my="0px">Ralph Edwards</H5>
-                    <FlexBox alignItems="center">
+                    <H5 my="0px">{profileData?.name}</H5>
+                    {/* <FlexBox alignItems="center">
                       <Typography fontSize="14px" color="text.hint">
                         Balance:
                       </Typography>
                       <Typography ml="4px" fontSize="14px" color="primary.main">
                         $500
                       </Typography>
-                    </FlexBox>
+                    </FlexBox> */}
                   </div>
 
                   <Typography
@@ -62,7 +79,7 @@ const Profile = () => {
             </FlexBox>
           </Grid>
 
-          <Grid item lg={6} md={6} sm={12} xs={12}>
+          {/* <Grid item lg={6} md={6} sm={12} xs={12}>
             <Grid container spacing={4}>
               {infoList.map((item) => (
                 <Grid item lg={3} sm={6} xs={6} key={item.subtitle}>
@@ -83,42 +100,45 @@ const Profile = () => {
                 </Grid>
               ))}
             </Grid>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
 
       <TableRow p="0.75rem 1.5rem">
         <FlexBox flexDirection="column" p="0.5rem">
           <Small color="text.muted" mb="4px" textAlign="left">
-            First Name
+            User Name
           </Small>
-          <span>Ralph</span>
+          <span>{profileData?.name}</span>
         </FlexBox>
-        <FlexBox flexDirection="column" p="0.5rem">
+        {/* <FlexBox flexDirection="column" p="0.5rem">
           <Small color="text.muted" mb="4px" textAlign="left">
             Last Name
           </Small>
           <span>Edwards</span>
-        </FlexBox>
+        </FlexBox> */}
         <FlexBox flexDirection="column" p="0.5rem">
           <Small color="text.muted" mb="4px" textAlign="left">
             Email
           </Small>
-          <span>ralfedwards@email.com</span>
+          <span>{profileData?.email}</span>
         </FlexBox>
         <FlexBox flexDirection="column" p="0.5rem">
           <Small color="text.muted" mb="4px" textAlign="left">
             Phone
           </Small>
-          <span>+1983649392983</span>
+          <span>
+            {profileData?.phone ? profileData.phone : "+1983649392983"}
+          </span>
         </FlexBox>
         <FlexBox flexDirection="column" p="0.5rem">
           <Small color="text.muted" mb="4px">
             Birth date
           </Small>
-          <span className="pre">
+          {/* <span className="pre">
             {format(new Date(1996 / 11 / 16), "dd MMM, yyyy")}
-          </span>
+          </span> */}
+          <span className="pre">{profileData?.birth_date}</span>
         </FlexBox>
       </TableRow>
     </div>

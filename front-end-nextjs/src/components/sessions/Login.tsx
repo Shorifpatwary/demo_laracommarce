@@ -1,7 +1,7 @@
-import { useFormik } from "formik";
+import { useFormik, withFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useContext } from "react";
 import * as yup from "yup";
 import Box from "../Box";
 import Button from "../buttons/Button";
@@ -12,32 +12,46 @@ import Icon from "../icon/Icon";
 import TextField from "../text-field/TextField";
 import { H3, H5, H6, SemiSpan, Small, Span } from "../Typography";
 import { StyledSessionCard } from "./SessionStyle";
+import { login } from "@data/apis.json";
+import { AuthContext } from "@context/AuthProvider";
 
 const Login: React.FC = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
+  const [loginResponse, setLoginResponse] = useState<{ message; status }>(null);
   const router = useRouter();
+  const authContext = useContext(AuthContext);
 
   const togglePasswordVisibility = useCallback(() => {
     setPasswordVisibility((visible) => !visible);
   }, []);
 
-  const handleFormSubmit = async (values) => {
-    router.push("/profile");
-    console.log(values);
+  const handleFormSubmit = async (formValues, formikActions) => {
+    const data = await authContext.Login(formValues.email, formValues.password);
+    setLoginResponse(data);
+    if (data.status === login.success_status_code) {
+      // set cookie
+      console.log(data.token, "token");
+      authContext.setUserCookie(data.token);
+      // Redirect or handle successful login as needed
+      router.push("/profile");
+    } else {
+      // Handle server-side validation errors
+      // response.data.errors should contain the validation errors from your API
+      if (data && data.errors) {
+        const serverErrors = data.errors;
+        // Set the server-side errors to the Formik's errors object
+        formikActions.setErrors(serverErrors);
+      }
+    }
+    // router.push("/profile");
   };
 
-  const {
-    values,
-    errors,
-    touched,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-  } = useFormik({
-    onSubmit: handleFormSubmit,
-    initialValues,
-    validationSchema: formSchema,
-  });
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+    useFormik({
+      onSubmit: handleFormSubmit,
+      initialValues,
+      validationSchema: formSchema,
+    });
 
   return (
     <StyledSessionCard mx="auto" my="2rem" boxShadow="large">
@@ -95,6 +109,23 @@ const Login: React.FC = () => {
           errorText={touched.password && errors.password}
         />
 
+        {
+          loginResponse?.status !== login.success_status_code ? (
+            <H5
+              fontWeight="600"
+              fontSize="14px"
+              color="red"
+              textAlign="center"
+              mb="2.25rem"
+              mt="2rem"
+            >
+              {loginResponse?.message || ""}
+            </H5>
+          ) : (
+            ""
+          ) // Render an empty string if the condition is not met
+        }
+
         <Button
           mb="1.65rem"
           variant="contained"
@@ -105,16 +136,16 @@ const Login: React.FC = () => {
           Login
         </Button>
 
-        <Box mb="1rem">
+        {/* <Box mb="1rem">
           <Divider width="200px" mx="auto" />
           <FlexBox justifyContent="center" mt="-14px">
             <Span color="text.muted" bg="body.paper" px="1rem">
               on
             </Span>
           </FlexBox>
-        </Box>
+        </Box> */}
 
-        <FlexBox
+        {/* <FlexBox
           justifyContent="center"
           alignItems="center"
           bg="#3B5998"
@@ -128,9 +159,9 @@ const Login: React.FC = () => {
             facebook-filled-white
           </Icon>
           <Small fontWeight="600">Continue with Facebook</Small>
-        </FlexBox>
+        </FlexBox> */}
 
-        <FlexBox
+        {/* <FlexBox
           justifyContent="center"
           alignItems="center"
           bg="#4285F4"
@@ -144,7 +175,7 @@ const Login: React.FC = () => {
             google-1
           </Icon>
           <Small fontWeight="600">Continue with Google</Small>
-        </FlexBox>
+        </FlexBox> */}
 
         <FlexBox justifyContent="center" mb="1.25rem">
           <SemiSpan>Don’t have account?</SemiSpan>
@@ -158,7 +189,7 @@ const Login: React.FC = () => {
         </FlexBox>
       </form>
 
-      <FlexBox justifyContent="center" bg="gray.200" py="19px">
+      {/* <FlexBox justifyContent="center" bg="gray.200" py="19px">
         <SemiSpan>Forgot your password?</SemiSpan>
         <Link href="/">
           <a>
@@ -167,7 +198,7 @@ const Login: React.FC = () => {
             </H6>
           </a>
         </Link>
-      </FlexBox>
+      </FlexBox> */}
     </StyledSessionCard>
   );
 };

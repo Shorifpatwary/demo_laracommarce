@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum',)->get('/user', function (Request $request) {
     return $request->user();
 });
 
@@ -33,4 +33,6 @@ Route::group(['middleware' => ['guest']], function () {
 Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('/logout', [CustomerController::class, 'logout'])->name('logout.api');
+    // profile
+    Route::get('/customer/profile', [CustomerController::class, 'show']);
 });
