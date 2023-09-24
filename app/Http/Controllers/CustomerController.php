@@ -92,39 +92,7 @@ class CustomerController extends Controller
     // profile 
     public function show(Request $request)
     {
-        // Check if the user is authenticated using the 'api' guard
-        // if (Auth::guard('api')->check()) {
-        //     $customer = Auth::guard('api')->user();
-        //     return response()->json([
-        //         'message' => 'Customer profile details retrieved successfully',
-        //         'status' => config('custom.api_success_status_code'),
-        //         'customer' => $customer,
-        //     ]);
-        // } else {
-        //     return response()->json([
-        //         'message' => 'Authentication failed',
-        //         'status' => config('custom.api_unauthorized_status_code')
-        //     ], config('custom.api_unauthorized_status_code'));
-        //     // Return a 401 Unauthorized status code
-        // }
-        try {
-            // Check if the user is authenticated using the 'api' guard
-            if (Auth::guard('api')->check()) {
-                $customer = Auth::guard('api')->user();
-            } else {
-                return response()->json([
-                    'message' => 'Authentication failed',
-                    'status' => config('custom.api_unauthorized_status_code')
-                ], config('custom.api_unauthorized_status_code'));
-                // Return a 401 Unauthorized status code
-            }
-        } catch (AuthorizationException $e) {
-            // Handle invalid token here
-            return response()->json([
-                'message' => 'Invalid or expired API token',
-                'status' => config('custom.api_unauthorized_status_code')
-            ], config('custom.api_unauthorized_status_code')); // Return a 401 Unauthorized status code
-        }
+        $customer = Auth::guard('api')->user();
         return response()->json([
             'message' => 'Customer profile details retrieved successfully',
             'status' => config('custom.api_success_status_code'),

@@ -30,9 +30,13 @@ Route::group(['middleware' => ['guest']], function () {
 });
 
 // Protected routes api 
-Route::group(['middleware' => ['auth:api']], function () {
+Route::group(['middleware' => ['api.authentication']], function () {
 
     Route::post('/logout', [CustomerController::class, 'logout'])->name('logout.api');
     // profile
     Route::get('/customer/profile', [CustomerController::class, 'show']);
+});
+
+Route::middleware('auth:api')->get('/test', function () {
+    return 'Authentication worked!';
 });
