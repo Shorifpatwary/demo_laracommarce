@@ -16,10 +16,13 @@ import { customer_profile } from "@data/apis.json";
 
 const Profile = () => {
   const { makeAuthenticatedRequest } = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+
   const [profileData, setProfileData] = useState(null);
 
   useEffect(() => {
     // Example: Make an authenticated API request
+
     makeAuthenticatedRequest(customer_profile.url, customer_profile.method)
       .then((data) => {
         setProfileData(data.customer);
@@ -35,11 +38,24 @@ const Profile = () => {
         iconName="user_filled"
         title="My Profile"
         button={
-          <Link href="/profile/edit">
-            <Button color="primary" bg="primary.light" px="2rem">
-              Edit Profile
+          <FlexBox>
+            {/* <Link href="/logout"> */}
+            <Button
+              onClick={() => authContext.Logout()}
+              color="primary"
+              bg="primary.light"
+              px="2rem"
+              marginX="0.5rem"
+            >
+              Log-Out
             </Button>
-          </Link>
+            {/* </Link> */}
+            <Link href="/profile/edit">
+              <Button color="success" bg="success.light" px="2rem">
+                Edit Profile
+              </Button>
+            </Link>
+          </FlexBox>
         }
       />
 
@@ -47,7 +63,14 @@ const Profile = () => {
         <Grid container spacing={6}>
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <FlexBox as={Card} p="14px 32px" height="100%" alignItems="center">
-              <Avatar src="/assets/images/faces/ralph.png" size={64} />
+              {/* <Avatar src="/assets/images/faces/ralph.png" size={64} /> */}
+              <Typography
+                color="text.hint"
+                letterSpacing="0.1rem"
+                fontWeight={700}
+              >
+                User Name:
+              </Typography>
               <Box ml="12px" flex="1 1 0">
                 <FlexBox
                   flexWrap="wrap"
@@ -126,9 +149,7 @@ const Profile = () => {
           <Small color="text.muted" mb="4px" textAlign="left">
             Phone
           </Small>
-          <span>
-            {profileData?.phone ? profileData.phone : "+1983649392983"}
-          </span>
+          <span>{profileData?.phone}</span>
         </FlexBox>
         <FlexBox flexDirection="column" p="0.5rem">
           <Small color="text.muted" mb="4px">
@@ -143,25 +164,6 @@ const Profile = () => {
     </div>
   );
 };
-
-const infoList = [
-  {
-    title: "16",
-    subtitle: "All Orders",
-  },
-  {
-    title: "02",
-    subtitle: "Awaiting Payments",
-  },
-  {
-    title: "00",
-    subtitle: "Awaiting Shipment",
-  },
-  {
-    title: "01",
-    subtitle: "Awaiting Delivery",
-  },
-];
 
 Profile.layout = DashboardLayout;
 

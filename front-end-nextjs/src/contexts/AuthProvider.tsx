@@ -14,6 +14,7 @@ interface User {
 interface headers {}
 interface AuthContextInterface {
   Login: (email: string, password: string) => Promise<any>;
+  Logout: () => void;
   Register: (
     name: string,
     email: string,
@@ -40,9 +41,9 @@ export const AuthContext = createContext<AuthContextInterface>(
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // request header
   const headers = {
-    "X-Authorization": process.env.NEXT_PUBLIC_SECRET_KEY_LIVE as string,
-    // "Content-Type": "application/json",
-    "Content-Type": "multipart/form-data",
+    // "X-Authorization": process.env.NEXT_PUBLIC_SECRET_KEY_LIVE as string,
+    "Content-Type": "application/json",
+    // "Content-Type": "multipart/form-data",
     Accept: "application/json",
   };
 
@@ -79,7 +80,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   ) => {
     try {
       const res = await fetch(register.url, {
-        method: login.method,
+        method: register.method,
         body: JSON.stringify({ name, email, password, confirmPassword }),
         headers: headers,
       });
@@ -92,6 +93,15 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  // Log out user
+  const Logout = () => {
+    // Clear the JWT token from cookies
+    deleteUserCookie();
+
+    // Redirect the user to the login page or any other appropriate page
+    redirectToLogin();
   };
 
   // SET USER COOKIE FUNCTION customerId: string,
@@ -165,7 +175,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       }
       const data = await res.json();
-      console.log(data, "data outside");
 
       return data;
     } catch (error) {
@@ -193,6 +202,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     <AuthContext.Provider
       value={{
         Login,
+        Logout,
         Register,
         userCookieState,
         setUserCookieState,

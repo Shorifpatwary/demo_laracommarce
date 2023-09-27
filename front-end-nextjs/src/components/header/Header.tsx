@@ -2,7 +2,7 @@ import IconButton from "@component/buttons/IconButton";
 import Image from "@component/Image";
 import { useAppContext } from "@context/app/AppContext";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Box from "../Box";
 import Categories from "../categories/Categories";
 import Container from "../Container";
@@ -15,6 +15,9 @@ import Sidenav from "../sidenav/Sidenav";
 import { Tiny } from "../Typography";
 import StyledHeader from "./HeaderStyle";
 import UserLoginDialog from "./UserLoginDialog";
+import UserProfileDialog from "./UserProfileDialog";
+import Button from "@component/buttons/Button";
+import { AuthContext } from "@context/AuthProvider";
 
 type HeaderProps = {
   isFixed?: boolean;
@@ -24,6 +27,7 @@ type HeaderProps = {
 const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
   const [open, setOpen] = useState(false);
   const toggleSidenav = () => setOpen(!open);
+  const authContext = useContext(AuthContext);
   const { state } = useAppContext();
   const { cartList } = state.cart;
 
@@ -81,21 +85,18 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
 
         <FlexBox justifyContent="center" flex="1 1 0">
           <SearchBox />
-        </FlexBox>
-
-        <FlexBox className="header-right" alignItems="center">
-          <UserLoginDialog
-            handle={
+          {
+            <Link
+              href={authContext.userCookieState.JWT ? "/profile" : "/login"}
+            >
               <IconButton ml="1rem" bg="gray.200" p="8px">
                 <Icon size="28px">user</Icon>
               </IconButton>
-            }
-          >
-            <Box>
-              <Login />
-            </Box>
-          </UserLoginDialog>
+            </Link>
+          }
+        </FlexBox>
 
+        <FlexBox className="header-right" alignItems="center">
           <Sidenav
             handle={cartHandle}
             position="right"
@@ -112,3 +113,25 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
 };
 
 export default Header;
+
+{
+  /* <UserProfileDialog
+  handle={
+    <IconButton ml="1rem" bg="gray.200" p="8px">
+      <Icon size="28px">user</Icon>
+    </IconButton>
+  }
+>
+  <Box>
+    <UserLoginDialog
+      handle={
+        <Button ml="1rem" bg="gray.200" p="8px">
+          Log in
+        </Button>
+      }
+    >
+      <Login />
+    </UserLoginDialog>
+  </Box>
+</UserProfileDialog>; */
+}

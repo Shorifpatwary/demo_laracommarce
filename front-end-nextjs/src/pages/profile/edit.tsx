@@ -20,7 +20,7 @@ import getCookie from "functions/getCookie";
 
 const ProfileEditor = () => {
   const router = useRouter(); // Initialize the useRouter hook
-  // const { makeAuthenticatedRequest } = useContext(AuthContext);
+  const { makeAuthenticatedRequest } = useContext(AuthContext);
   const authContext = useContext(AuthContext);
 
   const [profileData, setProfileData] = useState(null);
@@ -57,9 +57,9 @@ const ProfileEditor = () => {
   //   fetchCsrfToken();
   // }, []);
 
-  const handleFormSubmit = async (values) => {
-    console.log(values, "handle form submit ");
-  };
+  // const handleFormSubmit = async (values) => {
+  //   console.log(values, "handle form submit ");
+  // };
 
   // const formSubmitHandler = async (values, formikActions) => {
   //   // Make an authenticated API request
@@ -67,7 +67,6 @@ const ProfileEditor = () => {
   //   console.log(values);
 
   //   try {
-  //     console.log(values, "form values");
   //     makeAuthenticatedRequest(
   //       udpate_CP.url,
   //       udpate_CP.method,
@@ -104,8 +103,6 @@ const ProfileEditor = () => {
     // formData.append("birth_date", values.birth_date);
     // formData.append("image", values.image);
     // formData.append("_token", values._token);
-
-    console.log(values, "values");
 
     const response = await fetch(udpate_CP.url, {
       method: udpate_CP.method,

@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import * as yup from "yup";
 import Box from "../Box";
 import Button from "../buttons/Button";
@@ -12,6 +12,9 @@ import Icon from "../icon/Icon";
 import TextField from "../text-field/TextField";
 import { H3, H5, H6, SemiSpan, Small, Span } from "../Typography";
 import { StyledSessionCard } from "./SessionStyle";
+import { register } from "@data/apis.json";
+import { AuthContext } from "@context/AuthProvider";
+import { useRouter } from "next/router";
 
 const Signup: React.FC = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
@@ -19,23 +22,42 @@ const Signup: React.FC = () => {
   const togglePasswordVisibility = () => {
     setPasswordVisibility((visible) => !visible);
   };
+  // request response
+  const [response, setResponse] = useState<{ message; status }>(null);
+  const router = useRouter();
+  const authContext = useContext(AuthContext);
 
-  const handleFormSubmit = async (values) => {
-    console.log(values);
+  const handleFormSubmit = async (formValues, formikActions) => {
+    const data = await authContext.Register(
+      formValues.name,
+      formValues.email,
+      formValues.password,
+      formValues.password_confirmation
+    );
+    setResponse(data); // REMOVE
+    if (data.status === register.success_status_code) {
+      // set cookie
+      authContext.setUserCookie(data.token);
+      // Redirect or handle successful login as needed
+      router.push("/profile");
+    } else {
+      // Handle server-side validation errors
+      // response.data.errors should contain the validation errors from your API
+      if (data && data.errors) {
+        const serverErrors = data.errors;
+        // Set the server-side errors to the Formik's errors object
+        formikActions.setErrors(serverErrors);
+      }
+    }
+    // router.push("/profile");
   };
 
-  const {
-    values,
-    errors,
-    touched,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-  } = useFormik({
-    onSubmit: handleFormSubmit,
-    initialValues,
-    validationSchema: formSchema,
-  });
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+    useFormik({
+      onSubmit: handleFormSubmit,
+      initialValues,
+      validationSchema: formSchema,
+    });
 
   return (
     <StyledSessionCard mx="auto" my="2rem" boxShadow="large">
@@ -104,7 +126,7 @@ const Signup: React.FC = () => {
         />
         <TextField
           mb="1rem"
-          name="re_password"
+          name="password_confirmation"
           placeholder="*********"
           type={passwordVisibility ? "text" : "password"}
           label="Confirm Password"
@@ -125,8 +147,10 @@ const Signup: React.FC = () => {
           }
           onBlur={handleBlur}
           onChange={handleChange}
-          value={values.re_password || ""}
-          errorText={touched.re_password && errors.re_password}
+          value={values.password_confirmation || ""}
+          errorText={
+            touched.password_confirmation && errors.password_confirmation
+          }
         />
 
         <CheckBox
@@ -146,7 +170,23 @@ const Signup: React.FC = () => {
             </FlexBox>
           }
         />
-
+        {/* show request response error message  */}
+        {
+          response?.status !== register.success_status_code ? (
+            <H5
+              fontWeight="600"
+              fontSize="14px"
+              color="red"
+              textAlign="center"
+              mb="2.25rem"
+              mt="2rem"
+            >
+              {response?.message || ""}
+            </H5>
+          ) : (
+            ""
+          ) // Render an empty string if the condition is not met
+        }
         <Button
           mb="1.65rem"
           variant="contained"
@@ -216,7 +256,7 @@ const initialValues = {
   name: "",
   email: "",
   password: "",
-  re_password: "",
+  password_confirmation: "",
   agreement: false,
 };
 
@@ -224,7 +264,7 @@ const formSchema = yup.object().shape({
   name: yup.string().required("${path} is required"),
   email: yup.string().email("invalid email").required("${path} is required"),
   password: yup.string().required("${path} is required"),
-  re_password: yup
+  password_confirmation: yup
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
     .required("Please re-type password"),

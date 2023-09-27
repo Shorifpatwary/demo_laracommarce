@@ -18,6 +18,7 @@ import { AuthContext } from "@context/AuthProvider";
 const Login: React.FC = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [loginResponse, setLoginResponse] = useState<{ message; status }>(null);
+
   const router = useRouter();
   const authContext = useContext(AuthContext);
 
