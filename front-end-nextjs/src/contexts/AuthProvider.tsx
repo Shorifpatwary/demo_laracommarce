@@ -1,5 +1,11 @@
 import { createContext, useEffect, useState } from "react";
-import { login, register, customer_profile, status } from "@data/apis.json";
+import {
+  login,
+  register,
+  customer_profile,
+  status,
+  checkTokenValidity,
+} from "@data/apis.json";
 import getCookie from "functions/getCookie";
 import { useRouter } from "next/router";
 
@@ -16,16 +22,18 @@ interface AuthContextInterface {
   Login: (email: string, password: string) => Promise<any>;
   Logout: () => void;
   Register: (
-    name: string,
-    email: string,
-    password: string,
-    confirmPassword: string
+    // name: string,
+    // email: string,
+    // password: string,
+    // confirmPassword: string
+    values: {}
   ) => Promise<any>;
-  userCookieState: User;
-  setUserCookieState: React.Dispatch<React.SetStateAction<User>>;
+  // userCookieState: User;
+  // setUserCookieState: React.Dispatch<React.SetStateAction<User>>;
   // customerId: string,
   setUserCookie: (JWT: string) => void;
   deleteUserCookie: () => void;
+  isAuthenticatedUser: () => Promise<boolean>;
   makeAuthenticatedRequest: (
     url: string,
     method: string,
@@ -46,11 +54,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // "Content-Type": "multipart/form-data",
     Accept: "application/json",
   };
-
-  const [userCookieState, setUserCookieState] = useState({
-    // customerId: "",
-    JWT: "",
-  });
+  const router = useRouter();
+  // const [userCookieState, setUserCookieState] = useState({
+  //   // customerId: "",
+  //   JWT: null,
+  // });
   // commerce js issue and login token
   const Login = async (email: string, password: string) => {
     try {
@@ -73,15 +81,16 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // commerce js issue and login token
   const Register = async (
-    name: string,
-    email: string,
-    password: string,
-    confirmPassword: string
+    // name: string,
+    // email: string,
+    // password: string,
+    // password_confirmation: string
+    values
   ) => {
     try {
       const res = await fetch(register.url, {
         method: register.method,
-        body: JSON.stringify({ name, email, password, confirmPassword }),
+        body: JSON.stringify(values),
         headers: headers,
       });
       // if (!res.ok) {
@@ -115,10 +124,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // add customer JWT to the cookie
     document.cookie = `JWT=${JWT}; expires=${expires.toUTCString()};`;
     // Set user cookie state
-    setUserCookieState({
-      // customerId: customerId,
-      JWT: JWT,
-    });
+    // setUserCookieState({
+    //   // customerId: customerId,
+    //   JWT: JWT,
+    // });
   };
 
   // DELETE USER COOKIE FUNCTION
@@ -130,10 +139,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // delete JWT
     document.cookie = `JWT=""; expires=${expires.toUTCString()};`;
     // SET user cookie state
-    setUserCookieState({
-      // customerId: "",
-      JWT: "",
-    });
+    // setUserCookieState({
+    //   // customerId: "",
+    //   JWT: "",
+    // });
   };
   // AuthProvider makeAuthenticatedRequest
   const makeAuthenticatedRequest = async (
@@ -168,7 +177,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           redirectToLogin(); // Redirect to the login route
         } else if (res.status === errorStatus) {
           const data = await res.json();
-          console.log(data, "data");
           return data;
         } else {
           throw new Error("Request failed");
@@ -183,19 +191,49 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const router = useRouter();
+  // Function to check if the user is authenticated
+  const isAuthenticatedUser = async () => {
+    try {
+      const jwtToken = getCookie("JWT"); // Get JWT token from cookies using your getCookie function
+
+      if (!jwtToken) {
+        // If JWT token is not available, the user is not authenticated
+        return false;
+      }
+
+      // Make a request to the server to verify authentication
+      const res = await fetch(checkTokenValidity.url, {
+        method: checkTokenValidity.method,
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+
+      if (res.ok && res.status === 200) {
+        // If the server responds with a success status, the user is authenticated
+        return true;
+      } else {
+        // If the server responds with an error status, the user is not authenticated
+        deleteUserCookie();
+        return false;
+      }
+    } catch (error) {
+      console.error("Error checking authentication:", error);
+      return false;
+    }
+  };
+
   // Function to redirect to the login route
   const redirectToLogin = () => {
-    console.log("redirectToLogin function called");
     router.push("/login"); // Replace '/login' with the actual path to your login page
   };
 
   // SET USER COOKIE ON FIRST RENDER
   useEffect(() => {
-    setUserCookieState({
-      // customerId: getCookie("customerId") || "",
-      JWT: getCookie("JWT") || "",
-    });
+    // setUserCookieState({
+    //   // customerId: getCookie("customerId") || "",
+    //   JWT: getCookie("JWT") || "",
+    // });
   }, []);
 
   return (
@@ -204,11 +242,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         Login,
         Logout,
         Register,
-        userCookieState,
-        setUserCookieState,
+        // userCookieState,
+        // setUserCookieState,
         setUserCookie,
         deleteUserCookie,
         makeAuthenticatedRequest,
+        isAuthenticatedUser,
       }}
     >
       {children}

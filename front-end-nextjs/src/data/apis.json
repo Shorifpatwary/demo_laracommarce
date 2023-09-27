@@ -1,4 +1,10 @@
 {
+  "checkTokenValidity": {
+    "url": "http://localhost:8000/api/check-token",
+    "method": "POST",
+    "success_status_code": 200,
+    "error_status_code": 401
+  },
   "login": {
     "url": "http://localhost:8000/api/login",
     "method": "POST",

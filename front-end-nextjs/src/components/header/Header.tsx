@@ -2,7 +2,7 @@ import IconButton from "@component/buttons/IconButton";
 import Image from "@component/Image";
 import { useAppContext } from "@context/app/AppContext";
 import Link from "next/link";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Box from "../Box";
 import Categories from "../categories/Categories";
 import Container from "../Container";
@@ -18,6 +18,7 @@ import UserLoginDialog from "./UserLoginDialog";
 import UserProfileDialog from "./UserProfileDialog";
 import Button from "@component/buttons/Button";
 import { AuthContext } from "@context/AuthProvider";
+import getCookie from "functions/getCookie";
 
 type HeaderProps = {
   isFixed?: boolean;
@@ -27,7 +28,14 @@ type HeaderProps = {
 const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
   const [open, setOpen] = useState(false);
   const toggleSidenav = () => setOpen(!open);
-  const authContext = useContext(AuthContext);
+  // const authContext = useContext(AuthContext);
+  const { isAuthenticatedUser } = useContext(AuthContext);
+  const [JWTValue, setJWTValue] = useState(false);
+
+  useEffect(() => {
+    setJWTValue(isAuthenticatedUser());
+  }, []);
+
   const { state } = useAppContext();
   const { cartList } = state.cart;
 
@@ -86,9 +94,7 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
         <FlexBox justifyContent="center" flex="1 1 0">
           <SearchBox />
           {
-            <Link
-              href={authContext.userCookieState.JWT ? "/profile" : "/login"}
-            >
+            <Link href={JWTValue ? "/profile" : "/login"}>
               <IconButton ml="1rem" bg="gray.200" p="8px">
                 <Icon size="28px">user</Icon>
               </IconButton>

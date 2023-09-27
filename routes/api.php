@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('web',)->get('/csrf-endpoint', function () {
     return response()->json(['csrf_token' => csrf_token()]);
 });
+Route::middleware('api.authentication',)->post('/check-token', function () {
+    return response()->json(['message' => 'Token is valid'], 200);
+});
 
 Route::middleware('auth:sanctum',)->get('/user', function (Request $request) {
     return $request->user();
@@ -35,6 +38,9 @@ Route::group(['middleware' => ['guest']], function () {
 
 // Protected routes api 
 Route::group(['middleware' => ['api.authentication']], function () {
+
+
+    Route::post('/logout', [CustomerController::class, 'logout'])->name('logout.api');
 
     Route::post('/logout', [CustomerController::class, 'logout'])->name('logout.api');
     // profile

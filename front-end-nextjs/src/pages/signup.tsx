@@ -1,13 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import FlexBox from "../components/FlexBox";
 import Signup from "../components/sessions/Signup";
 import { useRouter } from "next/router";
 import getCookie from "functions/getCookie";
+import { AuthContext } from "@context/AuthProvider";
 
 const SignUpPage = () => {
+  const { isAuthenticatedUser } = useContext(AuthContext);
   const router = useRouter();
+
+  const [isAuthenticateUser, setIsAuthenticateUser] = useState(false);
+  async function checkAuthentication() {
+    const isAuthenticated = await isAuthenticatedUser();
+    setIsAuthenticateUser(isAuthenticated);
+  }
   useEffect(() => {
-    if (getCookie("JWT") !== null) {
+    checkAuthentication();
+    if (isAuthenticateUser) {
       router.back();
     }
   });

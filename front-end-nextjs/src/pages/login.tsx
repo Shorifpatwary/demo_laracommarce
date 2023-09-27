@@ -1,22 +1,24 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import FlexBox from "../components/FlexBox";
 import Login from "../components/sessions/Login";
 import { useRouter } from "next/router";
-import getCookie from "functions/getCookie";
 import { AuthContext } from "@context/AuthProvider";
 
 const LoginPage = () => {
-  const authContext = useContext(AuthContext);
+  // const authContext = useContext(AuthContext);
+  const { isAuthenticatedUser } = useContext(AuthContext);
+  const [isAuthenticateUser, setIsAuthenticateUser] = useState(false);
+
+  async function checkAuthentication() {
+    const isAuthenticated = await isAuthenticatedUser();
+    setIsAuthenticateUser(isAuthenticated);
+  }
 
   const router = useRouter();
+
   useEffect(() => {
-    if (authContext.userCookieState.JWT) {
-      console.log("cokie value form login page ", getCookie("JWT"));
-      console.log(
-        "JWT value form login page ",
-        authContext.userCookieState.JWT
-      );
-      // return;
+    checkAuthentication();
+    if (isAuthenticateUser) {
       router.back();
     }
   });

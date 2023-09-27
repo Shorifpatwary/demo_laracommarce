@@ -1,6 +1,6 @@
 // get cookie value function
 const getCookie = (cookieName: string): string | null => {
-  const cookies = document.cookie.split("; ");
+  const cookies = document?.cookie.split("; ");
   const cookieValue = cookies.find((cookie) =>
     cookie.startsWith(`${cookieName}=`)
   );

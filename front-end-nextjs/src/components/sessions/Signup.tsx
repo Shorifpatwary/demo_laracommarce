@@ -29,10 +29,11 @@ const Signup: React.FC = () => {
 
   const handleFormSubmit = async (formValues, formikActions) => {
     const data = await authContext.Register(
-      formValues.name,
-      formValues.email,
-      formValues.password,
-      formValues.password_confirmation
+      // formValues.name,
+      // formValues.email,
+      // formValues.password,
+      // formValues.password_confirmation
+      formValues
     );
     setResponse(data); // REMOVE
     if (data.status === register.success_status_code) {
@@ -152,9 +153,33 @@ const Signup: React.FC = () => {
             touched.password_confirmation && errors.password_confirmation
           }
         />
+        {/* phone */}
+        <TextField
+          my="1rem"
+          name="phone"
+          label="Phone"
+          placeholder="+991 23423 234234"
+          fullwidth
+          onBlur={handleBlur}
+          onChange={handleChange}
+          value={values.phone || ""}
+          errorText={touched.phone && errors.phone}
+        />
+        {/* birth date */}
+        <TextField
+          my="1rem"
+          name="birth_date"
+          label="Birth Date"
+          type="date"
+          fullwidth
+          onBlur={handleBlur}
+          onChange={handleChange}
+          value={values.birth_date || ""}
+          errorText={touched.birth_date && errors.birth_date}
+        />
 
         <CheckBox
-          mb="1.75rem"
+          my={"1.75rem"}
           name="agreement"
           color="secondary"
           checked={values.agreement}
@@ -257,17 +282,32 @@ const initialValues = {
   email: "",
   password: "",
   password_confirmation: "",
+  phone: "",
+  birth_date: "",
   agreement: false,
 };
 
 const formSchema = yup.object().shape({
-  name: yup.string().required("${path} is required"),
+  name: yup
+    .string()
+    .min(5, "${path} must be at least 5 characters")
+    .max(255, "${path} must not exceed 255 characters")
+    .required("${path} is required"),
   email: yup.string().email("invalid email").required("${path} is required"),
-  password: yup.string().required("${path} is required"),
+  password: yup
+    .string()
+    .min(6, "${path} must be at least 6 characters")
+    .max(50, "${path} must not exceed 50 characters")
+    .required("${path} is required"),
   password_confirmation: yup
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
-    .required("Please re-type password"),
+    .required("Please re-type ${path}"),
+  phone: yup
+    .string()
+    .min(6, "${path} must be at least 6 characters")
+    .max(50, "${path} must not exceed 50 characters"),
+  birth_date: yup.date(),
   agreement: yup
     .bool()
     .test(

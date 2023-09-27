@@ -13,15 +13,30 @@ import { format } from "date-fns";
 import Link from "next/link";
 import React, { useEffect, useState, useContext } from "react";
 import { customer_profile } from "@data/apis.json";
+import { useRouter } from "next/router";
 
 const Profile = () => {
-  const { makeAuthenticatedRequest } = useContext(AuthContext);
+  const { makeAuthenticatedRequest, isAuthenticatedUser } =
+    useContext(AuthContext);
   const authContext = useContext(AuthContext);
+  const [isAuthenticateUser, setIsAuthenticateUser] = useState(false);
+
+  async function checkAuthentication() {
+    const isAuthenticated = await isAuthenticatedUser();
+    setIsAuthenticateUser(isAuthenticated);
+  }
 
   const [profileData, setProfileData] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
+    checkAuthentication();
+    if (isAuthenticateUser) {
+      router.back();
+    }
     // Example: Make an authenticated API request
+    const userIsAuthenticated = isAuthenticatedUser();
+    console.log(userIsAuthenticated, " userIsAuthenticated "); // true or false
 
     makeAuthenticatedRequest(customer_profile.url, customer_profile.method)
       .then((data) => {
