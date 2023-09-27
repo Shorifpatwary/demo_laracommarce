@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Product;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class CustomerController extends Controller
 {
@@ -95,6 +98,68 @@ class CustomerController extends Controller
         $customer = Auth::guard('api')->user();
         return response()->json([
             'message' => 'Customer profile details retrieved successfully',
+            'status' => config('custom.api_success_status_code'),
+            'customer' => $customer,
+        ], config('custom.api_success_status_code'));
+    }
+
+    //  edit method 
+    public function edit(Customer $customer)
+    {
+        $customer = Auth::guard('api')->user();
+        return response()->json([
+            'message' => 'Customer profile edit data retrieved successfully',
+            'status' => config('custom.api_success_status_code'),
+            'customer' => $customer,
+        ], config('custom.api_success_status_code'));
+    }
+
+    public function update(Request $request)
+    {
+        $customer = Auth::guard('api')->user();
+        // Log::error($request->input('image'));
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:customers,email,' . $customer->id,
+            'phone' => 'nullable|string|max:20',
+            // 'image' => 'nullable|max:2048', // Example image validation
+            //'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Example image validation
+            'birth_date' => 'nullable|date',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'status' => config('custom.api_error_status_code'),
+                'errors' => $validator->errors(),
+            ], config('custom.api_error_status_code'));
+        }
+        // Handle image upload (if needed)
+        // if ($request->hasFile('image')) {
+        //     $image = $request->file('image');
+
+        //     // Check for image validation errors again
+        //     if ($image->isValid()) {
+        //         $photoname = "profile-" . hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+        //         Image::make($image)->resize(300, 300)->save('files/profile/' . $photoname);
+        //         $customer->image = $photoname; // Set the new image filename
+        //     } else {
+        //         return response()->json([
+        //             'message' => 'Image validation failed.',
+        //             'status' => config('custom.api_error_status_code'),
+        //             'errors' => ['image' => 'The image file is invalid.'],
+        //         ], config('custom.api_error_status_code'));
+        //     }
+        // }
+
+        // Update the customer's profile with the validated data
+        $customer->fill($request->only(['name', 'email', 'phone', 'birth_date']));
+
+        // Save the changes to the customer's profile
+        $customer->save();
+
+        return response()->json([
+            'message' => 'Customer profile updated successfully',
             'status' => config('custom.api_success_status_code'),
             'customer' => $customer,
         ], config('custom.api_success_status_code'));

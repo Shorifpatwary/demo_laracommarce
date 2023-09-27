@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { login, register, customer_profile } from "@data/apis.json";
+import { login, register, customer_profile, status } from "@data/apis.json";
 import getCookie from "functions/getCookie";
 import { useRouter } from "next/router";
 
@@ -11,6 +11,7 @@ interface User {
   // customerId: string;
   JWT: string;
 }
+interface headers {}
 interface AuthContextInterface {
   Login: (email: string, password: string) => Promise<any>;
   Register: (
@@ -27,7 +28,9 @@ interface AuthContextInterface {
   makeAuthenticatedRequest: (
     url: string,
     method: string,
-    body?: Record<string, any> | null
+    errorStatus?: number,
+    body?: Record<string, any> | null,
+    headers?: headers
   ) => Promise<any>;
 }
 export const AuthContext = createContext<AuthContextInterface>(
@@ -38,7 +41,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // request header
   const headers = {
     "X-Authorization": process.env.NEXT_PUBLIC_SECRET_KEY_LIVE as string,
-    "Content-Type": "application/json",
+    // "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
     Accept: "application/json",
   };
 
@@ -122,7 +126,13 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
   };
   // AuthProvider makeAuthenticatedRequest
-  const makeAuthenticatedRequest = async (url, method, body = null) => {
+  const makeAuthenticatedRequest = async (
+    url,
+    method,
+    errorStatus = status.error_unauthorized,
+    body = null,
+    headers?: headers
+  ) => {
     try {
       const jwtToken = getCookie("JWT"); // Get JWT token from cookies using your getCookie function
 
@@ -140,14 +150,23 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         },
       });
       if (!res.ok) {
-        if (res.status === customer_profile.error_status_code) {
+        console.log(res.status, "response form");
+        // errorStatus
+        console.log(errorStatus, "error status");
+        if (res.status === status.error_unauthorized) {
           // Handle error status code (e.g., 401 Unauthorized)
           redirectToLogin(); // Redirect to the login route
+        } else if (res.status === errorStatus) {
+          const data = await res.json();
+          console.log(data, "data");
+          return data;
         } else {
           throw new Error("Request failed");
         }
       }
       const data = await res.json();
+      console.log(data, "data outside");
+
       return data;
     } catch (error) {
       console.error("API request error:", error);

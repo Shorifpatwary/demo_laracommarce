@@ -17,7 +17,6 @@ import { customer_profile } from "@data/apis.json";
 const Profile = () => {
   const { makeAuthenticatedRequest } = useContext(AuthContext);
   const [profileData, setProfileData] = useState(null);
-  console.log(profileData, "profile data ");
 
   useEffect(() => {
     // Example: Make an authenticated API request

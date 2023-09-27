@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::middleware('web',)->get('/csrf-endpoint', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
+});
+
 Route::middleware('auth:sanctum',)->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -35,6 +39,10 @@ Route::group(['middleware' => ['api.authentication']], function () {
     Route::post('/logout', [CustomerController::class, 'logout'])->name('logout.api');
     // profile
     Route::get('/customer/profile', [CustomerController::class, 'show']);
+    // profile edit data 
+    Route::get('/customer/edit', [CustomerController::class, 'edit']);
+    // profile update 
+    Route::put('/customer/update', [CustomerController::class, 'update']);
 });
 
 Route::middleware('auth:api')->get('/test', function () {

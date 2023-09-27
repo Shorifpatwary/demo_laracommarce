@@ -27,10 +27,9 @@ const Login: React.FC = () => {
 
   const handleFormSubmit = async (formValues, formikActions) => {
     const data = await authContext.Login(formValues.email, formValues.password);
-    setLoginResponse(data);
+    setLoginResponse(data); // REMOVE
     if (data.status === login.success_status_code) {
       // set cookie
-      console.log(data.token, "token");
       authContext.setUserCookie(data.token);
       // Redirect or handle successful login as needed
       router.push("/profile");
