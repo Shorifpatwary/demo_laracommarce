@@ -35,9 +35,6 @@ const Profile = () => {
       router.back();
     }
     // Example: Make an authenticated API request
-    const userIsAuthenticated = isAuthenticatedUser();
-    console.log(userIsAuthenticated, " userIsAuthenticated "); // true or false
-
     makeAuthenticatedRequest(customer_profile.url, customer_profile.method)
       .then((data) => {
         setProfileData(data.customer);

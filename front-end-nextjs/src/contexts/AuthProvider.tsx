@@ -13,24 +13,12 @@ type AuthProviderProps = {
   children: React.ReactNode;
 };
 
-interface User {
-  // customerId: string;
-  JWT: string;
-}
 interface headers {}
 interface AuthContextInterface {
   Login: (email: string, password: string) => Promise<any>;
   Logout: () => void;
-  Register: (
-    // name: string,
-    // email: string,
-    // password: string,
-    // confirmPassword: string
-    values: {}
-  ) => Promise<any>;
-  // userCookieState: User;
-  // setUserCookieState: React.Dispatch<React.SetStateAction<User>>;
-  // customerId: string,
+  Register: (values: {}) => Promise<any>;
+
   setUserCookie: (JWT: string) => void;
   deleteUserCookie: () => void;
   isAuthenticatedUser: () => Promise<boolean>;
@@ -49,17 +37,13 @@ export const AuthContext = createContext<AuthContextInterface>(
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // request header
   const headers = {
-    // "X-Authorization": process.env.NEXT_PUBLIC_SECRET_KEY_LIVE as string,
     "Content-Type": "application/json",
-    // "Content-Type": "multipart/form-data",
+
     Accept: "application/json",
   };
   const router = useRouter();
-  // const [userCookieState, setUserCookieState] = useState({
-  //   // customerId: "",
-  //   JWT: null,
-  // });
-  // commerce js issue and login token
+
+  // LOGIN
   const Login = async (email: string, password: string) => {
     try {
       const res = await fetch(login.url, {
@@ -67,10 +51,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         body: JSON.stringify({ email, password }),
         headers: headers,
       });
-      // if (!res.ok) {
-      //   throw new Error("Login failed");
-      //   // or extract error message from the response
-      // }
       const data = await res.json();
       return data;
     } catch (error) {
@@ -79,24 +59,14 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // commerce js issue and login token
-  const Register = async (
-    // name: string,
-    // email: string,
-    // password: string,
-    // password_confirmation: string
-    values
-  ) => {
+  //  REGISTER
+  const Register = async (values) => {
     try {
       const res = await fetch(register.url, {
         method: register.method,
         body: JSON.stringify(values),
         headers: headers,
       });
-      // if (!res.ok) {
-      //   throw new Error("Registration failed");
-      //   // or extract error message from the response
-      // }
       const data = await res.json();
       return data;
     } catch (error) {
@@ -104,11 +74,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // Log out user
+  // LOG-OUT
   const Logout = () => {
     // Clear the JWT token from cookies
     deleteUserCookie();
-
     // Redirect the user to the login page or any other appropriate page
     redirectToLogin();
   };
@@ -119,32 +88,19 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     var expires = new Date();
     expires.setDate(expires.getDate() + 30);
     // set cookie
-    // add customer id to the cookie
-    // document.cookie = `customerId=${customerId}; expires=${expires.toUTCString()};`;
     // add customer JWT to the cookie
     document.cookie = `JWT=${JWT}; expires=${expires.toUTCString()};`;
-    // Set user cookie state
-    // setUserCookieState({
-    //   // customerId: customerId,
-    //   JWT: JWT,
-    // });
   };
 
   // DELETE USER COOKIE FUNCTION
   const deleteUserCookie = () => {
     var expires = new Date();
     expires.setDate(expires.getDate() - 30);
-    // delete customer id
-    // document.cookie = `customerId=""; expires=${expires.toUTCString()};`;
+
     // delete JWT
     document.cookie = `JWT=""; expires=${expires.toUTCString()};`;
-    // SET user cookie state
-    // setUserCookieState({
-    //   // customerId: "",
-    //   JWT: "",
-    // });
   };
-  // AuthProvider makeAuthenticatedRequest
+  //  makeAuthenticatedRequest
   const makeAuthenticatedRequest = async (
     url,
     method,
@@ -229,12 +185,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   // SET USER COOKIE ON FIRST RENDER
-  useEffect(() => {
-    // setUserCookieState({
-    //   // customerId: getCookie("customerId") || "",
-    //   JWT: getCookie("JWT") || "",
-    // });
-  }, []);
+  // useEffect(() => {
+  //   setUserCookieState({
+  //     // customerId: getCookie("customerId") || "",
+  //     JWT: getCookie("JWT") || "",
+  //   });
+  // }, []);
 
   return (
     <AuthContext.Provider

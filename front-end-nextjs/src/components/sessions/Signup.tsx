@@ -28,13 +28,7 @@ const Signup: React.FC = () => {
   const authContext = useContext(AuthContext);
 
   const handleFormSubmit = async (formValues, formikActions) => {
-    const data = await authContext.Register(
-      // formValues.name,
-      // formValues.email,
-      // formValues.password,
-      // formValues.password_confirmation
-      formValues
-    );
+    const data = await authContext.Register(formValues);
     setResponse(data); // REMOVE
     if (data.status === register.success_status_code) {
       // set cookie
@@ -43,14 +37,12 @@ const Signup: React.FC = () => {
       router.push("/profile");
     } else {
       // Handle server-side validation errors
-      // response.data.errors should contain the validation errors from your API
       if (data && data.errors) {
         const serverErrors = data.errors;
         // Set the server-side errors to the Formik's errors object
         formikActions.setErrors(serverErrors);
       }
     }
-    // router.push("/profile");
   };
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -222,16 +214,16 @@ const Signup: React.FC = () => {
           Create Account
         </Button>
 
-        <Box mb="1rem">
+        {/* <Box mb="1rem">
           <Divider width="200px" mx="auto" />
           <FlexBox justifyContent="center" mt="-14px">
             <Span color="text.muted" bg="body.paper" px="1rem">
               on
             </Span>
           </FlexBox>
-        </Box>
+        </Box> */}
 
-        <FlexBox
+        {/* <FlexBox
           justifyContent="center"
           alignItems="center"
           bg="#3B5998"
@@ -245,9 +237,9 @@ const Signup: React.FC = () => {
             facebook-filled-white
           </Icon>
           <Small fontWeight="600">Continue with Facebook</Small>
-        </FlexBox>
+        </FlexBox> */}
 
-        <FlexBox
+        {/* <FlexBox
           justifyContent="center"
           alignItems="center"
           bg="#4285F4"
@@ -261,7 +253,7 @@ const Signup: React.FC = () => {
             google-1
           </Icon>
           <Small fontWeight="600">Continue with Google</Small>
-        </FlexBox>
+        </FlexBox> */}
       </form>
       <FlexBox justifyContent="center" bg="gray.200" py="19px">
         <SemiSpan>Already have account?</SemiSpan>
