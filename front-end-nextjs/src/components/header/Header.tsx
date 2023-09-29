@@ -28,17 +28,13 @@ type HeaderProps = {
 const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
   const [open, setOpen] = useState(false);
   const toggleSidenav = () => setOpen(!open);
-
+  // const authContext = useContext(AuthContext);
   const { isAuthenticatedUser } = useContext(AuthContext);
-  const [isAuthenticateUser, setIsAuthenticateUser] = useState(false);
+  const [JWTValue, setJWTValue] = useState(false);
 
-  async function checkAuthentication() {
-    const isAuthenticated = await isAuthenticatedUser();
-    setIsAuthenticateUser(isAuthenticated);
-  }
   useEffect(() => {
-    checkAuthentication();
-  });
+    setJWTValue(isAuthenticatedUser());
+  }, []);
 
   // const { contextValue } = useAppContext();
   const { state } = useAppContext().contextValue;
@@ -99,7 +95,7 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
         <FlexBox justifyContent="center" flex="1 1 0">
           <SearchBox />
           {
-            <Link href={isAuthenticateUser ? "/profile" : "/login"}>
+            <Link href={JWTValue ? "/profile" : "/login"}>
               <IconButton ml="1rem" bg="gray.200" p="8px">
                 <Icon size="28px">user</Icon>
               </IconButton>
