@@ -49,7 +49,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
 }) => {
   const [open, setOpen] = useState(false);
 
-  const { state, dispatch } = useAppContext();
+  const { state, dispatch } = useAppContext().contextValue;
   const cartItem: CartItem = state.cart.cartList.find((item) => item.id === id);
 
   const toggleDialog = useCallback(() => {

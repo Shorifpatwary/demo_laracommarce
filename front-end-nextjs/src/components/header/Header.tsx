@@ -40,7 +40,8 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
     checkAuthentication();
   });
 
-  const { state } = useAppContext();
+  // const { contextValue } = useAppContext();
+  const { state } = useAppContext().contextValue;
   const { cartList } = state.cart;
 
   const cartHandle = (

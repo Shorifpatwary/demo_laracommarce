@@ -8,7 +8,7 @@ import StyledMobileNavigationBar from "./MobileNavigationBar.style";
 
 const MobileNavigationBar: React.FC = () => {
   const width = useWindowSize();
-  const { state } = useAppContext();
+  const { state } = useAppContext().contextValue;
   const { cartList } = state.cart;
 
   return (
