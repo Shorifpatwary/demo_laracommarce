@@ -46,7 +46,7 @@ function useFetch<T>(
         if (!response.ok) {
           setError(`HTTP Error: ${response.statusText}`);
         } else {
-          setData(responseData.data);
+          setData(responseData);
         }
       } catch (error) {
         setError(error);

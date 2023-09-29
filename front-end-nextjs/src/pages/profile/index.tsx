@@ -12,7 +12,7 @@ import { AuthContext } from "@context/AuthProvider";
 import { format } from "date-fns";
 import Link from "next/link";
 import React, { useEffect, useState, useContext } from "react";
-import { customer_profile } from "@data/apis";
+import { customer_profile } from "@data/apis.json";
 import { useRouter } from "next/router";
 
 const Profile = () => {

@@ -33,7 +33,7 @@ Route::group(['middleware' => ['guest']], function () {
 
     Route::post('/login', [CustomerController::class, 'Login'])->name('login.api');
     // category
-    Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('category', CategoryController::class);
 });
 
 // Protected routes api 

@@ -36,8 +36,7 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
     setJWTValue(isAuthenticatedUser());
   }, []);
 
-  // const { contextValue } = useAppContext();
-  const { state } = useAppContext().contextValue;
+  const { state } = useAppContext();
   const { cartList } = state.cart;
 
   const cartHandle = (

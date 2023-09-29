@@ -12,7 +12,7 @@ import Icon from "../icon/Icon";
 import TextField from "../text-field/TextField";
 import { H3, H5, H6, SemiSpan, Small, Span } from "../Typography";
 import { StyledSessionCard } from "./SessionStyle";
-import { register } from "@data/apis";
+import { register } from "@data/apis.json";
 import { AuthContext } from "@context/AuthProvider";
 import { useRouter } from "next/router";
 

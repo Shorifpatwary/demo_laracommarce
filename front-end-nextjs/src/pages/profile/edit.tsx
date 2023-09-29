@@ -13,7 +13,7 @@ import { Formik } from "formik";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import * as yup from "yup";
-import { edit_CP, udpate_CP } from "@data/apis";
+import { edit_CP, udpate_CP } from "@data/apis.json";
 import { AuthContext } from "@context/AuthProvider";
 import { useRouter } from "next/router";
 import getCookie from "functions/getCookie";

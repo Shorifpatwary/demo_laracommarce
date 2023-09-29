@@ -12,7 +12,7 @@ import Icon from "../icon/Icon";
 import TextField from "../text-field/TextField";
 import { H3, H5, H6, SemiSpan, Small, Span } from "../Typography";
 import { StyledSessionCard } from "./SessionStyle";
-import { login } from "@data/apis";
+import { login } from "@data/apis.json";
 import { AuthContext } from "@context/AuthProvider";
 
 const Login: React.FC = () => {

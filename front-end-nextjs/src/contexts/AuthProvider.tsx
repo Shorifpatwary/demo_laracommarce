@@ -5,7 +5,7 @@ import {
   customer_profile,
   status,
   checkTokenValidity,
-} from "@data/apis";
+} from "@data/apis.json";
 import getCookie from "functions/getCookie";
 import { useRouter } from "next/router";
 
@@ -191,12 +191,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   //     JWT: getCookie("JWT") || "",
   //   });
   // }, []);
-  // EXAMPLE : for easy use case
-  // export const useAppContext = () =>
-  // useContext<{
-  //   state: typeof initialState;
-  //   dispatch: (args: rootActionType) => void;
-  // }>(AppContext);
 
   return (
     <AuthContext.Provider

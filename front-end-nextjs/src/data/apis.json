@@ -1,0 +1,43 @@
+{
+  "checkTokenValidity": {
+    "url": "http://localhost:8000/api/check-token",
+    "method": "POST",
+    "success_status_code": 200,
+    "error_status_code": 401
+  },
+  "login": {
+    "url": "http://localhost:8000/api/login",
+    "method": "POST",
+    "success_status_code": 200,
+    "error_status_code": 422
+  },
+  "register": {
+    "url": "http://localhost:8000/api/register",
+    "method": "POST",
+    "success_status_code": 200,
+    "error_status_code": 422
+  },
+  "customer_profile": {
+    "url": "http://localhost:8000/api/customer/profile",
+    "method": "GET",
+    "success_status_code": 200,
+    "error_status_code": 401
+  },
+  "edit_CP": {
+    "url": "http://localhost:8000/api/customer/edit",
+    "method": "GET",
+    "success_status_code": 200,
+    "error_status_code": 422
+  },
+  "udpate_CP": {
+    "url": "http://localhost:8000/api/customer/update",
+    "method": "PUT",
+    "success_status_code": 200,
+    "error_status_code": 422
+  },
+  "status": {
+    "success_status_code": 200,
+    "error_unauthorized": 401,
+    "error_forbidden": 403
+  }
+}
