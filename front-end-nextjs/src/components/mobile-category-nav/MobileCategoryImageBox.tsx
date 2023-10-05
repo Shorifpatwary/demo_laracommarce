@@ -10,20 +10,20 @@ const StyledImage = styled(NextImage)`
 `;
 
 export interface MobileCategoryImageBoxProps {
-  title: string;
-  imgUrl?: string;
+  name: string;
+  image?: string;
   icon?: string;
 }
 
 const MobileCategoryImageBox: React.FC<MobileCategoryImageBoxProps> = ({
-  title,
-  imgUrl,
+  name,
+  image,
   icon,
 }) => {
   return (
     <FlexBox flexDirection="column" alignItems="center" justifyContent="center">
-      {imgUrl ? (
-        <StyledImage src={imgUrl} objectFit="cover" width={100} height={80} />
+      {image ? (
+        <StyledImage src={image} objectFit="cover" width={100} height={80} />
       ) : (
         icon && <Icon size="48px">{icon}</Icon>
       )}
@@ -34,7 +34,7 @@ const MobileCategoryImageBox: React.FC<MobileCategoryImageBoxProps> = ({
         lineHeight="1"
         mt="0.5rem"
       >
-        {title}
+        {name}
       </Typography>
     </FlexBox>
   );

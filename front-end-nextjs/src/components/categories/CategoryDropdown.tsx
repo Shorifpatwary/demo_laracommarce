@@ -6,6 +6,7 @@ import MegaMenu1 from "./mega-menu/MegaMenu1";
 import MegaMenu2 from "./mega-menu/MegaMenu2";
 import { H2 } from "@component/Typography";
 import useFetch from "@hook/useFetch";
+import { category } from "@data/apis";
 
 export interface CategoryDropdownProps {
   open: boolean;
@@ -22,11 +23,12 @@ const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
   };
   const [categoriesState, setCategoriesState] = useState([]);
   const [hoveredCategory, setHoveredCategory] = useState(null);
-  // Replace 'yourApiUrl' with your actual API endpoint URL
-  const apiUrl = "http://localhost:8000/api/category";
 
   // Call the useFetch hook to make the GET request
-  const { data, error, isLoading, isComplete } = useFetch(apiUrl, "GET");
+  const { data, error, isLoading, isComplete } = useFetch(
+    category.url,
+    category.method as "GET"
+  );
 
   useEffect(() => {
     // When the component mounts or when data changes, you can handle the response
@@ -98,33 +100,26 @@ CategoryDropdown.defaultProps = {
 // export default CategoryDropdown;
 export default React.memo(CategoryDropdown);
 
-// make parent category box filtering parent_id null .
-// pass parent id and full category array
-// make sub category box filtering parent id value parent_id
-// pass parent id and full category array
-// make child category box filtering parent id value parent_id
-// pass parent id and full category array
+// if (isLoading) {
+//   return (
+//     <StyledCategoryDropdown open={open} position={position}>
+//       <div className="animate-pulse ">
+//         <div className="bg-black text-white	 h-100 w-200 border">Loading</div>
+//         <div className="bg-black text-white	 h-100 w-200 border">Loading</div>
+//         <div className="bg-black text-white	 h-100 w-200 border">Loading</div>
+//       </div>
+//     </StyledCategoryDropdown>
+//   );
+// }
+// @keyframes pulse {
+//   0%, 100% {
+//     opacity: 1;
+//   }
+//   50% {
+//     opacity: 0.5;
+//   }
+// }
 
-// Step 3: Use useEffect to make the fetch request
-// useEffect(() => {
-//   // Define the API URL
-//   const apiUrl = "http://localhost:8000/api/category";
-
-//   // Make the fetch request
-//   fetch(apiUrl)
-//     .then((response) => {
-//       // Check if the response status code matches the success_status_code
-//       if (response.status === 200) {
-//         return response.json(); // Parse the JSON response
-//       } else {
-//         throw new Error("Fetch failed");
-//       }
-//     })
-//     .then((data) => {
-//       // Update the state with the fetched data
-//       setCategoriesState(data.data);
-//     })
-//     .catch((error) => {
-//       console.error("Fetch error:", error);
-//     });
-// }, []);
+// .animate-pulse {
+//   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+// }

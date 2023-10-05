@@ -7,7 +7,7 @@ import { CategoryInterface } from "interfaces/api-response";
 
 export interface MegaMenu2Props {
   parent_id: number;
-  categoriesState: CategoryInterfaces;
+  categoriesState: CategoryInterface;
   hasChildWithParentId: (id: any) => boolean;
 }
 

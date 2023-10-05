@@ -1,4 +1,3 @@
-// checkTokenValidity.js
 export const checkTokenValidity = {
   url: "http://localhost:8000/api/check-token",
   method: "POST",
@@ -6,7 +5,6 @@ export const checkTokenValidity = {
   error_status_code: 401,
 };
 
-// login.js
 export const login = {
   url: "http://localhost:8000/api/login",
   method: "POST",
@@ -14,7 +12,6 @@ export const login = {
   error_status_code: 422,
 };
 
-// register.js
 export const register = {
   url: "http://localhost:8000/api/register",
   method: "POST",
@@ -22,7 +19,6 @@ export const register = {
   error_status_code: 422,
 };
 
-// customerProfile.js
 export const customerProfile = {
   url: "http://localhost:8000/api/customer/profile",
   method: "GET",
@@ -30,7 +26,6 @@ export const customerProfile = {
   error_status_code: 401,
 };
 
-// editCP.js
 export const editCP = {
   url: "http://localhost:8000/api/customer/edit",
   method: "GET",
@@ -38,7 +33,6 @@ export const editCP = {
   error_status_code: 422,
 };
 
-// updateCP.js
 export const updateCP = {
   url: "http://localhost:8000/api/customer/update",
   method: "PUT",
@@ -46,15 +40,13 @@ export const updateCP = {
   error_status_code: 422,
 };
 
-// categories.js
-export const categories = {
-  url: "http://localhost:8000/api/categories",
+export const category = {
+  url: "http://localhost:8000/api/category",
   method: "GET",
   success_status_code: 200,
   error_status_code: 422,
 };
 
-// status.js
 export const status = {
   success_status_code: 200,
   error_unauthorized: 401,
@@ -69,7 +61,7 @@ export const status = {
 //   customerProfile,
 //   editCP,
 //   updateCP,
-//   categories,
+//   category,
 //   status,
 // };
 
@@ -81,6 +73,6 @@ export default {
   customerProfile,
   editCP,
   updateCP,
-  categories,
+  category,
   status,
 };

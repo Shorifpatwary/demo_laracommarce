@@ -19,7 +19,7 @@ const Icon: React.FC<
   const svgRegex = /<svg\s+/i;
 
   // Check if the 'children' prop contains an SVG tag using the regular expression
-  const isSvgIcon = svgRegex.test(children.toString());
+  const isSvgIcon = svgRegex.test(children?.toString());
 
   // console.log(isSvgIcon, "is svg icon");
   // return <div> lsdkf l</div>;
