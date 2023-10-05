@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryController extends Controller
 {
@@ -14,9 +15,17 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Category::all();
+        // $categories = Cache::remember('categories_with_descendant', now()->addMinutes(1), function () {
+        //     return Category::with('descendants')->get();
+        // });
+        // return $categories;
+        // return CategoryResource::collection($categories);
 
-        return CategoryResource::collection($query);
+        $categories = Cache::remember('categories_with_descendant', now()->addSeconds(5), function () {
+            return Category::all();
+        });
+
+        return CategoryResource::collection($categories);
     }
 
     /**

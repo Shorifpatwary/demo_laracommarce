@@ -15,9 +15,33 @@ export interface IconProps {
 const Icon: React.FC<
   IconProps & SpaceProps & ButtonHTMLAttributes<IconProps>
 > = ({ children, ...props }: IconProps) => {
+  // Regular expression to check if the 'children' prop contains an SVG tag
+  const svgRegex = /<svg\s+/i;
+
+  // Check if the 'children' prop contains an SVG tag using the regular expression
+  const isSvgIcon = svgRegex.test(children.toString());
+
+  // console.log(isSvgIcon, "is svg icon");
+  // return <div> lsdkf l</div>;
+
+  // If it's an SVG icon, use dangerouslySetInnerHTML on 'children'
+  if (isSvgIcon) {
+    const src = <div dangerouslySetInnerHTML={{ __html: children }} />;
+    return (
+      <StyledIcon
+        src={src}
+        {...props}
+        fallback={() => <div dangerouslySetInnerHTML={{ __html: children }} />}
+      />
+    );
+  }
+
+  // Construct the 'src' value based on whether it's an SVG icon or not
+  const src = `/assets/images/icons/${children}.svg`;
+
   return (
     <StyledIcon
-      src={`/assets/images/icons/${children}.svg`}
+      src={src}
       fallback={() => <span>{children?.trim()}</span>}
       {...props}
     />
@@ -29,4 +53,4 @@ Icon.defaultProps = {
   defaultcolor: "currentColor",
 };
 
-export default Icon;
+export default React.memo(Icon);

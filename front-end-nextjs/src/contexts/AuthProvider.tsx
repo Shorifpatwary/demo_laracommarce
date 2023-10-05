@@ -5,7 +5,7 @@ import {
   customer_profile,
   status,
   checkTokenValidity,
-} from "@data/apis.json";
+} from "@data/apis";
 import getCookie from "functions/getCookie";
 import { useRouter } from "next/router";
 

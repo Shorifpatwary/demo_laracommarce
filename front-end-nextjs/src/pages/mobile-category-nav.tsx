@@ -63,7 +63,7 @@ const MobileCategoryNav = () => {
           <Grid container spacing={3}>
             {suggestedList.map((item, ind) => (
               <Grid item lg={1} md={2} sm={3} xs={4} key={ind}>
-                <Link href="/product/search/423423">
+                <Link href={item.slug}>
                   <a>
                     <MobileCategoryImageBox {...item} />
                   </a>

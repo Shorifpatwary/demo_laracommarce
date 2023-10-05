@@ -23,7 +23,7 @@ const MobileCategoryImageBox: React.FC<MobileCategoryImageBoxProps> = ({
   return (
     <FlexBox flexDirection="column" alignItems="center" justifyContent="center">
       {imgUrl ? (
-        <StyledImage src={imgUrl} objectFit="cover" />
+        <StyledImage src={imgUrl} objectFit="cover" width={100} height={80} />
       ) : (
         icon && <Icon size="48px">{icon}</Icon>
       )}
@@ -40,4 +40,4 @@ const MobileCategoryImageBox: React.FC<MobileCategoryImageBoxProps> = ({
   );
 };
 
-export default MobileCategoryImageBox;
+export default React.memo(MobileCategoryImageBox);

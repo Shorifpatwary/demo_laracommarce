@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('slug');
             $table->string('description')->nullable();
             $table->string('image')->nullable();
-            $table->string('icon')->nullable();
+            $table->text('icon')->nullable();
 
             $table->foreign('parent_id')->references('id')->on('categories')->cascadeOnDelete();
             $table->timestamps();

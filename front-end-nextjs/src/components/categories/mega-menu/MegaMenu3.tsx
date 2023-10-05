@@ -7,8 +7,9 @@ import NavLink from "@component/nav-link/NavLink";
 import Typography, { H3, SemiSpan, Small } from "@component/Typography";
 import NextImage from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useMemo } from "react";
 import { StyledMegaMenu1 } from "./MegaMenuStyle";
+import MobileCategoryImageBox from "@component/mobile-category-nav/MobileCategoryImageBox";
 
 interface Image {
   imgUrl: string;
@@ -32,40 +33,50 @@ interface MegaMenu {
 }
 
 interface MegaMenuProps {
-  data: MegaMenu;
+  parent_id: number;
   minWidth?: string;
+  categoriesState;
 }
 
 const MegaMenu3: React.FC<MegaMenuProps> = ({
-  data: { categories, rightImage },
+  parent_id,
+  categoriesState,
   minWidth,
 }) => {
-  return categories ? (
+  // Define the getChild function
+  const getChild = (item) => {
+    return parent_id == item.parent_id;
+  };
+  // Use useMemo to memoize the filtered child categories
+  const childCategories = useMemo(() => {
+    return categoriesState?.filter(getChild);
+  }, [categoriesState, parent_id]);
+
+  return childCategories ? (
     <StyledMegaMenu1 className="mega-menu">
       <Card ml="1rem" minWidth={minWidth} boxShadow="regular">
         <FlexBox px="1.25rem" py="0.875rem">
           <Box flex="1 1 0">
             <Grid container spacing={4}>
-              {categories?.map((item, ind) => (
-                <Grid item md={3} key={ind}>
-                  {item.href ? (
-                    <NavLink className="title-link" href={item.href}>
-                      {item.title}
-                    </NavLink>
-                  ) : (
-                    <SemiSpan className="title-link">{item.title}</SemiSpan>
-                  )}
-                  {item.subCategories?.map((sub) => (
-                    <NavLink className="child-link" href={sub.href}>
-                      {sub.title}
-                    </NavLink>
-                  ))}
-                </Grid>
-              ))}
+              {childCategories?.map((item) => {
+                return (
+                  <Grid item md={3} key={item.id}>
+                    <Link href={item.slug}>
+                      <a>
+                        <MobileCategoryImageBox
+                          title={item.name}
+                          imgUrl={item.image}
+                          icon={item.icon}
+                        />
+                      </a>
+                    </Link>
+                  </Grid>
+                );
+              })}
             </Grid>
           </Box>
 
-          {rightImage && (
+          {/* {rightImage && (
             <Link href={rightImage.href}>
               <a>
                 <Box position="relative" width="153px" height="100%">
@@ -77,7 +88,7 @@ const MegaMenu3: React.FC<MegaMenuProps> = ({
                 </Box>
               </a>
             </Link>
-          )}
+          )} */}
         </FlexBox>
 
         <Link href="/sale-page-2">
@@ -134,3 +145,16 @@ MegaMenu3.defaultProps = {
 };
 
 export default MegaMenu3;
+
+// {item.slug ? (
+//   <NavLink className="title-link" href={item.slug}>
+//     {item.title}
+//   </NavLink>
+// ) : (
+//   <SemiSpan className="title-link">{item.title}</SemiSpan>
+// )}
+// {item.subCategories?.map((sub) => (
+//   <NavLink className="child-link" href={sub.slug}>
+//     {sub.title}
+//   </NavLink>
+// ))}

@@ -1,32 +1,46 @@
 import Card from "@component/Card";
-import React from "react";
+import React, { useMemo } from "react";
 import CategoryMenuItem from "../category-menu-item/CategoryMenuItem";
 import MegaMenu3 from "./MegaMenu3";
 import { StyledMegaMenu1 } from "./MegaMenuStyle";
+import { CategoryInterface } from "interfaces/api-response";
 
 export interface MegaMenu2Props {
-  data: {
-    icon: string;
-    href: string;
-    title: string;
-    menuData?: any;
-  }[];
+  parent_id: number;
+  categoriesState: CategoryInterfaces;
+  hasChildWithParentId: (id: any) => boolean;
 }
 
-const MegaMenu2: React.FC<MegaMenu2Props> = ({ data }) => {
+const MegaMenu2: React.FC<MegaMenu2Props> = ({
+  parent_id,
+  categoriesState,
+  hasChildWithParentId,
+}) => {
+  // Define the getChild function
+  const getChild = (item) => {
+    return parent_id == item.parent_id;
+  };
+  // Use useMemo to memoize the filtered child categories
+  const childCategories = useMemo(() => {
+    return categoriesState?.filter(getChild);
+  }, [categoriesState, parent_id]);
   return (
     <StyledMegaMenu1 className="mega-menu">
       <Card ml="1rem" py="0.5rem" boxShadow="regular">
-        {data?.map((item) => (
+        {childCategories?.map((item) => (
           <CategoryMenuItem
-            title={item.title}
-            href={item.href}
+            title={item.name}
+            href={item.slug}
             icon={item.icon}
-            caret={!!item.menuData}
-            key={item.title}
+            caret={hasChildWithParentId(item.id)}
+            key={item.id}
           >
-            {item.menuData && (
-              <MegaMenu3 minWidth="560px" data={item.menuData} />
+            {item.parent_id && (
+              <MegaMenu3
+                minWidth="560px"
+                parent_id={item.id}
+                categoriesState={categoriesState}
+              />
             )}
           </CategoryMenuItem>
         ))}
@@ -35,4 +49,4 @@ const MegaMenu2: React.FC<MegaMenu2Props> = ({ data }) => {
   );
 };
 
-export default MegaMenu2;
+export default React.memo(MegaMenu2);
