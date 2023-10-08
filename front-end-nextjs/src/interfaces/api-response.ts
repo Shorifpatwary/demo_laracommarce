@@ -11,3 +11,13 @@ export interface CategoryInterface extends timestamps {
   parent_id: null | number;
   slug: string;
 }
+
+export interface BrandInterface extends timestamps {
+  description: string;
+  icon: null | string;
+  id: number;
+  image: null | string;
+  name: string;
+  parent_id: null | number;
+  slug: string;
+}

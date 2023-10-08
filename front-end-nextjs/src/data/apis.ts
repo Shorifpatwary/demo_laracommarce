@@ -1,47 +1,63 @@
-export const checkTokenValidity = {
+import { HTTPMethod } from "@hook/useFetch";
+
+export type argumentsType = {
+  url: string;
+  method: HTTPMethod;
+  success_status_code: number;
+  error_status_code?: number;
+};
+
+export const checkTokenValidity: argumentsType = {
   url: "http://localhost:8000/api/check-token",
   method: "POST",
   success_status_code: 200,
   error_status_code: 401,
 };
 
-export const login = {
+export const login: argumentsType = {
   url: "http://localhost:8000/api/login",
   method: "POST",
   success_status_code: 200,
   error_status_code: 422,
 };
 
-export const register = {
+export const register: argumentsType = {
   url: "http://localhost:8000/api/register",
   method: "POST",
   success_status_code: 200,
   error_status_code: 422,
 };
 
-export const customerProfile = {
+export const customerProfile: argumentsType = {
   url: "http://localhost:8000/api/customer/profile",
   method: "GET",
   success_status_code: 200,
   error_status_code: 401,
 };
 
-export const editCP = {
+export const editCP: argumentsType = {
   url: "http://localhost:8000/api/customer/edit",
   method: "GET",
   success_status_code: 200,
   error_status_code: 422,
 };
 
-export const updateCP = {
+export const updateCP: argumentsType = {
   url: "http://localhost:8000/api/customer/update",
   method: "PUT",
   success_status_code: 200,
   error_status_code: 422,
 };
 
-export const category = {
+export const category: argumentsType = {
   url: "http://localhost:8000/api/category",
+  method: "GET",
+  success_status_code: 200,
+  error_status_code: 422,
+};
+
+export const brand: argumentsType = {
+  url: "http://localhost:8000/api/brand",
   method: "GET",
   success_status_code: 200,
   error_status_code: 422,
@@ -52,18 +68,6 @@ export const status = {
   error_unauthorized: 401,
   error_forbidden: 403,
 };
-
-// Export all objects separately
-// export {
-//   checkTokenValidity,
-//   login,
-//   register,
-//   customerProfile,
-//   editCP,
-//   updateCP,
-//   category,
-//   status,
-// };
 
 // Export the full object as the default export
 export default {

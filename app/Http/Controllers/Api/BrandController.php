@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CategoryResource;
-use App\Models\Category;
+use App\Http\Resources\BrandResource;
+use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class CategoryController extends Controller
+class BrandController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,16 +16,16 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         // $categories = Cache::remember('categories_with_descendant', now()->addMinutes(1), function () {
-        //     return Category::with('descendants')->get();
+        //     return Brand::with('descendants')->get();
         // });
         // return $categories;
-        // return CategoryResource::collection($categories);
+        // return BrandResource::collection($categories);
 
-        $categories = Cache::remember('categories_with_descendant', now()->addMinutes(5), function () {
-            return Category::all();
+        $categories = Cache::remember('brands', now()->addHours(2), function () {
+            return Brand::all();
         });
 
-        return CategoryResource::collection($categories);
+        return BrandResource::collection($categories);
     }
 
     /**
@@ -39,10 +39,10 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show(Brand $brand)
     {
-        $category->load('products', 'products.categories');
-        return new CategoryResource($category);
+        $brand->load('products', 'products.categories');
+        return new BrandResource($brand);
     }
 
     /**

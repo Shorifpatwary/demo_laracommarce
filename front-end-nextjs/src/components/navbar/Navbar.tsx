@@ -167,4 +167,4 @@ const Navbar: React.FC<NavbarProps> = ({ navListOpen }) => {
   );
 };
 
-export default Navbar;
+export default React.memo(Navbar);

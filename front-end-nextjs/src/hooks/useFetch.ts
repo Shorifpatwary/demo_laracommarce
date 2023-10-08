@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE";
+export type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 interface UseFetchResponse<T> {
   data: T | null;

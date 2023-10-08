@@ -24,6 +24,7 @@ const MegaMenu2: React.FC<MegaMenu2Props> = ({
   const childCategories = useMemo(() => {
     return categoriesState?.filter(getChild);
   }, [categoriesState, parent_id]);
+
   return (
     <StyledMegaMenu1 className="mega-menu">
       <Card ml="1rem" py="0.5rem" boxShadow="regular">
