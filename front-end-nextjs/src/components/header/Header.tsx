@@ -19,6 +19,7 @@ import UserProfileDialog from "./UserProfileDialog";
 import Button from "@component/buttons/Button";
 import { AuthContext } from "@context/AuthProvider";
 import getCookie from "functions/getCookie";
+import { CategoryProvider } from "@context/CategoryProvider";
 
 type HeaderProps = {
   isFixed?: boolean;
@@ -96,7 +97,9 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
         </FlexBox>
 
         <FlexBox justifyContent="center" flex="1 1 0">
-          <SearchBox />
+          <CategoryProvider>
+            <SearchBox />
+          </CategoryProvider>
           {
             <Link href={isAuthenticateUser ? "/profile" : "/login"}>
               <IconButton ml="1rem" bg="gray.200" p="8px">

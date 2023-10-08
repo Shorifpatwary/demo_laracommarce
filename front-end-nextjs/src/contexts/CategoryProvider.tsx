@@ -44,9 +44,7 @@ export function useCategory() {
 }
 
 export function CategoryProvider({ children }: CategoryProviderProps) {
-  const [categoriesState, setCategoriesState] = useState<CategoryInterface[]>(
-    []
-  );
+  const [categoriesState, setCategoriesState] = useState<CategoryInterface[]>();
   // Define the getParent function
   const getChilds = (item) => {
     return item.parent_id == null;
@@ -73,10 +71,12 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
   }, [categoriesState]);
 
   // Call the useFetch hook to make the GET request for categories
-  const { data, error, isLoading, isComplete } = useFetch<CategoryInterface[]>(
+  // if (!categoriesState) {
+  var { data, error, isLoading, isComplete } = useFetch<CategoryInterface[]>(
     category.url, // Replace with the actual category URL
-    category.method as "GET"
+    category.method
   );
+  // }
 
   useEffect(() => {
     // When the component mounts or when data changes, handle the response
@@ -92,12 +92,22 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
   }, [data, error, isComplete]);
 
   // Define the context value
-  const contextValue: CategoryContextType = {
-    categories: categoriesState,
-    parentCategories,
-    hasChildWithParentId,
-    childCategories,
-  };
+  // const contextValue: CategoryContextType = {
+  //   categories: categoriesState,
+  //   parentCategories,
+  //   hasChildWithParentId,
+  //   childCategories,
+  // };
+
+  // Define the context value and memoize the categories
+  const contextValue: CategoryContextType = useMemo(() => {
+    return {
+      categories: categoriesState,
+      parentCategories,
+      hasChildWithParentId,
+      childCategories,
+    };
+  }, [categoriesState]);
 
   return (
     <CategoryContext.Provider value={contextValue}>

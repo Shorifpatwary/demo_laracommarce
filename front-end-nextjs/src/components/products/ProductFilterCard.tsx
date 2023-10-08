@@ -220,24 +220,6 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   );
 };
 
-const categroyList = [
-  {
-    title: "Bath Preparations",
-    subCategories: ["Bubble Bath", "Bath Capsules", "Others"],
-  },
-  {
-    title: "Eye Makeup Preparations",
-  },
-  {
-    title: "Fragrance",
-  },
-  {
-    title: "Hair Preparations",
-  },
-];
-
-const brandList = ["Maccs", "Karts", "Baars", "Bukks", "Luasis"];
-const otherOptions = ["On Sale", "In Stock", "Featured", "Trendy"];
 const colorList = [
   "#1C1C1C",
   "#FF7A7A",

@@ -10,28 +10,52 @@ import Menu from "../Menu";
 import MenuItem from "../MenuItem";
 import TextField from "../text-field/TextField";
 import StyledSearchBox from "./SearchBoxStyle";
+import { useCategory } from "@context/CategoryProvider";
+import { useRouter } from "next/router";
 
 export interface SearchBoxProps {}
 
 const SearchBox: React.FC<SearchBoxProps> = () => {
-  const [category, setCategory] = useState("All Categories");
+  const router = useRouter();
+
+  const [category, setCategory] = useState({
+    id: null,
+    name: "All Categories",
+  });
+  const [query, setQuery] = useState<string>("");
   const [resultList, setResultList] = useState([]);
+
+  const { parentCategories } = useCategory();
 
   const handleCategoryChange = (cat) => () => {
     setCategory(cat);
   };
 
-  const search = debounce((e) => {
-    const value = e.target?.value;
+  const handleKeyPress = () => {
+    if (query.trim() === "") {
+      return;
+    }
+    if (category.name === "All Categories" || category.id === null) {
+      router.push(`/search?q=${encodeURIComponent(query)}`);
+    } else {
+      router.push(
+        `/search?q=${encodeURIComponent(query)}/category/${category.name}`
+      );
+    }
+  };
 
-    if (!value) setResultList([]);
-    else setResultList(dummySearchResult);
-  }, 200);
+  // const search = debounce((e) => {
+  //   const value = e.target?.value;
 
-  const hanldeSearch = useCallback((event) => {
-    event.persist();
-    search(event);
-  }, []);
+  //   // if (!value) setResultList([]);
+  //   setQuery((prev) => prev + value);
+  //   // else setResultList(dummySearchResult);
+  // }, 200);
+
+  // const handleSearch = useCallback((event) => {
+  //   event.persist();
+  //   search(event);
+  // }, []);
 
   const handleDocumentClick = () => {
     setResultList([]);
@@ -54,21 +78,27 @@ const SearchBox: React.FC<SearchBoxProps> = () => {
           className="search-field"
           placeholder="Search and hit enter..."
           fullwidth
-          onChange={hanldeSearch}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleKeyPress();
+            }
+          }}
         />
         <Menu
           className="category-dropdown"
           direction="right"
           handler={
             <FlexBox className="dropdown-handler" alignItems="center">
-              <span>{category}</span>
+              <span>{category.name}</span>
               <Icon variant="small">chevron-down</Icon>
             </FlexBox>
           }
         >
-          {categories.map((item) => (
-            <MenuItem key={item} onClick={handleCategoryChange(item)}>
-              {item}
+          {parentCategories?.map((item) => (
+            <MenuItem key={item.id} onClick={handleCategoryChange(item)}>
+              {item.name}
             </MenuItem>
           ))}
         </Menu>
@@ -115,6 +145,7 @@ const dummySearchResult = [
   "Ksus K555LA",
   "Acer Aspire X453",
   "iPad Mini 3",
+  "something more ",
 ];
 
-export default SearchBox;
+export default React.memo(SearchBox);
