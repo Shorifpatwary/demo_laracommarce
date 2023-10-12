@@ -15,34 +15,35 @@ import Modal from "../modal/Modal";
 import Rating from "../rating/Rating";
 import { H3, SemiSpan } from "../Typography";
 import { StyledProductCard1 } from "./ProductCardStyle";
+import { ProductInterface } from "interfaces/api-response";
+// export interface ProductCard1Props extends CardProps {
+//   className?: string;
+//   style?: CSSProperties;
+//   imgUrl?: string;
+//   title?: string;
+//   price?: number;
+//   off?: number;
+//   rating?: number;
+//   id?: string | number;
+//   // className?: string;
+//   // style?: CSSProperties;
+//   // imgUrl: string;
+//   // title: string;
+//   // price: number;
+//   // off: number;
+//   // rating?: number;
+//   // subcategories?: Array<{
+//   //   title: string;
+//   //   url: string;
+//   // }>;
+// }
 
-export interface ProductCard1Props extends CardProps {
-  className?: string;
-  style?: CSSProperties;
-  imgUrl?: string;
-  title?: string;
-  price?: number;
-  off?: number;
-  rating?: number;
-  id?: string | number;
-  // className?: string;
-  // style?: CSSProperties;
-  // imgUrl: string;
-  // title: string;
-  // price: number;
-  // off: number;
-  // rating?: number;
-  // subcategories?: Array<{
-  //   title: string;
-  //   url: string;
-  // }>;
-}
-
-const ProductCard1: React.FC<ProductCard1Props> = ({
+const ProductCard1 = ({
   id,
-  imgUrl,
-  title,
-  price,
+  thumbnail_link,
+  images_link,
+  name,
+  selling_price,
   off,
   rating,
   ...props
@@ -61,10 +62,10 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
       dispatch({
         type: "CHANGE_CART_AMOUNT",
         payload: {
-          name: title,
+          name: name,
           qty: amount,
-          price,
-          imgUrl,
+          selling_price,
+          thumbnail_link,
           id,
         },
       });
@@ -110,12 +111,18 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
 
         <Link href={`/product/${id}`}>
           <a>
+            {/* <img src={thumbnail_link} alt="" /> */}
             <Image
-              src={imgUrl}
+              src={thumbnail_link}
+              // src="http://localhost:8000/files/product/simple-product-name1777520611797309.jpg"
+              // src="/assets/images/products/macbook.png"
               layout="responsive"
-              alt={title}
+              alt={name}
               width={100}
               height={100}
+              blurDataURL="/assets/images/products/macbook.png"
+              placeholder="blur"
+              unoptimized // Disable optimization for this image
             />
           </a>
         </Link>
@@ -132,9 +139,9 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
                   fontWeight="600"
                   color="text.secondary"
                   mb="10px"
-                  title={title}
+                  title={name}
                 >
-                  {title}
+                  {name}
                 </H3>
               </a>
             </Link>
@@ -143,11 +150,12 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
 
             <FlexBox alignItems="center" mt="10px">
               <SemiSpan pr="0.5rem" fontWeight="600" color="primary.main">
-                ${(price - (price * off) / 100).toFixed(2)}
+                ${(selling_price - (selling_price * off) / 100).toFixed(2)}
               </SemiSpan>
               {!!off && (
                 <SemiSpan color="text.muted" fontWeight="600">
-                  <del>{price?.toFixed(2)}</del>
+                  {/* <del>{selling_price?.toFixed(2)}</del> */}
+                  <del>{selling_price}</del>
                 </SemiSpan>
               )}
             </FlexBox>
@@ -194,7 +202,12 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
 
       <Modal open={open} onClose={toggleDialog}>
         <Card p="1rem" position="relative">
-          <ProductIntro imgUrl={[imgUrl]} title={title} price={price} id={id} />
+          <ProductIntro
+            imgUrl={images_link}
+            title={name}
+            price={selling_price}
+            id={id}
+          />
           <Box
             position="absolute"
             top="0.75rem"

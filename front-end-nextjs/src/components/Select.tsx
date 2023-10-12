@@ -24,6 +24,7 @@ const Select: React.FC<SelectProps> = ({
   options,
   id,
   label,
+  value,
   errorText,
   ...props
 }) => {
@@ -53,7 +54,7 @@ const Select: React.FC<SelectProps> = ({
             neutral20: colors.text.disabled,
           },
         })}
-        // {...props}
+        {...props}
       />
       {errorText && (
         <Typography color="error.main" ml="0.25rem" mt="0.25rem" as="small">

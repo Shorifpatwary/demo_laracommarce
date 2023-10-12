@@ -14,6 +14,7 @@ import { BrandInterface } from "interfaces/api-response";
 import { brand } from "@data/apis";
 import useFetch from "@hook/useFetch";
 import { priceRangeType, ProductStatusOption } from "pages/product/search/[id]";
+import Button from "@component/buttons/Button";
 
 type ProductFilterCardProps = {
   priceRange: priceRangeType;
@@ -24,6 +25,8 @@ type ProductFilterCardProps = {
   setProductStatus: React.Dispatch<React.SetStateAction<ProductStatusOption[]>>;
   selectedRatings: number[];
   setSelectedRatings: React.Dispatch<React.SetStateAction<number[]>>;
+  handleProductFetch: () => void;
+  setCategoryName: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
@@ -35,6 +38,8 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
   setProductStatus,
   selectedRatings,
   setSelectedRatings,
+  handleProductFetch,
+  setCategoryName,
 }) => {
   const { parentCategories, childCategories, hasChildWithParentId } =
     useCategory();
@@ -79,7 +84,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
     <Card p="18px 27px" elevation={5}>
       <H6 mb="10px">Categories</H6>
 
-      {parentCategories.map((item) =>
+      {parentCategories?.map((item) =>
         childCategories(item.id) ? (
           <Accordion key={item.id} expanded>
             <AccordionHeader
@@ -87,6 +92,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
               px="0px"
               py="6px"
               color="text.muted"
+              onClick={() => setCategoryName(item.name)}
               // justifyContent="flex-start"
             >
               <SemiSpan className="cursor-pointer" mr="9px">
@@ -101,6 +107,7 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
                 pl="22px"
                 py="6px"
                 key={childCategoryItem.id}
+                onClick={() => setCategoryName(childCategoryItem.name)}
               >
                 {childCategoryItem.name}
               </Paragraph>
@@ -209,6 +216,15 @@ const ProductFilterCard: React.FC<ProductFilterCardProps> = ({
       ))}
 
       <Divider my="24px" />
+
+      <Button
+        fullwidth
+        color="primary"
+        variant="contained"
+        onClick={handleProductFetch}
+      >
+        Go
+      </Button>
 
       {/* <H6 mb="16px">Colors</H6>
       <FlexBox mb="1rem">

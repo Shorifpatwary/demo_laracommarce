@@ -20,9 +20,13 @@ export interface ProductIntroProps {
   id?: string | number;
 }
 
-const ProductIntro: React.FC<ProductIntroProps> = (props) => {
-  const { imgUrl, title, price, id } = props;
-
+const ProductIntro: React.FC<ProductIntroProps> = ({
+  imgUrl,
+  title,
+  price,
+  id,
+}) => {
+  console.log(imgUrl, "image url ");
   const [selectedImage, setSelectedImage] = useState(0);
   const { state, dispatch } = useAppContext();
   const cartList: CartItem[] = state.cart.cartList;
@@ -110,7 +114,7 @@ const ProductIntro: React.FC<ProductIntroProps> = (props) => {
 
           <Box mb="24px">
             <H2 color="primary.main" mb="4px" lineHeight="1">
-              ${price.toFixed(2)}
+              ${price}
             </H2>
             <SemiSpan color="inherit">Stock Available</SemiSpan>
           </Box>

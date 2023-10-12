@@ -24,6 +24,7 @@ interface CategoryContextType {
   parentCategories: CategoryInterface[];
   hasChildWithParentId: (id: number) => boolean;
   childCategories: (parentId: number) => CategoryInterface[];
+  getAllNestedCategories: (categoryId: number) => CategoryInterface[];
 }
 
 const CategoryContext = createContext<CategoryContextType | undefined>(
@@ -46,12 +47,12 @@ export function useCategory() {
 export function CategoryProvider({ children }: CategoryProviderProps) {
   const [categoriesState, setCategoriesState] = useState<CategoryInterface[]>();
   // Define the getParent function
-  const getChilds = (item) => {
+  const getParents = (item) => {
     return item.parent_id == null;
   };
   // Use useMemo to memoize the filtered parent categories
   const parentCategories = useMemo(() => {
-    return categoriesState?.filter(getChilds);
+    return categoriesState?.filter(getParents);
   }, [categoriesState]);
 
   // return true if child category has on this category
@@ -77,6 +78,33 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
     category.method
   );
   // }
+
+  // Function to get all nested categories for a given category
+  const getAllNestedCategories = (categoryId: number) => {
+    const nestedCategories: CategoryInterface[] = [];
+
+    const findNested = (parentId: number) => {
+      const children = childCategories(parentId);
+      if (children && children.length > 0) {
+        for (const child of children) {
+          nestedCategories.push(child);
+          findNested(child.id);
+        }
+      }
+    };
+
+    // Start the search for nested categories
+    // Add the received category to the nested categories
+    const receivedCategory = categoriesState?.find(
+      (category) => category.id === categoryId
+    );
+    if (receivedCategory) {
+      nestedCategories.push(receivedCategory);
+    }
+    findNested(categoryId);
+
+    return nestedCategories;
+  };
 
   useEffect(() => {
     // When the component mounts or when data changes, handle the response
@@ -106,6 +134,7 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
       parentCategories,
       hasChildWithParentId,
       childCategories,
+      getAllNestedCategories,
     };
   }, [categoriesState]);
 
@@ -115,3 +144,11 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
     </CategoryContext.Provider>
   );
 }
+
+// function algorithom
+// get category id form recieve category.
+// create a variable with recive category before starting loop.
+// check if has child category
+// get direct nested child category if check is true.
+// loop trow them  and do 1  store the value with variable 2. check if has child category   3. get direct nested child category if check is true. loop trow them  and do 1  store the value with variable . this process will continue dynamically or using recursive function .
+//

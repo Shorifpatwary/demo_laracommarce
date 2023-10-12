@@ -7,6 +7,7 @@ import { AppProvider } from "../contexts/app/AppContext";
 import AuthProvider from "@context/AuthProvider";
 import { GlobalStyles } from "../utils/globalStyles";
 import { theme } from "../utils/theme";
+import { CategoryProvider } from "@context/CategoryProvider";
 
 //Binding events.
 Router.events.on("routeChangeStart", () => NProgress.start());
@@ -57,11 +58,13 @@ const App = ({ Component, pageProps }: any) => {
       </Head>
       <GlobalStyles />
       <AppProvider>
-        <AuthProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </AuthProvider>
+        <CategoryProvider>
+          <AuthProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </AuthProvider>
+        </CategoryProvider>
       </AppProvider>
     </ThemeProvider>
   );

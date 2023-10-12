@@ -125,7 +125,7 @@ const Header: React.FC<HeaderProps> = ({ isFixed, className }) => {
   );
 };
 
-export default Header;
+export default React.memo(Header);
 
 {
   /* <UserProfileDialog

@@ -63,6 +63,13 @@ export const brand: argumentsType = {
   error_status_code: 422,
 };
 
+export const productSearch: argumentsType = {
+  url: "http://localhost:8000/api/search",
+  method: "GET",
+  success_status_code: 200,
+  error_status_code: 422,
+};
+
 export const status = {
   success_status_code: 200,
   error_unauthorized: 401,

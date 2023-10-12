@@ -17,6 +17,7 @@ export interface SearchBoxProps {}
 
 const SearchBox: React.FC<SearchBoxProps> = () => {
   const router = useRouter();
+  console.log(router, "router ");
 
   const [category, setCategory] = useState({
     id: null,
@@ -36,10 +37,17 @@ const SearchBox: React.FC<SearchBoxProps> = () => {
       return;
     }
     if (category.name === "All Categories" || category.id === null) {
-      router.push(`/search?q=${encodeURIComponent(query)}`);
+      // router.push(`/product/search/search=${encodeURIComponent(query)}`);
+      router.push(`/product/search/search=${encodeURIComponent(query)}`);
     } else {
       router.push(
-        `/search?q=${encodeURIComponent(query)}/category/${category.name}`
+        `/product/search/search=${encodeURIComponent(query)}&category=${
+          category.name
+        }`
+
+        // `/product/search/search=${encodeURIComponent(query)}/category/${
+        //   category.name
+        // }`
       );
     }
   };
@@ -58,7 +66,9 @@ const SearchBox: React.FC<SearchBoxProps> = () => {
   // }, []);
 
   const handleDocumentClick = () => {
-    setResultList([]);
+    // if (resultList !== []) {
+    //   setResultList([]);
+    // }
   };
 
   useEffect(() => {
@@ -117,7 +127,7 @@ const SearchBox: React.FC<SearchBoxProps> = () => {
           zIndex={99}
         >
           {resultList.map((item) => (
-            <Link href={`/product/search/${item}`} key={item}>
+            <Link href={`/product/search/search?q=${item}`} key={item}>
               <MenuItem key={item}>
                 <Span fontSize="14px">{item}</Span>
               </MenuItem>

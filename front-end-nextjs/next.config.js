@@ -1,6 +1,9 @@
 const postcssConfig = require("postcss-load-config");
 
 module.exports = {
+  images: {
+    domains: ["localhost"], // Add 'localhost' to the list of allowed domains
+  },
   // ...other configuration options...
   webpack: (config) => {
     // ...other webpack configuration...

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\CustomerController;
@@ -36,8 +37,13 @@ Route::group(['middleware' => ['guest']], function () {
     // category
     Route::apiResource('category', CategoryController::class);
 
-    // category
+    // brand
     Route::apiResource('brand', BrandController::class);
+
+    // product
+    Route::apiResource('product', ProductController::class);
+    // product search
+    Route::get('/search', [ProductController::class, 'search']);
 });
 
 // Protected routes api 

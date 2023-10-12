@@ -10,6 +10,7 @@ export interface PaginationProps extends SpaceProps {
   marginPagesDisplayed?: number;
   pageRangeDisplayed?: number;
   onChange?: (data: { selected: number }) => void;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -17,10 +18,14 @@ const Pagination: React.FC<PaginationProps> = ({
   marginPagesDisplayed,
   pageRangeDisplayed,
   onChange,
+  setPage,
   ...props
 }) => {
   const handlePageChange = async (page) => {
     if (onChange) onChange(page.selected);
+    setPage(page.selected + 1);
+    console.log(page.selected + 1, "page.selected form pagination");
+    console.log(page, "page form pagination");
   };
 
   return (
