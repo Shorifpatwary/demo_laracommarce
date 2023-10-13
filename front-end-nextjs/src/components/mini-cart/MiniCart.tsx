@@ -19,6 +19,8 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
   const { state, dispatch } = useAppContext();
   const { cartList } = state.cart;
 
+  console.log(cartList, "cart list ");
+
   const handleCartAmountChange = useCallback(
     (amount, product) => () => {
       dispatch({
@@ -127,7 +129,8 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
                   </a>
                 </Link>
                 <Tiny color="text.muted">
-                  ${item.price.toFixed(2)} x {item.qty}
+                  ${item.price} x {item.qty}
+                  {/* ${item.price.toFixed(2)} x {item.qty} */}
                 </Tiny>
                 <Typography
                   fontWeight={600}
@@ -135,7 +138,8 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
                   color="primary.main"
                   mt="4px"
                 >
-                  ${(item.qty * item.price).toFixed(2)}
+                  ${item.qty * item.price}
+                  {/* ${(item.qty * item.price).toFixed(2)} */}
                 </Typography>
               </div>
 
@@ -163,7 +167,8 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
               onClick={toggleSidenav}
             >
               <Typography fontWeight={600}>
-                Checkout Now (${getTotalPrice().toFixed(2)})
+                Checkout Now (${getTotalPrice()})
+                {/* Checkout Now (${getTotalPrice().toFixed(2)}) */}
               </Typography>
             </Button>
           </Link>

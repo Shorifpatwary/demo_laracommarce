@@ -86,13 +86,6 @@ class ProductController extends Controller
         }
 
         // Apply category filter if provided.
-        // if ($category) {
-        //     $query->whereHas('category', function ($query) use ($category) {
-        //         $query->where('name', $category);
-        //     });
-        // }
-
-        // Apply category filter if provided.
         if (!empty($category)) {
             $categoryIds = explode(',', $category);
             $query->whereIn('category_id', $categoryIds);

@@ -201,8 +201,14 @@ const ProductSearchResult = () => {
           as={Card}
         >
           <div>
-            <H5>Searching for “ mobile phone + ”</H5>
-            <Paragraph color="text.muted">48 results found</Paragraph>
+            {search ? <H5>Searching for “ {search} ”</H5> : ""}
+            {products?.meta.total > 0 ? (
+              <Paragraph color="text.muted">
+                {products.meta.total} results found
+              </Paragraph>
+            ) : (
+              ""
+            )}
           </div>
           <FlexBox alignItems="center" flexWrap="wrap">
             <Paragraph color="text.muted" mr="1rem">

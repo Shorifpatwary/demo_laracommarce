@@ -70,10 +70,10 @@ const ProductCard1: React.FC<ProductCard1Props> = ({ product, ...props }) => {
         payload: {
           name: name,
           qty: amount,
-          selling_price,
-          discount_price,
-          thumbnail_link,
-          brand,
+          price:selling_price,
+          // discount_price,
+          imgUrl:thumbnail_link,
+          // brand,
           id,
         },
       });
