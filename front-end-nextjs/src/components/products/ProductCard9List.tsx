@@ -4,14 +4,21 @@ import FlexBox from "../FlexBox";
 import Pagination from "../pagination/Pagination";
 import ProductCard9 from "../product-cards/ProductCard9";
 import { SemiSpan } from "../Typography";
+import { ProductsWithPagination } from "interfaces/api-response";
 
-export interface ProductCard9ListProps {}
+export interface ProductCard9ListProps {
+  products: ProductsWithPagination;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+}
 
-const ProductCard9List: React.FC<ProductCard9ListProps> = () => {
+const ProductCard9List: React.FC<ProductCard9ListProps> = ({
+  products,
+  setPage,
+}) => {
   return (
     <div>
-      {productDatabase.slice(95, 104).map((item, ind) => (
-        <ProductCard9 mb="1.25rem" key={ind} {...item} />
+      {products.data?.map((product) => (
+        <ProductCard9 mb="1.25rem" key={product.id} product={product} />
       ))}
 
       <FlexBox
@@ -20,8 +27,12 @@ const ProductCard9List: React.FC<ProductCard9ListProps> = () => {
         alignItems="center"
         mt="32px"
       >
-        <SemiSpan>Showing 1-9 of 1.3k Products</SemiSpan>
-        <Pagination pageCount={10} />
+        <SemiSpan>
+          Showing {products.meta.from} - {products.meta.to} of{" "}
+          {products.meta.total} Products
+          <span> </span>
+        </SemiSpan>
+        <Pagination pageCount={products.meta.last_page} setPage={setPage} />
       </FlexBox>
     </div>
   );

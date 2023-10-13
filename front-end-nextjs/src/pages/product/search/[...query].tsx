@@ -294,7 +294,7 @@ const ProductSearchResult = () => {
               view === "grid" ? (
                 <ProductCard1List products={products} setPage={setPage} />
               ) : (
-                <ProductCard9List />
+                <ProductCard9List products={products} setPage={setPage} />
               )
             ) : (
               <h2 style={{ textAlign: "center" }}>No products found</h2>

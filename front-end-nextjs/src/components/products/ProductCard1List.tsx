@@ -16,8 +16,6 @@ const ProductCard1List: React.FC<ProductCard1ListProps> = ({
   products,
   setPage,
 }) => {
-  console.log(products, " product form product card  ");
-
   return (
     <div>
       <Grid container spacing={6}>
