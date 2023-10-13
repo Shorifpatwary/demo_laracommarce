@@ -108,6 +108,12 @@ const ProductSearchResult = () => {
       fetchURL += `${delimiter}brand=${brandIds.join(",")}`;
       delimiter = "&";
     }
+    // price
+    if (priceRange.min !== null && priceRange.max !== null) {
+      // Include price range in the URL
+      fetchURL += `${delimiter}min_price=${priceRange.min}&max_price=${priceRange.max}`;
+      delimiter = "&";
+    }
     // product status
     if (productStatus) {
       const activeProductStatus = productStatus.filter(

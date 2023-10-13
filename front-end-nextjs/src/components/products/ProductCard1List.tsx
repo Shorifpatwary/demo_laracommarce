@@ -22,9 +22,9 @@ const ProductCard1List: React.FC<ProductCard1ListProps> = ({
     <div>
       <Grid container spacing={6}>
         {/* {!!products.data?.length ? ( */}
-        {products.data?.map((item) => (
-          <Grid item lg={4} sm={6} xs={12} key={item.id}>
-            <ProductCard1 {...item} />
+        {products.data?.map((product) => (
+          <Grid item lg={4} sm={6} xs={12} key={product.id}>
+            <ProductCard1 product={product} />
           </Grid>
         ))}
         {/* ) : (

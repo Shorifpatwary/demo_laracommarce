@@ -65,16 +65,18 @@ class ProductController extends Controller
         $brand = $request->input('brand');
         // Get the filters parameter from the request
         $filters = $request->input('product_status');
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
 
         $orderBy = $request->input('order_by', 'created_at');
         $orderDirection = $request->input('order_direction', 'asc');
 
         // Perform the search based on text and category.
-        $results = $this->performSearch($text, $category, $brand, $filters, $orderBy, $orderDirection)->with('category', 'brand')->paginate(12);
+        $results = $this->performSearch($text, $category, $brand, $minPrice, $maxPrice, $filters, $orderBy, $orderDirection)->with('category', 'brand')->paginate(12);
 
         return ProductResource::collection($results);
     }
-    private function performSearch($text, $category, $brand, $filters,  $orderBy = 'created_at', $orderDirection = 'asc')
+    private function performSearch($text, $category, $brand, $minPrice, $maxPrice, $filters,  $orderBy = 'created_at', $orderDirection = 'asc')
     {
         $query = Product::query();
 
@@ -98,6 +100,11 @@ class ProductController extends Controller
         if (!empty($brand)) {
             $brandIds = explode(',', $brand);
             $query->whereIn('brand_id', $brandIds);
+        }
+
+        // Apply price range filter if provided.
+        if ($minPrice !== null && $maxPrice !== null) {
+            $query->whereBetween('selling_price', [$minPrice, $maxPrice]);
         }
 
         if (!empty($filters)) {

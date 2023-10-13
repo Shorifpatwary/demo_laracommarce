@@ -12,11 +12,13 @@ import Grid from "../grid/Grid";
 import Icon from "../icon/Icon";
 import Rating from "../rating/Rating";
 import { H1, H2, H3, H6, SemiSpan } from "../Typography";
+import { BrandInterface } from "interfaces/api-response";
 
 export interface ProductIntroProps {
   imgUrl?: string[];
   title?: string;
   price?: number;
+  brandName?: string;
   id?: string | number;
 }
 
@@ -24,6 +26,7 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
   imgUrl,
   title,
   price,
+  brandName,
   id,
 }) => {
   console.log(imgUrl, "image url ");
@@ -99,10 +102,14 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
         <Grid item md={6} xs={12} alignItems="center">
           <H1 mb="1rem">{title}</H1>
 
-          <FlexBox alignItems="center" mb="1rem">
-            <SemiSpan>Brand:</SemiSpan>
-            <H6 ml="8px">Ziaomi</H6>
-          </FlexBox>
+          {!!brandName ? (
+            <FlexBox alignItems="center" mb="1rem">
+              <SemiSpan>Brand:</SemiSpan>
+              <H6 ml="8px">{brandName}</H6>
+            </FlexBox>
+          ) : (
+            " "
+          )}
 
           <FlexBox alignItems="center" mb="1rem">
             <SemiSpan>Rated:</SemiSpan>

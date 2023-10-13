@@ -16,6 +16,10 @@ import Rating from "../rating/Rating";
 import { H3, SemiSpan } from "../Typography";
 import { StyledProductCard1 } from "./ProductCardStyle";
 import { ProductInterface } from "interfaces/api-response";
+export interface ProductCard1Props extends CardProps {
+  product: ProductInterface;
+  [key: string]: unknown;
+}
 // export interface ProductCard1Props extends CardProps {
 //   className?: string;
 //   style?: CSSProperties;
@@ -38,20 +42,22 @@ import { ProductInterface } from "interfaces/api-response";
 //   // }>;
 // }
 
-const ProductCard1 = ({
-  id,
-  thumbnail_link,
-  images_link,
-  name,
-  selling_price,
-  off,
-  rating,
-  ...props
-}) => {
+const ProductCard1: React.FC<ProductCard1Props> = ({ product, ...props }) => {
+  const {
+    id,
+    thumbnail_link,
+    images_link,
+    name,
+    selling_price,
+    discount_price,
+    // rating,
+  } = product;
   const [open, setOpen] = useState(false);
 
   const { state, dispatch } = useAppContext();
-  const cartItem: CartItem = state.cart.cartList.find((item) => item.id === id);
+  const cartItem: CartItem = state.cart.cartList.find(
+    (item) => parseInt(item.id) === product.id
+  );
 
   const toggleDialog = useCallback(() => {
     setOpen((open) => !open);
@@ -65,7 +71,9 @@ const ProductCard1 = ({
           name: name,
           qty: amount,
           selling_price,
+          discount_price,
           thumbnail_link,
+          brand,
           id,
         },
       });
@@ -76,7 +84,7 @@ const ProductCard1 = ({
   return (
     <StyledProductCard1 {...props}>
       <div className="image-holder">
-        {!!off && (
+        {!!discount_price && (
           <Chip
             position="absolute"
             bg="primary.main"
@@ -87,7 +95,7 @@ const ProductCard1 = ({
             top="10px"
             left="10px"
           >
-            {off}% off
+            ${discount_price} off
           </Chip>
         )}
 
@@ -146,16 +154,19 @@ const ProductCard1 = ({
               </a>
             </Link>
 
-            <Rating value={rating || 0} outof={5} color="warn" readonly />
+            {/* <Rating value={rating || 0} outof={5} color="warn" readonly /> */}
 
             <FlexBox alignItems="center" mt="10px">
               <SemiSpan pr="0.5rem" fontWeight="600" color="primary.main">
-                ${(selling_price - (selling_price * off) / 100).toFixed(2)}
+                {/* ${(selling_price - (selling_price * off) / 100).toFixed(2)} */}
+                {selling_price}
               </SemiSpan>
-              {!!off && (
+              {!!discount_price && (
                 <SemiSpan color="text.muted" fontWeight="600">
                   {/* <del>{selling_price?.toFixed(2)}</del> */}
-                  <del>{selling_price}</del>
+                  <del>
+                    {parseInt(selling_price) + parseInt(discount_price || 0)}
+                  </del>
                 </SemiSpan>
               )}
             </FlexBox>
@@ -206,6 +217,7 @@ const ProductCard1 = ({
             imgUrl={images_link}
             title={name}
             price={selling_price}
+            brandName={product.brand.name}
             id={id}
           />
           <Box
