@@ -115,4 +115,30 @@ class ProductController extends Controller
         // Apply pagination.
         return $query;
     }
+
+    // Home page 
+    public function todayDeal()
+    {
+        $results = Product::where('today_deal', 1)->with('brand')->paginate(10);
+
+        return ProductResource::collection($results);
+    }
+    public function newArrival()
+    {
+        $results = Product::orderBy('created_at', 'asc')->with('brand')->paginate(10);
+
+        return ProductResource::collection($results);
+    }
+    public function bestDiscount()
+    {
+        $results = Product::orderBy('discount_price', 'asc')->with('brand')->paginate(10);
+
+        return ProductResource::collection($results);
+    }
+    public function trendingItem()
+    {
+        $results = Product::where('trendy', 1)->with('brand')->paginate(10);
+
+        return ProductResource::collection($results);
+    }
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Admin\NewsLetterController;
 use App\Http\Controllers\CustomerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +45,13 @@ Route::group(['middleware' => ['guest']], function () {
     Route::apiResource('product', ProductController::class);
     // product search
     Route::get('/search', [ProductController::class, 'search']);
+    // home page 
+    Route::get('/today_deal', [ProductController::class, 'todayDeal']);
+    Route::get('/new_arrival', [ProductController::class, 'newArrival']);
+    Route::get('/best_discount', [ProductController::class, 'bestDiscount']);
+    Route::get('/trending', [ProductController::class, 'trendingItem']);
+    // news letter 
+    Route::post('/create_news_letter', [NewsLetterController::class, 'create']);
 });
 
 // Protected routes api 

@@ -1,39 +1,41 @@
 import HoverBox from "@component/HoverBox";
 import { H4 } from "@component/Typography";
+import { ProductInterface } from "interfaces/api-response";
 import NextImage from "next/image";
 import Link from "next/link";
 import React from "react";
 
+// export interface ProductCard2Props {
+//   imgUrl: string;
+//   title: string;
+//   price: number;
+//   productUrl: string;
+// }
 export interface ProductCard2Props {
-  imgUrl: string;
-  title: string;
-  price: number;
-  productUrl: string;
+  product: ProductInterface;
 }
 
-const ProductCard2: React.FC<ProductCard2Props> = ({
-  imgUrl,
-  title,
-  price,
-  productUrl,
-}) => {
+const ProductCard2: React.FC<ProductCard2Props> = ({ product }) => {
   return (
-    <Link href={productUrl}>
+    <Link href={`/product/${product.id}`}>
       <a>
         <HoverBox borderRadius={8} mb="0.5rem">
           <NextImage
-            src={imgUrl}
+            src={product.thumbnail_link}
             width={100}
             height={100}
             layout="responsive"
-            alt={title}
+            alt={product.name}
+            blurDataURL="/assets/images/products/macbook.png"
+            placeholder="blur"
+            unoptimized // Disable optimization for this image
           />
         </HoverBox>
         <H4 fontWeight="600" fontSize="14px" mb="0.25rem">
-          {title}
+          {product.name}
         </H4>
         <H4 fontWeight="600" fontSize="14px" color="primary.main">
-          ${Math.ceil(price).toLocaleString()}
+          {product.selling_price}
         </H4>
       </a>
     </Link>

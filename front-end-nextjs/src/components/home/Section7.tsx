@@ -2,37 +2,44 @@ import Box from "@component/Box";
 import Grid from "@component/grid/Grid";
 import ProductCard1 from "@component/product-cards/ProductCard1";
 import { H2 } from "@component/Typography";
+import { trendingItem } from "@data/apis";
 import productDatabase from "@data/product-database";
-import React from "react";
+import { ProductInterface } from "interfaces/api-response";
+import React, { useEffect, useState } from "react";
 
 export interface Section7Props {}
 
 const Section7: React.FC<Section7Props> = () => {
+  const [products, setProducts] = useState<ProductInterface[]>(null);
+
+  useEffect(() => {
+    fetch(`${trendingItem.url}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setProducts(data.data);
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error(error);
+      });
+  }, []);
   return (
     <Box mb="3.75rem">
       <H2 mb="1.5rem">Trending Items</H2>
 
       <Grid container spacing={6}>
         <Grid item md={4} xs={12}>
-          <ProductCard1
-            id="3425442"
-            title="KSUS ROG Strix G15"
-            price={1100}
-            off={null}
-            imgUrl={productDatabase[100].imgUrl}
-          />
+          {products ? (
+            <ProductCard1 product={products[products.length - 1]} />
+          ) : (
+            ""
+          )}
         </Grid>
         <Grid item md={8} xs={12}>
           <Grid container spacing={6}>
-            {productDatabase.slice(169, 175).map((item, ind) => (
-              <Grid item lg={4} sm={6} xs={12} key={item.title}>
-                <ProductCard1
-                  id={item.id}
-                  title={item.title}
-                  price={item.price}
-                  imgUrl={item.imgUrl}
-                  off={ind * 10}
-                />
+            {products?.map((item) => (
+              <Grid item lg={4} sm={6} xs={12} key={item.id}>
+                <ProductCard1 product={item} />
               </Grid>
             ))}
           </Grid>

@@ -120,6 +120,12 @@
               </a>
             </li>
             <li class="nav-item">
+              <a href="{{ route('news_letter.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>News Letter</p>
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="{{ route('product.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Product</p>

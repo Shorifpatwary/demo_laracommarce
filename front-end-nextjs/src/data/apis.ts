@@ -1,5 +1,5 @@
 import { HTTPMethod } from "@hook/useFetch";
-
+// export type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE";
 export type argumentsType = {
   url: string;
   method: HTTPMethod;
@@ -66,6 +66,38 @@ export const brand: argumentsType = {
 export const productSearch: argumentsType = {
   url: "http://localhost:8000/api/search",
   method: "GET",
+  success_status_code: 200,
+  error_status_code: 422,
+};
+// for home page
+export const todayDeal: argumentsType = {
+  url: "http://localhost:8000/api/today_deal",
+  method: "GET",
+  success_status_code: 200,
+  error_status_code: 422,
+};
+export const newArrival: argumentsType = {
+  url: "http://localhost:8000/api/new_arrival",
+  method: "GET",
+  success_status_code: 200,
+  error_status_code: 422,
+};
+export const bestDiscount: argumentsType = {
+  url: "http://localhost:8000/api/best_discount",
+  method: "GET",
+  success_status_code: 200,
+  error_status_code: 422,
+};
+export const trendingItem: argumentsType = {
+  url: "http://localhost:8000/api/trending",
+  method: "GET",
+  success_status_code: 200,
+  error_status_code: 422,
+};
+
+export const subscriberCreate: argumentsType = {
+  url: "http://localhost:8000/api/create_news_letter",
+  method: "POST",
   success_status_code: 200,
   error_status_code: 422,
 };

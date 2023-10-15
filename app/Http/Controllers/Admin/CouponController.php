@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
-use DataTables;
+use Yajra\DataTables\Facades\DataTables;
 
 class CouponController extends Controller
 {

@@ -33,19 +33,13 @@
           <!-- /.card-header -->
           <div class="card-body">
             <table class="table table-bordered  table-sm ytable">
-              <thead class="text-capitalize" <tr>
-                <th>SL</th>
-                <th>Product name</th>
-                <th>selling price</th>
-                {{-- <th>thumbnail</th> --}}
-                <th>stock</th>
-                <th>category</th>
-                <th>user</th>
-                <th>Action</th>
+              <thead class="text-capitalize">
+                <tr>
+                  <th>SL</th>
+                  <th>Email</th>
                 </tr>
               </thead>
               <tbody>
-
               </tbody>
             </table>
 
@@ -67,6 +61,7 @@
 <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
 <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+
 <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 @endpush
 
@@ -87,19 +82,15 @@
      dom: 'lBfrtip', 
      processing:true,
 			serverSide:true,
-			ajax:"{{ route('product.index') }}",
+			ajax:"{{ route('news_letter.index') }}",
 			columns:[
 				{data:'DT_RowIndex',name:'DT_RowIndex'},
-				{data:'name'  ,name:'name'},
-				{data:'selling_price',name:'selling_price'},
-        // {data:'thumbnail'  ,name:'thumbnail'},
-				{data:'stock_quantity',name:'stock_quantity'},	
-				{data:'category.name',name:'category.name'},	
-        { data: 'user.name', name: 'user.name' },	
-				{data:'action',name:'action',orderable:true, searchable:true},
+        // ,orderable:true, searchable:true
+				{data:'email'  ,name:'email'},
 			]
   });
 });
 </script>
+
 @endpush
 @endsection

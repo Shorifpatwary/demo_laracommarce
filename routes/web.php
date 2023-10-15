@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\WarehouseController;
 use App\Http\Controllers\Admin\PickupPointController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\NewsLetterController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +63,8 @@ Route::middleware(['web', 'auth'])->group(function () {
 
 	// product routes
 	Route::resource('product', ProductController::class);
+	// news letter 
+	Route::get('/news_letter', [NewsLetterController::class, 'index'])->name('news_letter.index');
 });
 
 // settings 
@@ -84,7 +87,6 @@ Route::middleware(['web', 'auth'])->group(function () {
 		Route::post('/update/{id}', [SettingController::class, 'WebsiteUpdate'])->name('website.setting.update');
 	});
 });
-
 
 // other routes
 //global route

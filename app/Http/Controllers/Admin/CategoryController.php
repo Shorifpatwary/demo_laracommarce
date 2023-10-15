@@ -19,13 +19,6 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         // to avoid using subCategoryController .... 
-        if ($request->is('specific/form/route')) {
-            // The request is coming from a specific form route
-            // Your logic here
-        } else {
-            // The request is not coming from the specific form route
-            // Your alternative logic here
-        }
         $data = Category::all();
         return view('category.category.index', compact('data'));
     }

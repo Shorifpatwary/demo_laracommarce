@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PickupPoint;
 
 use Illuminate\Http\Request;
-use DataTables;
+use Yajra\DataTables\Facades\DataTables;
 
 class PickupPointController extends Controller
 {

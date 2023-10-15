@@ -27,7 +27,6 @@ class AttributeController extends Controller
      */
     public function index()
     {
-
         $data = Attribute::all();
         return view('shop.attribute.index', compact('data'));
     }

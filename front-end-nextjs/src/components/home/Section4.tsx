@@ -2,11 +2,15 @@ import Box from "@component/Box";
 import Carousel from "@component/carousel/Carousel";
 import CategorySectionCreator from "@component/CategorySectionCreator";
 import ProductCard2 from "@component/product-cards/ProductCard2";
+import { newArrival } from "@data/apis";
 import useWindowSize from "@hook/useWindowSize";
+import { ProductInterface } from "interfaces/api-response";
 import React, { useEffect, useState } from "react";
 
 const Section4: React.FC = () => {
   const [visibleSlides, setVisibleSlides] = useState(6);
+  const [products, setProducts] = useState<ProductInterface[]>(null);
+
   const width = useWindowSize();
 
   useEffect(() => {
@@ -16,6 +20,18 @@ const Section4: React.FC = () => {
     else setVisibleSlides(6);
   }, [width]);
 
+  useEffect(() => {
+    fetch(`${newArrival.url}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setProducts(data.data);
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error(error);
+      });
+  }, []);
+
   return (
     <CategorySectionCreator
       iconName="new-product-1"
@@ -23,13 +39,10 @@ const Section4: React.FC = () => {
       seeMoreLink="#"
     >
       <Box mt="-0.25rem" mb="-0.25rem">
-        <Carousel
-          totalSlides={productList.length}
-          visibleSlides={visibleSlides}
-        >
-          {productList.map((item, ind) => (
-            <Box py="0.25rem" key={ind}>
-              <ProductCard2 {...item} />
+        <Carousel totalSlides={products?.length} visibleSlides={visibleSlides}>
+          {products?.map((product) => (
+            <Box py="0.25rem" key={product.id}>
+              <ProductCard2 product={product} />
             </Box>
           ))}
         </Carousel>

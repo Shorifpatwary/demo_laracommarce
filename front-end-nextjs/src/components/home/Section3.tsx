@@ -4,9 +4,12 @@ import useWindowSize from "../../hooks/useWindowSize";
 import Carousel from "../carousel/Carousel";
 import CategorySectionCreator from "../CategorySectionCreator";
 import ProductCard1 from "../product-cards/ProductCard1";
+import { todayDeal } from "@data/apis";
+import { ProductInterface } from "interfaces/api-response";
 
 const Section2: React.FC = () => {
   const [visibleSlides, setVisibleSlides] = useState(4);
+  const [products, setProducts] = useState<ProductInterface[]>(null);
   const width = useWindowSize();
 
   useEffect(() => {
@@ -16,6 +19,17 @@ const Section2: React.FC = () => {
     else setVisibleSlides(4);
   }, [width]);
 
+  useEffect(() => {
+    fetch(`${todayDeal.url}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setProducts(data.data);
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error(error);
+      });
+  }, []);
   return (
     <CategorySectionCreator
       iconName="light"
@@ -24,17 +38,9 @@ const Section2: React.FC = () => {
     >
       <Box mt="-0.25rem" mb="-0.25rem">
         <Carousel totalSlides={10} visibleSlides={visibleSlides}>
-          {productList.map((item, ind) => (
+          {products?.map((item, ind) => (
             <Box py="0.25rem" key={ind}>
-              <ProductCard1
-                id={ind}
-                imgUrl={item.imgUrl}
-                title="Smart watch black"
-                rating={4}
-                price={250}
-                off={56}
-                key={ind}
-              />
+              <ProductCard1 product={item} key={ind} />
             </Box>
           ))}
         </Carousel>
