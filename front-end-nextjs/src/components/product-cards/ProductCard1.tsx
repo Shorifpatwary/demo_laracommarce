@@ -108,10 +108,10 @@ const ProductCard1: React.FC<ProductCard1Props> = ({ product, ...props }) => {
           >
             eye-alt
           </Icon>
-
-          <Icon className="favorite-icon outlined-icon" variant="small">
+          {/* wishlist */}
+          {/* <Icon className="favorite-icon outlined-icon" variant="small">
             heart
-          </Icon>
+          </Icon> */}
           {/* <Icon className="favorite-icon" color="primary" variant="small">
               heart-filled
             </Icon> */}
@@ -154,7 +154,12 @@ const ProductCard1: React.FC<ProductCard1Props> = ({ product, ...props }) => {
               </a>
             </Link>
 
-            {/* <Rating value={rating || 0} outof={5} color="warn" readonly /> */}
+            <Rating
+              value={product.average_rating}
+              outof={5}
+              color="warn"
+              readonly
+            />
 
             <FlexBox alignItems="center" mt="10px">
               <SemiSpan pr="0.5rem" fontWeight="600" color="primary.main">
@@ -213,13 +218,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({ product, ...props }) => {
 
       <Modal open={open} onClose={toggleDialog}>
         <Card p="1rem" position="relative">
-          <ProductIntro
-            imgUrl={images_link}
-            title={name}
-            price={selling_price}
-            brandName={product.brand.name}
-            id={id}
-          />
+          <ProductIntro product={product} />
           <Box
             position="absolute"
             top="0.75rem"

@@ -88,8 +88,10 @@ class CustomerController extends Controller
     //   log out 
     public function logout(Request $request)
     {
-        $token = $request->user()->token();
-        $token->revoke();
+        $user = Auth::guard('api')->user(); // Use the "api" guard
+        if ($user) {
+            $user->token()->revoke();
+        }
         $response = ['message' => 'You have been successfully logged out!', 'status' => config('custom.api_success_status_code')];
         return response($response, config('custom.api_success_status_code'));
     }

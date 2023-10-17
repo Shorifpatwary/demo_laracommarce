@@ -32,6 +32,7 @@ export interface CategoryInterface extends Timestamps {
   name: string;
   parent_id: null | number;
   slug: string;
+  products: ProductInterface[] | null;
 }
 
 export interface BrandInterface extends Timestamps {
@@ -62,12 +63,14 @@ export interface ProductInterface extends Timestamps {
   thumbnail: string;
   thumbnail_link: string;
   images: string[];
-  images_link: string;
+  images_link: string[];
   featured: boolean;
   today_deal: boolean;
   product_slider: boolean;
   trendy: boolean;
   status: string;
+  average_rating: number;
+  review: productReviewInterface[] | null;
   category: CategoryInterface | null;
   brand: BrandInterface | null;
   // warehouse: string;
@@ -77,6 +80,37 @@ export interface ProductInterface extends Timestamps {
 
 export interface ProductsWithPagination {
   data: ProductInterface[];
-  links: Link;
+  links: Links;
   meta: Meta;
+}
+
+interface UserInterface extends Timestamps {
+  id: number;
+  name: string;
+  email: string;
+  email_verified_at: string | null;
+  phone: string | null;
+  role_id: number;
+}
+
+export interface productReviewInterface extends Timestamps {
+  id: number;
+  body: string;
+  rating: number;
+  approved: boolean;
+  featured: boolean;
+  // Add other fields as needed
+  product: ProductInterface | null;
+  customer: CustomerInterface | null;
+}
+interface CustomerInterface extends Timestamps {
+  id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  image: string | null;
+  email_verified_at: string | null;
+  birth_date: string | null;
+  password: string;
+  remember_token: string;
 }

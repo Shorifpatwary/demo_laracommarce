@@ -2,11 +2,11 @@ import { createContext, useEffect, useState } from "react";
 import {
   login,
   register,
-  customer_profile,
   status,
   checkTokenValidity,
+  logout,
 } from "@data/apis";
-import getCookie from "functions/getCookie";
+import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 
 type AuthProviderProps = {
@@ -53,9 +53,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       const data = await res.json();
       return data;
+      // this is wrong
     } catch (error) {
       console.error("Login error:", error);
-      throw error;
     }
   };
 
@@ -69,36 +69,49 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       const data = await res.json();
       return data;
+      // this is wrong
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // LOG-OUT
+  const Logout = async () => {
+    try {
+      const jwtToken = Cookies.get("JWT", { path: "/" });
+      const res = await fetch(logout.url, {
+        method: logout.method,
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      if (res.ok) {
+        // Clear the JWT token from cookies
+        deleteUserCookie();
+        // Redirect the user to the login page or any other appropriate page
+        redirectToLogin();
+      }
+      const data = await res.json();
+
+      // return data;
     } catch (error) {
       console.log(error);
     }
   };
 
-  // LOG-OUT
-  const Logout = () => {
-    // Clear the JWT token from cookies
-    deleteUserCookie();
-    // Redirect the user to the login page or any other appropriate page
-    redirectToLogin();
-  };
-
   // SET USER COOKIE FUNCTION customerId: string,
   const setUserCookie = (JWT: string) => {
-    // get expires data
-    var expires = new Date();
-    expires.setDate(expires.getDate() + 30);
-    // set cookie
-    // add customer JWT to the cookie
-    document.cookie = `JWT=${JWT}; expires=${expires.toUTCString()};`;
+    // Set the JWT as a cookie with an expiration date
+    if (!!Cookies.get("JWT", { path: "/" })) {
+      deleteUserCookie();
+    }
+
+    Cookies.set("JWT", JWT, { expires: 30, path: "/" });
   };
 
   // DELETE USER COOKIE FUNCTION
   const deleteUserCookie = () => {
-    var expires = new Date();
-    expires.setDate(expires.getDate() - 30);
-
-    // delete JWT
-    document.cookie = `JWT=""; expires=${expires.toUTCString()};`;
+    Cookies.remove("JWT", { path: "/" });
   };
   //  makeAuthenticatedRequest
   const makeAuthenticatedRequest = async (
@@ -109,25 +122,26 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     headers?: headers
   ) => {
     try {
-      const jwtToken = getCookie("JWT"); // Get JWT token from cookies using your getCookie function
+      const jwtToken = Cookies.get("JWT", { path: "/" });
 
       if (!jwtToken) {
-        // Handle the case where the JWT token is not available (user is not authenticated)
         redirectToLogin();
       }
+      const requestHeaders = {
+        ...headers,
+        Authorization: `Bearer ${jwtToken}`,
+      };
 
+      if (body) {
+        requestHeaders["Content-Type"] = "application/json"; // Set the content type for JSON
+      }
       const res = await fetch(url, {
         method,
         body: body ? JSON.stringify(body) : null,
-        headers: {
-          ...headers,
-          Authorization: `Bearer ${jwtToken}`, // Include JWT token in headers
-        },
+        headers: requestHeaders,
       });
       if (!res.ok) {
-        console.log(res.status, "response form");
         // errorStatus
-        console.log(errorStatus, "error status");
         if (res.status === status.error_unauthorized) {
           // Handle error status code (e.g., 401 Unauthorized)
           redirectToLogin(); // Redirect to the login route
@@ -150,7 +164,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Function to check if the user is authenticated
   const isAuthenticatedUser = async () => {
     try {
-      const jwtToken = getCookie("JWT"); // Get JWT token from cookies using your getCookie function
+      const jwtToken = Cookies.get("JWT", { path: "/" });
 
       if (!jwtToken) {
         // If JWT token is not available, the user is not authenticated

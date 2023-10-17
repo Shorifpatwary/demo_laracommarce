@@ -35,7 +35,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load('categories', 'users');
+        $product->load('category', 'category.products', 'category.products.brand', 'user', 'review', 'review.customer', 'brand');
         return new ProductResource($product);
     }
 
@@ -67,16 +67,17 @@ class ProductController extends Controller
         $filters = $request->input('product_status');
         $minPrice = $request->input('min_price');
         $maxPrice = $request->input('max_price');
+        $ratings = $request->input('ratings');
 
         $orderBy = $request->input('order_by', 'created_at');
         $orderDirection = $request->input('order_direction', 'asc');
 
         // Perform the search based on text and category.
-        $results = $this->performSearch($text, $category, $brand, $minPrice, $maxPrice, $filters, $orderBy, $orderDirection)->with('category', 'brand')->paginate(12);
+        $results = $this->performSearch($text, $category, $brand, $minPrice, $maxPrice, $ratings,  $filters, $orderBy, $orderDirection)->with('category', 'brand', 'review')->paginate(12);
 
         return ProductResource::collection($results);
     }
-    private function performSearch($text, $category, $brand, $minPrice, $maxPrice, $filters,  $orderBy = 'created_at', $orderDirection = 'asc')
+    private function performSearch($text, $category, $brand, $minPrice, $maxPrice, $ratings, $filters,  $orderBy = 'created_at', $orderDirection = 'asc')
     {
         $query = Product::query();
 
@@ -107,6 +108,13 @@ class ProductController extends Controller
                 // Apply the filter to the query
                 $query->where($filter, true); // Modify this as per your database schema
             }
+        }
+        // Apply filtering based on selected ratings
+        if (!empty($ratings)) {
+            // $ratingsArray = explode(',', $ratings);
+            $query->whereHas('review', function ($subquery) use ($ratings) {
+                $subquery->whereIn('rating', explode(',', $ratings));
+            });
         }
 
         // Apply ordering based on the provided parameters.

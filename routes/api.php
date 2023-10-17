@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Admin\NewsLetterController;
+use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\CustomerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -52,21 +53,24 @@ Route::group(['middleware' => ['guest']], function () {
     Route::get('/trending', [ProductController::class, 'trendingItem']);
     // news letter 
     Route::post('/create_news_letter', [NewsLetterController::class, 'create']);
+    // all reviews
+    Route::get('/review', [ReviewController::class, 'index'])->name('review.index');
+    // Route::apiResource('review', ReviewController::class);
 });
 
 // Protected routes api 
 Route::group(['middleware' => ['api.authentication']], function () {
 
-
     Route::post('/logout', [CustomerController::class, 'logout'])->name('logout.api');
 
-    Route::post('/logout', [CustomerController::class, 'logout'])->name('logout.api');
     // profile
     Route::get('/customer/profile', [CustomerController::class, 'show']);
     // profile edit data 
     Route::get('/customer/edit', [CustomerController::class, 'edit']);
     // profile update 
     Route::put('/customer/update', [CustomerController::class, 'update']);
+    // review create 
+    Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
 });
 
 Route::middleware('auth:api')->get('/test', function () {

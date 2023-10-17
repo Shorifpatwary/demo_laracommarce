@@ -45,13 +45,15 @@ class ProductResource extends JsonResource
             'product_slider' => $this->product_slider,
             'trendy' => $this->trendy,
             'status' => $this->status,
-
+            // 'average_rating' =>  number_format($this->averageRating(), 2),
+            'average_rating' =>  $this->averageRating(),
             'category' => new CategoryResource($this->whenLoaded('category')),
 
+            'review' => ReviewResource::collection($this->whenLoaded('review')),
             'brand' =>  new BrandResource($this->whenLoaded('brand')),
             'warehouse' => $this->warehouse,
             'pickup_point' => $this->pickup_point,
-            'user' => $this->user,
+            'user' => new UserResource($this->whenLoaded('user')),
 
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,

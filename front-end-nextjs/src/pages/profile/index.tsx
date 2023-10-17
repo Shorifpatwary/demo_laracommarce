@@ -12,7 +12,7 @@ import { AuthContext } from "@context/AuthProvider";
 import { format } from "date-fns";
 import Link from "next/link";
 import React, { useEffect, useState, useContext } from "react";
-import { customer_profile } from "@data/apis";
+import { customerProfile } from "@data/apis";
 import { useRouter } from "next/router";
 
 const Profile = () => {
@@ -35,7 +35,7 @@ const Profile = () => {
       router.back();
     }
     // Example: Make an authenticated API request
-    makeAuthenticatedRequest(customer_profile.url, customer_profile.method)
+    makeAuthenticatedRequest(customerProfile.url, customerProfile.method)
       .then((data) => {
         setProfileData(data.customer);
       })

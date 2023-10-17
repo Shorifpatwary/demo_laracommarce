@@ -42,10 +42,20 @@ class Product extends Model
     {
         return $this->belongsTo(User::class);
     }
-
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function review()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function averageRating()
+    {
+        // return $this->review()->avg('rating');
+        return (float) $this->review()->avg('rating');
     }
 
     public function brand(): BelongsTo

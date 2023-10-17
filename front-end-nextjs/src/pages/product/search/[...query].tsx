@@ -22,7 +22,6 @@ import {
 } from "interfaces/api-response";
 import { useRouter } from "next/router";
 import { productSearch } from "@data/apis";
-import { color, textAlign } from "styled-system";
 
 export type priceRangeType = {
   min: number;
@@ -125,6 +124,11 @@ const ProductSearchResult = () => {
         delimiter = "&";
       }
     }
+    // rating
+    if (selectedRatings.length > 0) {
+      fetchURL += `${delimiter}ratings=${selectedRatings.join(",")}`;
+      delimiter = "&";
+    }
     // order by
     if (orderBy) {
       // Include sorting in the URL with ascending/descending
@@ -202,7 +206,7 @@ const ProductSearchResult = () => {
         >
           <div>
             {search ? <H5>Searching for “ {search} ”</H5> : ""}
-            {products?.meta.total > 0 ? (
+            {products?.meta?.total > 0 ? (
               <Paragraph color="text.muted">
                 {products.meta.total} results found
               </Paragraph>
@@ -290,7 +294,7 @@ const ProductSearchResult = () => {
           </Hidden>
 
           <Grid item lg={9} xs={12}>
-            {!!products && products.data.length > 0 ? (
+            {!!products && products.data?.length > 0 ? (
               view === "grid" ? (
                 <ProductCard1List products={products} setPage={setPage} />
               ) : (

@@ -11,7 +11,7 @@ export interface Section7Props {}
 
 const Section7: React.FC<Section7Props> = () => {
   const [products, setProducts] = useState<ProductInterface[]>(null);
-
+  console.log(products, "product form section 7");
   useEffect(() => {
     fetch(`${trendingItem.url}`)
       .then((response) => response.json())

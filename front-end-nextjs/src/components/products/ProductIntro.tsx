@@ -3,7 +3,7 @@ import Image from "@component/Image";
 import { CartItem } from "@reducer/cartReducer";
 import { useAppContext } from "@context/app/AppContext";
 import { useRouter } from "next/router";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Avatar from "../avatar/Avatar";
 import Box from "../Box";
 import Button from "../buttons/Button";
@@ -12,36 +12,31 @@ import Grid from "../grid/Grid";
 import Icon from "../icon/Icon";
 import Rating from "../rating/Rating";
 import { H1, H2, H3, H6, SemiSpan } from "../Typography";
-import { BrandInterface } from "interfaces/api-response";
+import { BrandInterface, ProductInterface } from "interfaces/api-response";
 
 export interface ProductIntroProps {
-  imgUrl?: string[];
-  title?: string;
-  price?: number;
-  brandName?: string;
-  id?: string | number;
+  product: ProductInterface;
 }
 
-const ProductIntro: React.FC<ProductIntroProps> = ({
-  imgUrl,
-  title,
-  price,
-  brandName,
-  id,
-}) => {
-  console.log(imgUrl, "image url ");
+const ProductIntro: React.FC<ProductIntroProps> = ({ product }) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const { state, dispatch } = useAppContext();
   const cartList: CartItem[] = state.cart.cartList;
   const router = useRouter();
   const routerId = router.query.id as string;
+
   const cartItem = cartList.find(
-    (item) => item.id === id || item.id === routerId
+    (item) => item.id === product.id || item.id === routerId
   );
 
-  const handleImageClick = (ind) => () => {
-    setSelectedImage(ind);
+  const handleImageClick = (imageIndex) => () => {
+    setSelectedImage(imageIndex);
   };
+
+  useEffect(() => {
+    // Bug fix:: update selected image state when page initialize
+    setSelectedImage(0);
+  }, [router.query]);
 
   const handleCartAmountChange = useCallback(
     (amount) => () => {
@@ -49,10 +44,10 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
         type: "CHANGE_CART_AMOUNT",
         payload: {
           qty: amount,
-          name: title,
-          price,
-          imgUrl: imgUrl[0],
-          id: id || routerId,
+          name: product.name,
+          price: product.selling_price,
+          imgUrl: product.thumbnail_link,
+          id: product.id || routerId,
         },
       });
     },
@@ -68,12 +63,12 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
               <Image
                 width={300}
                 height={300}
-                src={imgUrl[selectedImage]}
+                src={product.images_link[selectedImage]}
                 style={{ objectFit: "contain" }}
               />
             </FlexBox>
             <FlexBox overflow="auto">
-              {imgUrl.map((url, ind) => (
+              {product.images_link.map((url, ind) => (
                 <Box
                   size={70}
                   minWidth={70}
@@ -86,7 +81,7 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
                   border="1px solid"
                   key={ind}
                   ml={ind === 0 && "auto"}
-                  mr={ind === imgUrl.length - 1 ? "auto" : "10px"}
+                  mr={ind === product.images_link.length - 1 ? "auto" : "10px"}
                   borderColor={
                     selectedImage === ind ? "primary.main" : "gray.400"
                   }
@@ -100,12 +95,12 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
         </Grid>
 
         <Grid item md={6} xs={12} alignItems="center">
-          <H1 mb="1rem">{title}</H1>
+          <H1 mb="1rem">{product.name}</H1>
 
-          {!!brandName ? (
+          {!!product.brand?.name ? (
             <FlexBox alignItems="center" mb="1rem">
               <SemiSpan>Brand:</SemiSpan>
-              <H6 ml="8px">{brandName}</H6>
+              <H6 ml="8px">{product.brand.name}</H6>
             </FlexBox>
           ) : (
             " "
@@ -114,14 +109,14 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
           <FlexBox alignItems="center" mb="1rem">
             <SemiSpan>Rated:</SemiSpan>
             <Box ml="8px" mr="8px">
-              <Rating color="warn" value={4} outof={5} />
+              <Rating color="warn" value={product.average_rating} outof={5} />
             </Box>
-            <H6>(50)</H6>
+            <H6>({product.review.length})</H6>
           </FlexBox>
 
           <Box mb="24px">
             <H2 color="primary.main" mb="4px" lineHeight="1">
-              ${price}
+              ${product.selling_price}
             </H2>
             <SemiSpan color="inherit">Stock Available</SemiSpan>
           </Box>
@@ -162,30 +157,20 @@ const ProductIntro: React.FC<ProductIntroProps> = ({
             </FlexBox>
           )}
 
-          <FlexBox alignItems="center" mb="1rem">
+          {/* <FlexBox alignItems="center" mb="1rem">
             <SemiSpan>Sold By:</SemiSpan>
-            <Link href="/shop/fdfdsa">
+            <Link href="/">
               <a>
                 <H6 lineHeight="1" ml="8px">
                   Mobile Store
                 </H6>
               </a>
             </Link>
-          </FlexBox>
+          </FlexBox> */}
         </Grid>
       </Grid>
     </Box>
   );
-};
-
-ProductIntro.defaultProps = {
-  imgUrl: [
-    "/assets/images/products/headphone.png",
-    "/assets/images/products/hiclipart.com (16).png",
-    "/assets/images/products/hiclipart.com (18).png",
-  ],
-  title: "Mi Note 11 Pro",
-  price: 1100,
 };
 
 export default ProductIntro;

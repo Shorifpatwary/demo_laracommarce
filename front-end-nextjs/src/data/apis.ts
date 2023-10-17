@@ -20,6 +20,12 @@ export const login: argumentsType = {
   success_status_code: 200,
   error_status_code: 422,
 };
+export const logout: argumentsType = {
+  url: "http://localhost:8000/api/logout",
+  method: "POST",
+  success_status_code: 200,
+  error_status_code: 422,
+};
 
 export const register: argumentsType = {
   url: "http://localhost:8000/api/register",
@@ -69,6 +75,14 @@ export const productSearch: argumentsType = {
   success_status_code: 200,
   error_status_code: 422,
 };
+
+export const singleProduct: argumentsType = {
+  url: "http://localhost:8000/api/product",
+  method: "GET",
+  success_status_code: 200,
+  error_status_code: 422,
+};
+
 // for home page
 export const todayDeal: argumentsType = {
   url: "http://localhost:8000/api/today_deal",
@@ -97,6 +111,18 @@ export const trendingItem: argumentsType = {
 
 export const subscriberCreate: argumentsType = {
   url: "http://localhost:8000/api/create_news_letter",
+  method: "POST",
+  success_status_code: 200,
+  error_status_code: 422,
+};
+export const getProductReview: argumentsType = {
+  url: "http://localhost:8000/api/review",
+  method: "GET",
+  success_status_code: 200,
+  error_status_code: 422,
+};
+export const createProductReview: argumentsType = {
+  url: "http://localhost:8000/api/review",
   method: "POST",
   success_status_code: 200,
   error_status_code: 422,

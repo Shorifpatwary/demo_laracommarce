@@ -1,20 +1,60 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Box from "../Box";
 import Button from "../buttons/Button";
 import FlexBox from "../FlexBox";
 import Rating from "../rating/Rating";
 import TextArea from "../textarea/TextArea";
-import { H2, H5 } from "../Typography";
+import { H2, H5, Small } from "../Typography";
 import ProductComment from "./ProductComment";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import useFetch from "@hook/useFetch";
+import { createProductReview, getProductReview } from "@data/apis";
+import { productReviewInterface } from "interfaces/api-response";
+import { AuthContext } from "@context/AuthProvider";
+import { useRouter } from "next/router";
+import Hidden from "@component/hidden/Hidden";
 
-export interface ProductReviewProps {}
+export interface ProductReviewProps {
+  review: productReviewInterface[];
+  product_id: number;
+}
 
-const ProductReview: React.FC<ProductReviewProps> = () => {
-  const handleFormSubmit = async (values, { resetForm }) => {
-    console.log(values);
-    resetForm();
+const ProductReview: React.FC<ProductReviewProps> = ({
+  review,
+  product_id,
+}) => {
+  const { makeAuthenticatedRequest, isAuthenticatedUser } =
+    useContext(AuthContext);
+
+  const handleFormSubmit = async (values, formikActions) => {
+    setFieldValue("product_id", product_id);
+
+    try {
+      const data = await makeAuthenticatedRequest(
+        createProductReview.url,
+        createProductReview.method,
+        createProductReview.error_status_code,
+        values
+      );
+
+      if (data && data.errors) {
+        console.log(data.status, "data status ");
+        const serverErrors = data.errors;
+        // Set the server-side errors to the Formik's errors object
+        formikActions.setErrors(serverErrors);
+      } else {
+        formikActions.resetForm();
+      }
+    } catch (error) {
+      console.log(error, "make auth");
+    }
+  };
+
+  const initialValues = {
+    rating: "",
+    body: "",
+    product_id: product_id,
   };
 
   const {
@@ -35,8 +75,8 @@ const ProductReview: React.FC<ProductReviewProps> = () => {
 
   return (
     <Box>
-      {commentList.map((item, ind) => (
-        <ProductComment {...item} key={ind} />
+      {review?.map((item) => (
+        <ProductComment review={item} key={item.id} />
       ))}
 
       <H2 fontWeight="600" mt="55px" mb="20">
@@ -71,15 +111,33 @@ const ProductReview: React.FC<ProductReviewProps> = () => {
           </FlexBox>
 
           <TextArea
-            name="comment"
+            name="body"
             placeholder="Write a review here..."
             fullwidth
             rows={8}
             onBlur={handleBlur}
             onChange={handleChange}
-            value={values.comment || ""}
-            errorText={touched.comment && errors.comment}
+            value={values.body || ""}
+            errorText={touched.body && errors.body}
           />
+          <Hidden>
+            {/* <TextArea name="product_id" className="hidden" value={productID} /> */}
+          </Hidden>
+
+          {errors ? (
+            <Small
+              fontWeight="600"
+              fontSize="12px"
+              color="red"
+              textAlign="center"
+              mb="2.25rem"
+              mt="2rem"
+            >
+              {errors?.product_id || ""}
+            </Small>
+          ) : (
+            ""
+          )}
         </Box>
 
         <Button
@@ -96,42 +154,9 @@ const ProductReview: React.FC<ProductReviewProps> = () => {
   );
 };
 
-const commentList = [
-  {
-    name: "Jannie Schumm",
-    imgUrl: "/assets/images/faces/7.png",
-    rating: 4.7,
-    date: "2021-02-14",
-    comment:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida egestas ac account.",
-  },
-  {
-    name: "Joe Kenan",
-    imgUrl: "/assets/images/faces/6.png",
-    rating: 4.7,
-    date: "2019-08-10",
-    comment:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida egestas ac account.",
-  },
-  {
-    name: "Jenifer Tulio",
-    imgUrl: "/assets/images/faces/8.png",
-    rating: 4.7,
-    date: "2021-02-05",
-    comment:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida egestas ac account.",
-  },
-];
-
-const initialValues = {
-  rating: "",
-  comment: "",
-  date: new Date().toISOString(),
-};
-
 const reviewSchema = yup.object().shape({
   rating: yup.number().required("required"),
-  comment: yup.string().required("required"),
+  body: yup.string().required("required").min(5),
 });
 
-export default ProductReview;
+export default React.memo(ProductReview);

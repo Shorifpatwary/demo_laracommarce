@@ -21,7 +21,7 @@ class CategoryController extends Controller
         // return $categories;
         // return CategoryResource::collection($categories);
 
-        $categories = Cache::remember('categories_with_descendant', now()->addMinutes(5), function () {
+        $categories = Cache::remember('categories', now()->addMinutes(5), function () {
             return Category::all();
         });
 
@@ -41,7 +41,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $category->load('products', 'products.categories');
+        $category->load('product', 'product.category');
         return new CategoryResource($category);
     }
 

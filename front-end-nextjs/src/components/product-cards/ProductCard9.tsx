@@ -140,7 +140,7 @@ const ProductCard9: React.FC<ProductCard9Props> = ({ product, ...props }) => {
               ))}
             </div> */}
 
-            <Link href="/product/34324321">
+            <Link href={`/product/${product.id}`}>
               <a>
                 <H5 fontWeight="600" my="0.5rem">
                   {name}
@@ -180,9 +180,10 @@ const ProductCard9: React.FC<ProductCard9Props> = ({ product, ...props }) => {
                 flexDirection="row-reverse"
                 height="30px"
               >
-                <Icon className="favorite-icon outlined-icon" variant="small">
+                {/* wishlist */}
+                {/* <Icon className="favorite-icon outlined-icon" variant="small">
                   heart
-                </Icon>
+                </Icon> */}
 
                 <FlexBox alignItems="center" flexDirection="row-reverse">
                   <Button
@@ -276,13 +277,7 @@ const ProductCard9: React.FC<ProductCard9Props> = ({ product, ...props }) => {
 
       <Modal open={open} onClose={toggleDialog}>
         <Card p="1rem" position="relative">
-          <ProductIntro
-            imgUrl={images_link}
-            title={name}
-            price={selling_price}
-            brandName={product.brand.name}
-            id={id}
-          />
+          <ProductIntro product={product} />
           <Box
             position="absolute"
             top="0.75rem"

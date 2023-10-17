@@ -13,7 +13,7 @@ import { Formik } from "formik";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import * as yup from "yup";
-import { edit_CP, udpate_CP } from "@data/apis";
+import { editCP, updateCP } from "@data/apis";
 import { AuthContext } from "@context/AuthProvider";
 import { useRouter } from "next/router";
 import getCookie from "functions/getCookie";
@@ -29,9 +29,9 @@ const ProfileEditor = () => {
     // Make an authenticated API request
     authContext
       .makeAuthenticatedRequest(
-        edit_CP.url,
-        edit_CP.method,
-        edit_CP.error_status_code
+        editCP.url,
+        editCP.method,
+        editCP.error_status_code
       )
       .then((data) => {
         setProfileData(data.customer);
@@ -41,52 +41,6 @@ const ProfileEditor = () => {
       });
   }, []);
 
-  // CSRF get
-  // const [csrfToken, setCsrfToken] = useState("");
-  // useEffect(() => {
-  //   async function fetchCsrfToken() {
-  //     try {
-  //       const response = await fetch("http://localhost:8000/api/csrf-endpoint");
-  //       const data = await response.json();
-  //       setCsrfToken(data.csrf_token);
-  //     } catch (error) {
-  //       console.error("Error fetching CSRF token:", error);
-  //     }
-  //   }
-
-  //   fetchCsrfToken();
-  // }, []);
-
-  // const handleFormSubmit = async (values) => {
-  //   console.log(values, "handle form submit ");
-  // };
-
-  // const formSubmitHandler = async (values, formikActions) => {
-  //   // Make an authenticated API request
-
-  //   console.log(values);
-
-  //   try {
-  //     makeAuthenticatedRequest(
-  //       udpate_CP.url,
-  //       udpate_CP.method,
-  //       udpate_CP.error_status_code,
-  //       values
-  //     ).then((data) => {
-  //       if (data.status === udpate_CP.success_status_code) {
-  //         router.push("/profile");
-  //       } else if (data && data.errors) {
-  //         // Handle server-side validation errors
-  //         const serverErrors = data.errors;
-  //         // Set the server-side errors to the Formik's errors object
-  //         formikActions.setErrors(serverErrors);
-  //       }
-  //     });
-  //   } catch (error) {
-  //     // Handle fetch error
-  //     console.error("Error updating the data:", error);
-  //   }
-  // };
   const headers = {
     // "Content-Type": "application/x-www-form-urlencoded",
     "Content-Type": "application/json",
@@ -104,8 +58,8 @@ const ProfileEditor = () => {
     // formData.append("image", values.image);
     // formData.append("_token", values._token);
 
-    const response = await fetch(udpate_CP.url, {
-      method: udpate_CP.method,
+    const response = await fetch(updateCP.url, {
+      method: updateCP.method,
       headers: {
         ...headers,
         Authorization: `Bearer ${getCookie("JWT")}`,
@@ -115,7 +69,7 @@ const ProfileEditor = () => {
 
     const data = await response.json();
 
-    if (data.status === udpate_CP.success_status_code) {
+    if (data.status === updateCP.success_status_code) {
       router.push("/profile");
     } else {
       if (data && data.errors) {

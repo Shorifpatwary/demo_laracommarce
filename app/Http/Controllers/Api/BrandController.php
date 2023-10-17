@@ -41,7 +41,7 @@ class BrandController extends Controller
      */
     public function show(Brand $brand)
     {
-        $brand->load('products', 'products.categories');
+        $brand->load('product', 'product.category');
         return new BrandResource($brand);
     }
 
