@@ -1,7 +1,7 @@
 import { useAppContext } from "@context/app/AppContext";
 import { CartItem } from "@reducer/cartReducer";
 import Link from "next/link";
-import React, { Fragment } from "react";
+import React, { Fragment, useCallback, useState } from "react";
 import Box from "../components/Box";
 import Button from "../components/buttons/Button";
 import { Card1 } from "../components/Card1";
@@ -15,10 +15,24 @@ import TextField from "../components/text-field/TextField";
 import TextArea from "../components/textarea/TextArea";
 import Typography from "../components/Typography";
 import countryList from "../data/countryList";
+import { useRouter } from "next/router";
 
 const Cart = () => {
-  const { state } = useAppContext();
+  const router = useRouter();
+
+  const { state, dispatch } = useAppContext();
   const cartList: CartItem[] = state.cart.cartList;
+  console.log(state, "state");
+  // handle note change
+  const handleNoteChange = useCallback(
+    (note) => {
+      dispatch({
+        type: "SET_NOTE",
+        payload: note,
+      });
+    },
+    [dispatch]
+  );
 
   const getTotalPrice = () => {
     return (
@@ -27,6 +41,10 @@ const Cart = () => {
         0
       ) || 0
     );
+  };
+  // cart handler
+  const cartHandler = () => {
+    router.push("/checkout");
   };
 
   return (
@@ -47,10 +65,10 @@ const Cart = () => {
               <Typography color="gray.600">Total:</Typography>
               <FlexBox alignItems="flex-end">
                 <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-                  ${getTotalPrice().toFixed(2)}
+                  ${getTotalPrice()}
                 </Typography>
                 <Typography fontWeight="600" fontSize="14px" lineHeight="1">
-                  00
+                  .00
                 </Typography>
               </FlexBox>
             </FlexBox>
@@ -68,12 +86,18 @@ const Cart = () => {
               </Box>
             </FlexBox>
 
-            <TextArea rows={6} fullwidth mb="1rem" />
+            <TextArea
+              rows={6}
+              fullwidth
+              mb="1rem"
+              value={state.order.note || ""}
+              onChange={(e) => handleNoteChange(e.currentTarget.value)}
+            />
 
             <Divider mb="1rem" />
 
-            <TextField placeholder="Voucher" fullwidth />
-
+            {/* /voucher will show on checkout page */}
+            {/* <TextField placeholder="Voucher" fullwidth />
             <Button
               variant="outlined"
               color="primary"
@@ -83,14 +107,14 @@ const Cart = () => {
             >
               Apply Voucher
             </Button>
+            <Divider mb="1.5rem" /> */}
 
-            <Divider mb="1.5rem" />
-
-            <Typography fontWeight="600" mb="1rem">
+            {/* <Typography fontWeight="600" mb="1rem">
               Shipping Estimates
-            </Typography>
+            </Typography> */}
 
-            <Select
+            {/* hide country.show only warehouse  */}
+            {/* <Select
               mb="1rem"
               label="Country"
               placeholder="Select Country"
@@ -98,11 +122,11 @@ const Cart = () => {
               onChange={(e) => {
                 console.log(e);
               }}
-            />
+            /> */}
 
-            <Select
-              label="State"
-              placeholder="Select State"
+            {/* <Select
+              label="Ware House"
+              placeholder="Select Ware House"
               options={stateList}
               onChange={(e) => {
                 console.log(e);
@@ -115,12 +139,17 @@ const Cart = () => {
 
             <Button variant="outlined" color="primary" my="1rem" fullwidth>
               Calculate Shipping
+            </Button> */}
+            {/* <Link href="/checkout"> */}
+            <Button
+              onClick={cartHandler}
+              variant="contained"
+              color="primary"
+              fullwidth
+            >
+              Checkout Now
             </Button>
-            <Link href="/checkout">
-              <Button variant="contained" color="primary" fullwidth>
-                Checkout Now
-              </Button>
-            </Link>
+            {/* </Link> */}
           </Card1>
         </Grid>
       </Grid>
@@ -128,16 +157,16 @@ const Cart = () => {
   );
 };
 
-const stateList = [
-  {
-    value: "New York",
-    label: "New York",
-  },
-  {
-    value: "Chicago",
-    label: "Chicago",
-  },
-];
+// const stateList = [
+//   {
+//     value: "New York",
+//     label: "New York",
+//   },
+//   {
+//     value: "Chicago",
+//     label: "Chicago",
+//   },
+// ];
 
 Cart.layout = CheckoutNavLayout;
 

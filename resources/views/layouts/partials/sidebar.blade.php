@@ -131,6 +131,13 @@
                 <p>Product</p>
               </a>
             </li>
+            {{-- order --}}
+            <li class="nav-item">
+              <a href="{{ route('order.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Order</p>
+              </a>
+            </li>
           </ul>
         </li>
         {{-- Website setting --}}

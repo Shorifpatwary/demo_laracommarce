@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useCallback, useState } from "react";
 import { Formik } from "formik";
 import * as yup from "yup";
 import Typography from "../Typography";
@@ -13,9 +13,12 @@ import FlexBox from "../FlexBox";
 import Divider from "../Divider";
 import Box from "../Box";
 import useWindowSize from "../../hooks/useWindowSize";
+import { useAppContext } from "@context/app/AppContext";
 
 const PaymentForm = () => {
-  const [paymentMethod, setPaymentMethod] = useState("credit-card");
+  const { state, dispatch } = useAppContext();
+
+  const paymentMethod = state.order.paymentMethod;
 
   const width = useWindowSize();
   const router = useRouter();
@@ -26,14 +29,20 @@ const PaymentForm = () => {
     router.push("/payment");
   };
 
-  const handlePaymentMethodChange = ({ target: { name } }) => {
-    setPaymentMethod(name);
-  };
+  const handlePaymentMethodChange = useCallback(
+    (name) => {
+      dispatch({
+        type: "SET_PAYMENT_METHOD",
+        payload: name == "cashOnDelivery" ? "cashOnDelivery" : "paypal",
+      });
+    },
+    [state.order.paymentMethod]
+  );
 
   return (
     <Fragment>
       <Card1 mb="2rem">
-        <Radio
+        {/* <Radio
           name="credit-card"
           mb="1.5rem"
           color="secondary"
@@ -46,9 +55,9 @@ const PaymentForm = () => {
           onChange={handlePaymentMethodChange}
         />
 
-        <Divider mb="1.25rem" mx="-2rem" />
+        <Divider mb="1.25rem" mx="-2rem" /> */}
 
-        {paymentMethod === "credit-card" && (
+        {/* {paymentMethod === "credit-card" && (
           <Formik
             initialValues={initialValues}
             validationSchema={checkoutSchema}
@@ -121,7 +130,7 @@ const PaymentForm = () => {
               </form>
             )}
           </Formik>
-        )}
+        )} */}
 
         <Radio
           name="paypal"
@@ -133,11 +142,11 @@ const PaymentForm = () => {
               Pay with Paypal
             </Typography>
           }
-          onChange={handlePaymentMethodChange}
+          onChange={() => handlePaymentMethodChange("paypal")}
         />
         <Divider mb="1.5rem" mx="-2rem" />
 
-        {paymentMethod === "paypal" && (
+        {/* {paymentMethod === "paypal" && (
           <Fragment>
             <FlexBox alignItems="flex-end" mb="30px">
               <TextField
@@ -154,18 +163,18 @@ const PaymentForm = () => {
 
             <Divider mb="1.5rem" mx="-2rem" />
           </Fragment>
-        )}
+        )} */}
 
         <Radio
-          name="cod"
+          name="cashOnDelivery"
           color="secondary"
-          checked={paymentMethod === "cod"}
+          checked={paymentMethod === "cashOnDelivery"}
           label={
             <Typography ml="6px" fontWeight="600" fontSize="18px">
               Cash On Delivery
             </Typography>
           }
-          onChange={handlePaymentMethodChange}
+          onChange={() => handlePaymentMethodChange("cashOnDelivery")}
         />
       </Card1>
 
@@ -178,9 +187,9 @@ const PaymentForm = () => {
           </Link>
         </Grid>
         <Grid item sm={6} xs={12}>
-          <Link href="/orders">
+          <Link href="/orders/order-preview">
             <Button variant="contained" color="primary" type="submit" fullwidth>
-              Review
+              order preview
             </Button>
           </Link>
         </Grid>

@@ -21,7 +21,7 @@ class CategoryController extends Controller
         // return $categories;
         // return CategoryResource::collection($categories);
 
-        $categories = Cache::remember('categories', now()->addMinutes(5), function () {
+        $categories = Cache::remember('categories', now()->addHours(15), function () {
             return Category::all();
         });
 

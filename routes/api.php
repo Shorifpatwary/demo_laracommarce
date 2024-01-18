@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\Api\CustomerAddressController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Admin\NewsLetterController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\CustomerController;
+use App\Models\CustomerAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +47,13 @@ Route::group(['middleware' => ['guest']], function () {
 
     // product
     Route::apiResource('product', ProductController::class);
+
+    // order
+    Route::apiResource('order', OrderController::class);
+
+    // customer address
+    Route::apiResource('customer-address', CustomerAddressController::class);
+
     // product search
     Route::get('/search', [ProductController::class, 'search']);
     // home page 

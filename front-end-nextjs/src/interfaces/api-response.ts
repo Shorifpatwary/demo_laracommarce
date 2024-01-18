@@ -44,6 +44,27 @@ export interface BrandInterface extends Timestamps {
   parent_id: null | number;
   slug: string;
 }
+interface CustomerInterface extends Timestamps {
+  id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  image: string | null;
+  email_verified_at: string | null;
+  birth_date: string | null;
+  password: string;
+  remember_token: string;
+}
+
+interface CustomerAddressInterface extends Timestamps {
+  id: number;
+  name: string;
+  phone: string;
+  address: string;
+  postal_code: string;
+  created_at: string;
+  updated_at: string;
+}
 
 export interface ProductInterface extends Timestamps {
   id: number;
@@ -78,10 +99,25 @@ export interface ProductInterface extends Timestamps {
   // user: string;
 }
 
-export interface ProductsWithPagination {
-  data: ProductInterface[];
-  links: Links;
-  meta: Meta;
+export interface OrderInterface extends Timestamps {
+  id: number;
+  note: string;
+  status: string;
+  total_price: number;
+  customer: CustomerInterface | null;
+  shipping_address: CustomerAddressInterface | null;
+  billing_address: CustomerAddressInterface | null;
+}
+
+export interface CustomerAddress extends Timestamps {
+  id: number;
+  name: string;
+  phone: string;
+  address: string;
+  postal_code: string;
+  customer: CustomerInterface | null;
+  created_at: string;
+  updated_at: string;
 }
 
 interface UserInterface extends Timestamps {
@@ -103,14 +139,20 @@ export interface productReviewInterface extends Timestamps {
   product: ProductInterface | null;
   customer: CustomerInterface | null;
 }
-interface CustomerInterface extends Timestamps {
-  id: number;
-  name: string;
-  email: string;
-  phone: string | null;
-  image: string | null;
-  email_verified_at: string | null;
-  birth_date: string | null;
-  password: string;
-  remember_token: string;
+
+export interface OrdersWithPagination {
+  data: OrderInterface[];
+  links: Links;
+  meta: Meta;
+}
+
+export interface ProductsWithPagination {
+  data: ProductInterface[];
+  links: Links;
+  meta: Meta;
+}
+export interface CustomerAddressesWithPagination {
+  data: CustomerAddress[];
+  links: Links;
+  meta: Meta;
 }

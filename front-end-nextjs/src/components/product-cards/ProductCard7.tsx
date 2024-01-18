@@ -89,10 +89,10 @@ const ProductCard7: React.FC<ProductCard7Props & SpaceProps> = ({
         >
           <FlexBox flexWrap="wrap" alignItems="center">
             <Typography color="gray.600" mr="0.5rem">
-              ${price.toFixed(2)} x {qty}
+              ${price} x {qty}
             </Typography>
             <Typography fontWeight={600} color="primary.main" mr="1rem">
-              ${(price * qty).toFixed(2)}
+              ${price * qty}
             </Typography>
           </FlexBox>
 

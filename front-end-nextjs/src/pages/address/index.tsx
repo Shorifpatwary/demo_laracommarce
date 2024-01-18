@@ -6,11 +6,54 @@ import DashboardLayout from "@component/layout/CustomerDashboardLayout";
 import DashboardPageHeader from "@component/layout/DashboardPageHeader";
 import Pagination from "@component/pagination/Pagination";
 import TableRow from "@component/TableRow";
-import Typography from "@component/Typography";
+import Typography, { H2 } from "@component/Typography";
+import { AuthContext } from "@context/AuthProvider";
+import { CustomerAddressesWithPagination } from "interfaces/api-response";
+import { customerAddress, deleteCustomerAddress } from "@data/apis";
 import Link from "next/link";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 const AddressList = () => {
+  const { makeAuthenticatedRequest } = useContext(AuthContext);
+  const [addressesData, setAddressesData] =
+    useState<CustomerAddressesWithPagination | null>(null);
+
+  // delete Handler
+  const deleteHandler = (recordId) => {
+    console.log(recordId, "recordId");
+    // get the address for this user
+    makeAuthenticatedRequest(
+      `${deleteCustomerAddress.url}/${recordId}`,
+      deleteCustomerAddress.method,
+      deleteCustomerAddress.error_status_code
+    )
+      .then((data) => {
+        console.log(data, "data from delete handler");
+        setAddressesData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching profile data:", error);
+      });
+  };
+
+  const [page, setPage] = useState<number>(1);
+  console.log(addressesData, "orders data");
+  // make order request after component mounted.
+  useEffect(() => {
+    // get the address for this user
+    makeAuthenticatedRequest(
+      `${customerAddress.url}?page=` + page,
+      customerAddress.method,
+      customerAddress.error_status_code
+    )
+      .then((data) => {
+        setAddressesData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching profile data:", error);
+      });
+  }, [page]);
+
   return (
     <div>
       <DashboardPageHeader
@@ -23,21 +66,25 @@ const AddressList = () => {
         }
       />
 
-      {orderList.map(() => (
-        <TableRow my="1rem" padding="6px 18px">
+      {addressesData?.data.map((address) => (
+        <TableRow my="1rem" padding="6px 18px" key={address.id}>
           <Typography className="pre" m="6px" textAlign="left">
-            Ralf Edward
+            {address.name}
           </Typography>
           <Typography flex="1 1 260px !important" m="6px" textAlign="left">
-            777 Brockton Avenue, Abington MA 2351
+            {address.address}
           </Typography>
           <Typography className="pre" m="6px" textAlign="left">
-            +1927987987498
+            {address.phone}
           </Typography>
 
           <Typography className="pre" textAlign="center" color="text.muted">
-            <Link href="/address/xkssThds6h37sd">
-              <Typography as="a" href="/address/xkssThds6h37sd" color="inherit">
+            <Link href={`/address/${address.id}`}>
+              <Typography
+                as="a"
+                href={`/address/${address.id}`}
+                color="inherit"
+              >
                 <IconButton size="small">
                   <Icon variant="small" defaultcolor="currentColor">
                     edit
@@ -45,7 +92,14 @@ const AddressList = () => {
                 </IconButton>
               </Typography>
             </Link>
-            <IconButton size="small" onClick={(e) => e.stopPropagation()}>
+            <IconButton
+              size="small"
+              value={address.id}
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteHandler(address.id);
+              }}
+            >
               <Icon variant="small" defaultcolor="currentColor">
                 delete
               </Icon>
@@ -54,50 +108,29 @@ const AddressList = () => {
         </TableRow>
       ))}
 
-      <FlexBox justifyContent="center" mt="2.5rem">
-        <Pagination
+      {addressesData?.meta.last_page > 1 ? (
+        <FlexBox justifyContent="center" mt="2.5rem">
+          {/* <Pagination
           pageCount={5}
           onChange={(data) => {
             console.log(data.selected);
           }}
-        />
-      </FlexBox>
+        /> */}
+          <Pagination
+            pageCount={addressesData?.meta.last_page}
+            setPage={setPage}
+          />
+        </FlexBox>
+      ) : (
+        ""
+      )}
+      {/* no records found status */}
+      {addressesData?.data.length > 0 || (
+        <H2 textAlign={"center"}>No Records Found</H2>
+      )}
     </div>
   );
 };
-
-const orderList = [
-  {
-    orderNo: "1050017AS",
-    status: "Pending",
-    purchaseDate: new Date(),
-    price: 350,
-  },
-  {
-    orderNo: "1050017AS",
-    status: "Processing",
-    purchaseDate: new Date(),
-    price: 500,
-  },
-  {
-    orderNo: "1050017AS",
-    status: "Delivered",
-    purchaseDate: "2020/12/23",
-    price: 700,
-  },
-  {
-    orderNo: "1050017AS",
-    status: "Delivered",
-    purchaseDate: "2020/12/23",
-    price: 700,
-  },
-  {
-    orderNo: "1050017AS",
-    status: "Cancelled",
-    purchaseDate: "2020/12/15",
-    price: 300,
-  },
-];
 
 AddressList.layout = DashboardLayout;
 

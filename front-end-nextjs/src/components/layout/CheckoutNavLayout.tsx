@@ -25,7 +25,7 @@ const CheckoutNavLayout: React.FC = ({ children }) => {
         router.push("/payment");
         break;
       case 3:
-        router.push("/orders");
+        router.push("/orders/order-preview");
         break;
       default:
         break;
@@ -42,6 +42,9 @@ const CheckoutNavLayout: React.FC = ({ children }) => {
         break;
       case "/payment":
         setSelectedStep(3);
+        break;
+      case "/orders/order-preview":
+        setSelectedStep(4);
         break;
       default:
         break;
@@ -82,8 +85,8 @@ const stepperList = [
     disabled: false,
   },
   {
-    title: "Review",
-    disabled: true,
+    title: "Preview",
+    disabled: false,
   },
 ];
 

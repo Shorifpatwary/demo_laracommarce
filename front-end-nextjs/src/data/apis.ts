@@ -127,6 +127,32 @@ export const createProductReview: argumentsType = {
   success_status_code: 200,
   error_status_code: 422,
 };
+export const createOrder: argumentsType = {
+  url: "http://localhost:8000/api/order",
+  method: "POST",
+  success_status_code: 200,
+  error_status_code: 422,
+};
+export const orders: argumentsType = {
+  url: "http://localhost:8000/api/order",
+  method: "GET",
+  success_status_code: 200,
+  error_status_code: 422,
+};
+
+export const customerAddress: argumentsType = {
+  url: "http://localhost:8000/api/customer-address",
+  method: "GET",
+  success_status_code: 200,
+  error_status_code: 422,
+};
+
+export const deleteCustomerAddress: argumentsType = {
+  url: "http://localhost:8000/api/customer-address",
+  method: "DELETE",
+  success_status_code: 200,
+  error_status_code: 422,
+};
 
 export const status = {
   success_status_code: 200,

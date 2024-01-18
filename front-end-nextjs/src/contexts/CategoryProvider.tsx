@@ -144,11 +144,3 @@ export function CategoryProvider({ children }: CategoryProviderProps) {
     </CategoryContext.Provider>
   );
 }
-
-// function algorithom
-// get category id form recieve category.
-// create a variable with recive category before starting loop.
-// check if has child category
-// get direct nested child category if check is true.
-// loop trow them  and do 1  store the value with variable 2. check if has child category   3. get direct nested child category if check is true. loop trow them  and do 1  store the value with variable . this process will continue dynamically or using recursive function .
-//

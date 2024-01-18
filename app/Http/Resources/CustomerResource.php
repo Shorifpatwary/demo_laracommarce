@@ -21,7 +21,7 @@ class CustomerResource extends JsonResource
             'phone' => $this->phone,
             'image' => $this->image,
             'email_verified_at' => $this->email_verified_at,
-            'birth_date' => $this->birth_date,
+            'birth_date' =>  (string) $this->birth_date,
             // Add more attributes as needed
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,

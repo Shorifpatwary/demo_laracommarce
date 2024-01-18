@@ -94,7 +94,7 @@ class ProductController extends Controller
             'warehouse_id' => 'required|string|exists:warehouses,id',
             'stock_quantity' => 'string|between:2,200',
             'description' => 'required|string|min:50',
-            'video' => 'url|between:5,200',
+            'video' => 'nullable|url|between:5,200',
             'featured' => 'boolean',
             'today_deal' => 'boolean',
             'product_slider' => 'boolean',
@@ -254,7 +254,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
 
-        // $product->delete();
+        $product->delete();
         $notification = ['notification' => 'Product Deleted!', 'alert-type' => 'success'];
         return redirect()->back()->with($notification);
     }

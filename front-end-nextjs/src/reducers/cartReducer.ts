@@ -4,6 +4,7 @@ console.log(Cookies, "cookies ");
 
 // Define action type
 const CHANGE_CART_AMOUNT = "CHANGE_CART_AMOUNT";
+const CLEAR_CART = "CLEAR_CART";
 // Retrieve the cart data from cookies
 const cartData = Cookies.get("cartData");
 const initialCartList = cartData ? JSON.parse(cartData) : [];
@@ -25,10 +26,14 @@ export type CartStateType = {
   cartList: CartItem[];
 };
 
-export type CartActionType = {
-  type: typeof CHANGE_CART_AMOUNT;
-  payload: CartItem;
-};
+export type CartActionType =
+  | {
+      type: typeof CHANGE_CART_AMOUNT;
+      payload: CartItem;
+    }
+  | {
+      type: typeof CLEAR_CART;
+    };
 
 export const cartReducer: React.Reducer<CartStateType, CartActionType> = (
   state: CartStateType,
@@ -67,6 +72,12 @@ export const cartReducer: React.Reducer<CartStateType, CartActionType> = (
           cartList: newCartList,
         };
       }
+    // cart clear
+    case CLEAR_CART:
+      Cookies.remove("cartData");
+      return {
+        cartList: [],
+      };
 
     default: {
       return state;

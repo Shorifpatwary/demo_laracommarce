@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\WarehouseController;
 use App\Http\Controllers\Admin\PickupPointController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\NewsLetterController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -63,6 +64,9 @@ Route::middleware(['web', 'auth'])->group(function () {
 
 	// product routes
 	Route::resource('product', ProductController::class);
+
+	// order routes
+	Route::resource('order', OrderController::class);
 	// news letter 
 	Route::get('/news_letter', [NewsLetterController::class, 'index'])->name('news_letter.index');
 });

@@ -22,6 +22,7 @@ import {
 } from "interfaces/api-response";
 import { useRouter } from "next/router";
 import { productSearch } from "@data/apis";
+import Button from "@component/buttons/Button";
 
 export type priceRangeType = {
   min: number;
@@ -80,6 +81,7 @@ const ProductSearchResult = () => {
   };
 
   const { getAllNestedCategories, categories } = useCategory();
+  // handleClearSearch
 
   const handleProductFetch = () => {
     let delimiter = "?";
@@ -93,8 +95,6 @@ const ProductSearchResult = () => {
       const category = categories?.filter((item) => item.name === categoryName);
       const nestedCategories = getAllNestedCategories(category[0].id);
       const categoryIds = nestedCategories.map((category) => category.id);
-      console.log(categoryIds, "categories ids form inner query ");
-
       // Send the `category` parameter only if categoryIds is not empty
       if (categoryIds.length > 0) {
         fetchURL += `${delimiter}category=${categoryIds.join(",")}`;
@@ -136,17 +136,13 @@ const ProductSearchResult = () => {
         orderBy.asc ? "asc" : "desc"
       }`;
     }
-    console.log(products, "products form query page");
     // Make your fetch request using the constructed URL
     if (search || categoryName) {
       fetch(fetchURL)
         .then((response) => response.json())
         .then((data) => {
           // Handle the fetched data
-          console.log(data.data, "data . data ");
-
           setProducts(data);
-          console.log(products, "products form use effect");
         })
         .catch((error) => {
           // Handle errors
@@ -164,10 +160,21 @@ const ProductSearchResult = () => {
       const categoryValue = searchParam.get("category");
 
       // Update the state with the extracted values
-      setSearch(searchValue || "");
-      setCategoryName(categoryValue || "");
-      setSearch((prevSearch) => searchValue || prevSearch);
-      setCategoryName((prevCategory) => categoryValue || prevCategory);
+      setSearch((prevSearch) => {
+        if (searchValue) {
+          return searchValue;
+        } else {
+          return prevSearch;
+        }
+      });
+
+      setCategoryName((prevCategory) => {
+        if (categoryValue) {
+          return categoryValue;
+        } else {
+          return prevCategory;
+        }
+      });
     }
   }, [query]);
 
@@ -177,10 +184,7 @@ const ProductSearchResult = () => {
       .then((response) => response.json())
       .then((data) => {
         // Handle the fetched data
-        console.log(data.data, "data . data ");
-
         setProducts(data);
-        console.log(products, "products form use effect");
       })
       .catch((error) => {
         // Handle errors
@@ -204,16 +208,19 @@ const ProductSearchResult = () => {
           elevation={5}
           as={Card}
         >
-          <div>
+          <FlexBox justifyContent="space-between" alignItems="center">
             {search ? <H5>Searching for “ {search} ”</H5> : ""}
             {products?.meta?.total > 0 ? (
-              <Paragraph color="text.muted">
-                {products.meta.total} results found
-              </Paragraph>
+              <>
+                <Paragraph color="text.muted">
+                  {products.meta.total} results found
+                </Paragraph>
+              </>
             ) : (
               ""
             )}
-          </div>
+            {/* <Button onClick={() => setSearch("")}>X</Button> */}
+          </FlexBox>
           <FlexBox alignItems="center" flexWrap="wrap">
             <Paragraph color="text.muted" mr="1rem">
               Short by:

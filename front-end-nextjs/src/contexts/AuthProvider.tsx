@@ -8,6 +8,7 @@ import {
 } from "@data/apis";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
+import { HTTPMethod } from "@hook/useFetch";
 
 type AuthProviderProps = {
   children: React.ReactNode;
@@ -115,8 +116,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
   //  makeAuthenticatedRequest
   const makeAuthenticatedRequest = async (
-    url,
-    method,
+    url: string,
+    method: HTTPMethod,
     errorStatus = status.error_unauthorized,
     body = null,
     headers?: headers

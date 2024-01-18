@@ -8,27 +8,23 @@ import Hidden from "../hidden/Hidden";
 import Icon from "../icon/Icon";
 import TableRow from "../TableRow";
 import Typography, { H5, Small } from "../Typography";
+import { OrderInterface } from "interfaces/api-response";
 
 export interface OrderRowProps {
-  item: {
-    orderNo: any;
-    status: string;
-    href: string;
-    purchaseDate: string | Date;
-    price: number;
-  };
+  item: OrderInterface;
+  SL_no: number;
 }
 
-const OrderRow: React.FC<OrderRowProps> = ({ item }) => {
+const OrderRow: React.FC<OrderRowProps> = ({ item, SL_no }) => {
   const getColor = (status) => {
     switch (status) {
-      case "Pending":
+      case "pending payment":
+        return "secondary"; //  info
+      case "processing":
         return "secondary";
-      case "Processing":
-        return "secondary";
-      case "Delivered":
+      case "delivered":
         return "success";
-      case "Cancelled":
+      case "canceled":
         return "error";
       default:
         return "";
@@ -36,10 +32,10 @@ const OrderRow: React.FC<OrderRowProps> = ({ item }) => {
   };
 
   return (
-    <Link href={item.href}>
-      <TableRow as="a" href={item.href} my="1rem" padding="6px 18px">
+    <Link href={`/orders/${item.id}`}>
+      <TableRow as="a" href={`/orders/${item.id}`} my="1rem" padding="6px 18px">
         <H5 m="6px" textAlign="left">
-          {item.orderNo}
+          {SL_no}
         </H5>
         <Box m="6px">
           <Chip p="0.25rem 1rem" bg={`${getColor(item.status)}.light`}>
@@ -47,10 +43,10 @@ const OrderRow: React.FC<OrderRowProps> = ({ item }) => {
           </Chip>
         </Box>
         <Typography className="flex-grow pre" m="6px" textAlign="left">
-          {format(new Date(item.purchaseDate), "MMM dd, yyyy")}
+          {format(new Date(item.created_at), "MMM dd, yyyy")}
         </Typography>
         <Typography m="6px" textAlign="left">
-          ${item.price.toFixed(2)}
+          ${item.total_price.toFixed(2)}
         </Typography>
 
         <Hidden flex="0 0 0 !important" down={769}>

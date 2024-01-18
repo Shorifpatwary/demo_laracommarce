@@ -24,8 +24,7 @@ const ProductReview: React.FC<ProductReviewProps> = ({
   review,
   product_id,
 }) => {
-  const { makeAuthenticatedRequest, isAuthenticatedUser } =
-    useContext(AuthContext);
+  const { makeAuthenticatedRequest } = useContext(AuthContext);
 
   const handleFormSubmit = async (values, formikActions) => {
     setFieldValue("product_id", product_id);
